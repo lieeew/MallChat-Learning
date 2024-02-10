@@ -28,3 +28,14 @@ replay_pid*
 .idea/jarRepositories.xml
 .idea/misc.xml
 .idea/vcs.xml
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+!/src/main/resources/application-test.yml
+!/src/main/resources/application-dev.yml
+!/src/main/resources/application-prod.yml
