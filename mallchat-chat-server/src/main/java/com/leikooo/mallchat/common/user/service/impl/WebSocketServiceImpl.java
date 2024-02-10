@@ -1,0 +1,133 @@
+package com.leikooo.mallchat.common.user.service.impl;
+
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.json.JSONUtil;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
+import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
+import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
+import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
+import com.leikooo.mallchat.common.user.domain.vo.request.ws.WSAuthorize;
+import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginUrl;
+import com.leikooo.mallchat.common.user.service.WebSocketService;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
+import me.chanjar.weixin.mp.api.WxMpQrcodeService;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.time.Duration;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @data : 2023-03-19 16:21
+ * @description websocket 处理类
+ */
+@Slf4j
+@Component
+public class WebSocketServiceImpl implements WebSocketService {
+    /**
+     * 绑定 Channel 和 WSChannelExtraDTO 的关系，至于为什么不直接使用 UUID 呢，因为这样方便扩展
+     * 管理所有的用户连接，包括登录、未登录
+     */
+    private static final Map<Channel, WSChannelExtraDTO> ONLINE_WS_MAP = new ConcurrentHashMap<>();
+
+    public static final Duration EXPIRE_MINUTES = Duration.ofHours(1);
+
+    public static final long MAX_SIZE = 1000;
+
+    /**
+     * 等待登录的用户，存储的是生成二维码的 code 和对应的 Channel
+     */
+    public static final Cache<Integer, Channel> WAITING_LOGIN_MAP = Caffeine.newBuilder()
+            .expireAfterWrite(EXPIRE_MINUTES)
+            .maximumSize(MAX_SIZE).build();
+
+    @Resource
+    private WxMpService wxMpService;
+
+    @Override
+    public void handleLoginReq(Channel channel) {
+        // 生成一个随机的 code
+        int code = generateCode(channel);
+        // 调用 WX 接口生成二维码
+        WxMpQrCodeTicket wxMpQrCodeTicket = null;
+        try {
+            wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(code, (int) EXPIRE_MINUTES.getSeconds());
+            // 二维码发送给前端
+            sendMsg(channel, WebSocketAdapter.buildCodeUrl(wxMpQrCodeTicket));
+        } catch (WxErrorException e) {
+            log.error("生成二维码/发送二维码失败", e);
+        }
+    }
+
+    private void sendMsg(Channel channel, WSBaseResp<?> resp) {
+        channel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(resp)));
+    }
+
+
+    /**
+     * 生成一个随机的 code
+     *
+     * @param channel
+     * @return
+     */
+    private int generateCode(Channel channel) {
+        int code;
+        do {
+            code = RandomUtil.randomInt(Integer.MAX_VALUE);
+        } while (Objects.isNull(WAITING_LOGIN_MAP.asMap().putIfAbsent(code, channel)));
+        return code;
+    }
+
+
+    @Override
+    public void connect(Channel channel) {
+        WSChannelExtraDTO wsChannelExtraDTO = WSChannelExtraDTO.builder().build();
+        ONLINE_WS_MAP.put(channel, wsChannelExtraDTO);
+    }
+
+    @Override
+    public void removed(Channel channel) {
+        ONLINE_WS_MAP.remove(channel);
+    }
+
+    @Override
+    public void authorize(Channel channel, WSAuthorize wsAuthorize) {
+
+    }
+
+    @Override
+    public Boolean scanLoginSuccess(Integer loginCode, Long uid) {
+        return null;
+    }
+
+    @Override
+    public Boolean scanSuccess(Integer loginCode) {
+        return null;
+    }
+
+    @Override
+    public void sendToAllOnline(WSBaseResp<?> wsBaseResp, Long skipUid) {
+
+    }
+
+    @Override
+    public void sendToAllOnline(WSBaseResp<?> wsBaseResp) {
+
+    }
+
+    @Override
+    public void sendToUid(WSBaseResp<?> wsBaseResp, Long uid) {
+
+    }
+}
