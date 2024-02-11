@@ -62,13 +62,10 @@ public class WxPortalController {
         try {
             WxOAuth2AccessToken accessToken = wxService.getOAuth2Service().getAccessToken(code);
             WxOAuth2UserInfo userInfo = wxService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
-//            wxMsgService.authorize(userInfo);
         } catch (Exception e) {
             log.error("callBack error", e);
         }
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("https://mp.weixin.qq.com/s/m1SRsBG96kLJW5mPe4AVGA");
-        return redirectView;
+        return null;
     }
 
     @PostMapping(produces = "application/xml; charset=UTF-8")

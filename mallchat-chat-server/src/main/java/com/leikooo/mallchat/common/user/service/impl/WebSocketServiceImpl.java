@@ -7,16 +7,12 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
-import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
 import com.leikooo.mallchat.common.user.domain.vo.request.ws.WSAuthorize;
-import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginUrl;
 import com.leikooo.mallchat.common.user.service.WebSocketService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpMessageRouter;
-import me.chanjar.weixin.mp.api.WxMpQrcodeService;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.stereotype.Component;
@@ -85,7 +81,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         int code;
         do {
             code = RandomUtil.randomInt(Integer.MAX_VALUE);
-        } while (Objects.isNull(WAITING_LOGIN_MAP.asMap().putIfAbsent(code, channel)));
+        } while (Objects.nonNull(WAITING_LOGIN_MAP.asMap().putIfAbsent(code, channel)));
         return code;
     }
 
@@ -98,6 +94,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void removed(Channel channel) {
+        // 保证 ONLINE_WS_MAP 不会 OOM
         ONLINE_WS_MAP.remove(channel);
     }
 

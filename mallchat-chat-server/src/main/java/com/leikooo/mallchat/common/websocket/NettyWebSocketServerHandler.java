@@ -128,9 +128,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
         WSReqTypeEnum wsReqTypeEnum = WSReqTypeEnum.of(wsBaseReq.getType());
         switch (wsReqTypeEnum) {
             case LOGIN:
-                log.info("请求二维码 = " + msg.text());
-                // 写数据必须要是 TextWebSocketFrame 类型
-                ctx.channel().writeAndFlush(new TextWebSocketFrame("123"));
+                webSocketService.handleLoginReq(ctx.channel());
                 break;
             case HEARTBEAT:
                 break;

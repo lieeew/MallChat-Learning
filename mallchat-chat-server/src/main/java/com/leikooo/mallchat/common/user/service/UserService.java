@@ -1,6 +1,5 @@
 package com.leikooo.mallchat.common.user.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 
 /**
@@ -11,6 +10,6 @@ import com.leikooo.mallchat.common.user.domain.entity.User;
  * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2024-02-07
  */
-public interface IUserService extends IService<User> {
-
+public interface UserService {
+    Long saveUser(User user);
 }
