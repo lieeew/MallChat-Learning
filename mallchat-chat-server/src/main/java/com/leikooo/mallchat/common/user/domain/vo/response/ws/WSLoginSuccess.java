@@ -6,9 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Description:
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
- * Date: 2023-03-19
+ * @author <a href="https://github.com/lieeew">leikooo</a>
+ * @description 登录成功返回的包装类
  */
 @Data
 @Builder
@@ -16,9 +15,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WSLoginSuccess {
     private Long uid;
+
     private String avatar;
+
     private String token;
+
     private String name;
-    //用户权限 0普通用户 1超管
+
+    /**
+     * 用户权限 0普通用户 1超管
+     */
     private Integer power;
 }

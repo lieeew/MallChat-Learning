@@ -1,10 +1,12 @@
 package com.leikooo.mallchat.common.user.controller;
 
+import com.leikooo.mallchat.common.user.service.WxMsgService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpMassMessageService;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpQrcodeService;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -14,6 +16,8 @@ import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.annotation.Resource;
 
 /**
  * Description: 微信api交互接口
@@ -29,6 +33,9 @@ public class WxPortalController {
     private final WxMpService wxService;
 
     private final WxMpMessageRouter messageRouter;
+
+    @Resource
+    private WxMsgService wxMsgService;
 
     @PostMapping("/test")
     public String test(@RequestParam String code) throws WxErrorException {
@@ -62,6 +69,7 @@ public class WxPortalController {
         try {
             WxOAuth2AccessToken accessToken = wxService.getOAuth2Service().getAccessToken(code);
             WxOAuth2UserInfo userInfo = wxService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
+            wxMsgService.authorized(userInfo);
         } catch (Exception e) {
             log.error("callBack error", e);
         }

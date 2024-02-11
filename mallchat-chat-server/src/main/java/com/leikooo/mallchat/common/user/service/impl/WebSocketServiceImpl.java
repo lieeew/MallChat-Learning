@@ -5,9 +5,12 @@ import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
+import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
+import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.domain.vo.request.ws.WSAuthorize;
+import com.leikooo.mallchat.common.user.service.LoginService;
 import com.leikooo.mallchat.common.user.service.WebSocketService;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -51,6 +54,12 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Resource
     private WxMpService wxMpService;
 
+    @Resource
+    private LoginService loginService;
+
+    @Resource
+    private UserDao userDao;
+
     @Override
     public void handleLoginReq(Channel channel) {
         // 生成一个随机的 code
@@ -60,7 +69,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         try {
             wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(code, (int) EXPIRE_MINUTES.getSeconds());
             // 二维码发送给前端
-            sendMsg(channel, WebSocketAdapter.buildCodeUrl(wxMpQrCodeTicket));
+            sendMsg(channel, WebSocketAdapter.buildResp(wxMpQrCodeTicket));
         } catch (WxErrorException e) {
             log.error("生成二维码/发送二维码失败", e);
         }
@@ -105,6 +114,16 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public Boolean scanLoginSuccess(Integer loginCode, Long uid) {
+        Channel channel = WAITING_LOGIN_MAP.getIfPresent(loginCode);
+        if (Objects.isNull(channel)) {
+            // 没有对应的 channel
+            return false;
+        }
+        // 获取 token
+        String token = loginService.login(uid);
+        // 获取登录的 user
+        User user = userDao.getById(uid);
+        sendMsg(channel, WebSocketAdapter.buildResp(user, token));
         return null;
     }
 
