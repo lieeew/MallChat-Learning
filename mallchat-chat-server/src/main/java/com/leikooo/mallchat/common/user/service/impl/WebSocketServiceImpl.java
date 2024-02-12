@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -28,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author <a href="https://github.com/zongzibinbin">leikooo</a>
- * @data : 2023-03-19 16:21
+ * @date : 2023-03-19 16:21
  * @description websocket 处理类
  */
 @Slf4j
@@ -51,6 +52,7 @@ public class WebSocketServiceImpl implements WebSocketService {
             .expireAfterWrite(EXPIRE_MINUTES)
             .maximumSize(MAX_SIZE).build();
 
+    @Lazy
     @Resource
     private WxMpService wxMpService;
 
@@ -69,7 +71,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         try {
             wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(code, (int) EXPIRE_MINUTES.getSeconds());
             // 二维码发送给前端
-            sendMsg(channel, WebSocketAdapter.buildResp(wxMpQrCodeTicket));
+            sendMsg(channel, WebSocketAdapter.buildLoginUrlResp(wxMpQrCodeTicket));
         } catch (WxErrorException e) {
             log.error("生成二维码/发送二维码失败", e);
         }
@@ -108,42 +110,28 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void authorize(Channel channel, WSAuthorize wsAuthorize) {
-
-    }
-
-    @Override
     public Boolean scanLoginSuccess(Integer loginCode, Long uid) {
         Channel channel = WAITING_LOGIN_MAP.getIfPresent(loginCode);
         if (Objects.isNull(channel)) {
             // 没有对应的 channel
             return false;
         }
+        // 移除 code
+        WAITING_LOGIN_MAP.invalidate(loginCode);
         // 获取 token
         String token = loginService.login(uid);
         // 获取登录的 user
         User user = userDao.getById(uid);
-        sendMsg(channel, WebSocketAdapter.buildResp(user, token));
-        return null;
+        sendMsg(channel, WebSocketAdapter.buildLoginSuccessResp(user, token));
+        return true;
     }
 
     @Override
-    public Boolean scanSuccess(Integer loginCode) {
-        return null;
-    }
-
-    @Override
-    public void sendToAllOnline(WSBaseResp<?> wsBaseResp, Long skipUid) {
-
-    }
-
-    @Override
-    public void sendToAllOnline(WSBaseResp<?> wsBaseResp) {
-
-    }
-
-    @Override
-    public void sendToUid(WSBaseResp<?> wsBaseResp, Long uid) {
-
+    public void waitAuthorized(Integer code) {
+        Channel channel = WAITING_LOGIN_MAP.getIfPresent(code);
+        if (Objects.isNull(channel)) {
+            return;
+        }
+        sendMsg(channel, WebSocketAdapter.buildWaitAuthorizedResp());
     }
 }

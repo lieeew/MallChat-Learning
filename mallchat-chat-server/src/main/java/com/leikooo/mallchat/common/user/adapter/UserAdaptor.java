@@ -15,6 +15,12 @@ public class UserAdaptor {
         return User.builder().openId(openId).build();
     }
 
+    /**
+     * 构建授权后的用户信息
+     * @param id 用户 id 也叫 uniId
+     * @param userInfo 微信用户信息
+     * @return
+     */
     public static User buildAuthorizedUser(Long id, WxOAuth2UserInfo userInfo) {
         return User.builder()
                 .id(id)

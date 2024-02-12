@@ -68,6 +68,8 @@ public class WxMsgServiceImpl implements WxMsgService {
             webSocketService.scanLoginSuccess(code, user.getId());
             return null;
         }
+        // 向前端发送 等待授权的 message
+        webSocketService.waitAuthorized(code);
         if (!isHaveUser) {
             userService.saveUser(UserAdaptor.buildNewUser(openId));
         }
@@ -88,7 +90,7 @@ public class WxMsgServiceImpl implements WxMsgService {
         if (StringUtils.isEmpty(user.getAvatar())) {
             fillUserInfo(userInfo, user.getId());
         }
-        Integer code = WAIT_AUTHORIED_MAP.get(userInfo.getOpenid());
+        Integer code = WAIT_AUTHORIED_MAP.remove(userInfo.getOpenid());
         webSocketService.scanLoginSuccess(code, user.getId());
     }
 

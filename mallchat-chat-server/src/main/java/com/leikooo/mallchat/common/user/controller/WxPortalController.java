@@ -73,7 +73,8 @@ public class WxPortalController {
         } catch (Exception e) {
             log.error("callBack error", e);
         }
-        return null;
+        // todo 重定向到前端页面
+        return new RedirectView("https://www.bing.com");
     }
 
     @PostMapping(produces = "application/xml; charset=UTF-8")

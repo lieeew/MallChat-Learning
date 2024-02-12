@@ -55,3 +55,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #开启驼峰命名法
     map-underscore-to-camel-case: true
+mallchat:
+  jwt:
+    secret: ${mallchat.jwt.secret}
