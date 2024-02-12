@@ -1,7 +1,5 @@
 package com.leikooo.mallchat.common.user.service;
 
-import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
-import com.leikooo.mallchat.common.user.domain.vo.request.ws.WSAuthorize;
 import io.netty.channel.Channel;
 
 public interface WebSocketService {

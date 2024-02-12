@@ -9,7 +9,6 @@ import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
-import com.leikooo.mallchat.common.user.domain.vo.request.ws.WSAuthorize;
 import com.leikooo.mallchat.common.user.service.LoginService;
 import com.leikooo.mallchat.common.user.service.WebSocketService;
 import io.netty.channel.Channel;
@@ -67,9 +66,8 @@ public class WebSocketServiceImpl implements WebSocketService {
         // 生成一个随机的 code
         int code = generateCode(channel);
         // 调用 WX 接口生成二维码
-        WxMpQrCodeTicket wxMpQrCodeTicket = null;
         try {
-            wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(code, (int) EXPIRE_MINUTES.getSeconds());
+            WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket(code, (int) EXPIRE_MINUTES.getSeconds());
             // 二维码发送给前端
             sendMsg(channel, WebSocketAdapter.buildLoginUrlResp(wxMpQrCodeTicket));
         } catch (WxErrorException e) {
