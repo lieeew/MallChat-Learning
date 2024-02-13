@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.util;
+package com.leikooo.mallchat.common.common.util;
 
 
 import com.auth0.jwt.JWT;
@@ -53,7 +53,7 @@ public class JwtUtils {
     }
 
     /**
-     * 解密Token
+     * 解密 Token
      *
      * @param token
      * @return
@@ -74,7 +74,7 @@ public class JwtUtils {
 
 
     /**
-     * 根据Token获取uid
+     * 根据 Token 获取 uid
      *
      * @param token
      * @return uid

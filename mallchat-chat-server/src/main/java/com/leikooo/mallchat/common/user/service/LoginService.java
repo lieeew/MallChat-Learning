@@ -15,7 +15,7 @@ public interface LoginService {
     String login(Long uid);
 
     /**
-     * 校验token是不是有效
+     * 校验 token 是不是有效
      *
      * @param token
      * @return
@@ -23,7 +23,7 @@ public interface LoginService {
     boolean verify(String token);
 
     /**
-     * 刷新token有效期
+     * 刷新 token 有效期
      *
      * @param token
      */
