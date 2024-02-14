@@ -2,8 +2,10 @@ package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.jwt.JWTUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.leikooo.mallchat.common.common.util.JwtUtils;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
@@ -120,7 +122,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         String token = loginService.login(uid);
         // 获取登录的 user
         User user = userDao.getById(uid);
-        sendMsg(channel, WebSocketAdapter.buildLoginSuccessResp(user, token));
+        loginSuccess(channel, WebSocketAdapter.buildLoginSuccessResp(user, token), user);
         return true;
     }
 
@@ -131,5 +133,30 @@ public class WebSocketServiceImpl implements WebSocketService {
             return;
         }
         sendMsg(channel, WebSocketAdapter.buildWaitAuthorizedResp());
+    }
+
+    @Override
+    public void authorized(Channel channel, String token) {
+        Long uid = loginService.getValidUid(token);
+        if (uid == null) {
+            // token 已经失效
+            sendMsg(channel, WebSocketAdapter.buildInvalidToken());
+            return;
+        }
+        User user = userDao.getById(uid);
+        loginSuccess(channel, WebSocketAdapter.buildAuthorizedResp(user, token), user);
+    }
+
+    /**
+     * 1、发送登录成功的消息
+     * 2、更新 ONLINE_WS_MAP 里面与 channel 绑定的对象的属性
+     *
+     * @param channel
+     * @param user
+     */
+    private void loginSuccess(Channel channel, WSBaseResp<?> wsBaseResp, User user) {
+        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
+        wsChannelExtraDTO.setUid(user.getId());
+        sendMsg(channel,wsBaseResp);
     }
 }

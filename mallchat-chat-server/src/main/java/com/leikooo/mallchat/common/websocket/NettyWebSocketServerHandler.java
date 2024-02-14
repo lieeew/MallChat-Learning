@@ -91,7 +91,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             Channel channel = ctx.channel();
             String token = NettyUtil.getAttr(channel, NettyUtil.TOKEN);
             if (StringUtils.isEmpty(token)) {
-
+                webSocketService.authorized(channel, token);
             }
         }
         // the method calls super.userEventTriggered(ctx, evt), which passes the event to the next handler in the pipeline

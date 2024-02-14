@@ -2,6 +2,9 @@ package com.leikooo.mallchat.common.user.service;
 
 import io.netty.channel.Channel;
 
+/**
+ * @author <a href="https://github.com/lieeew">leikooo</a>
+ */
 public interface WebSocketService {
 
     /**
@@ -30,5 +33,12 @@ public interface WebSocketService {
      */
     Boolean scanLoginSuccess(Integer loginCode, Long uid);
 
+    /**
+     * 等待验证
+     *
+     * @param code
+     */
     void waitAuthorized(Integer code);
+
+    void authorized(Channel channel, String token);
 }

@@ -75,7 +75,7 @@ public class NettyWebSocketServer {
                            2. 这就是为什么当浏览器发送大量数据时，就会发出多次 http请求的原因
                          */
                         pipeline.addLast(new HttpObjectAggregator(8192));
-                        // 保存用户 ip 信息
+                        // 保存用户 ip 信息 和 token
                         pipeline.addLast(new HttpHeadersHandler());
                         /*
                           说明：
