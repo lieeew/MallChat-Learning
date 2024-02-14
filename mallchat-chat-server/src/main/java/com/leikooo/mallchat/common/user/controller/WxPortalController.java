@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 /**
  * Description: 微信api交互接口
  *
- * @author <a href="https://github.com/zongzibinbin">abin</a>
+ * @author <a href="https://github.com/lieeew">abin</a>
  * Date: 2023-03-19
  */
 @Slf4j

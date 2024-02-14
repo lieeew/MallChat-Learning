@@ -27,6 +27,7 @@ import java.util.List;
 
 /**
  * Description:
+ *
  * @author <a href=https://github.com/lieeew>leikooo</a>
  * Date: 2023-03-23
  */
@@ -39,12 +40,12 @@ public class SwaggerConfig {
                 //配置网站的基本信息
                 .apiInfo(new ApiInfoBuilder()
                         //网站标题
-                        .title("mallchat接口文档")
+                        .title("mallChat接口文档")
                         //标题后面的版本号
                         .version("v1.0")
-                        .description("mallchat接口文档")
+                        .description("mallChat接口文档")
                         //联系人信息
-                        .contact(new Contact("阿斌", "<http://www.mallchat.cn>", "972627721@qq.com"))
+                        .contact(new Contact("leikooo", "<https://www.mallchat.cn>", "972627721@qq.com"))
                         .build())
                 .select()
                 //指定接口的位置
@@ -54,6 +55,10 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build();
     }
+
+    /**
+     * 增加如下配置可解决Spring Boot 6.x 与Swagger 3.0.0 不兼容问题
+     */
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
         List<ExposableEndpoint<?>> allEndpoints = new ArrayList();
@@ -66,6 +71,7 @@ public class SwaggerConfig {
         boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
     }
+
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }

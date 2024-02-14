@@ -15,7 +15,7 @@ import java.util.Date;
  * 用户角色关系表
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-06-04
  */
 @Data

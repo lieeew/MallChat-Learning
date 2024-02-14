@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Description: 表情包反参
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-07-09
  */
 @Data

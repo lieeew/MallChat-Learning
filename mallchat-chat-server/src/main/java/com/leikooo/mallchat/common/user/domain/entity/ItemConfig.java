@@ -14,7 +14,7 @@ import java.util.Date;
  * 功能物品配置表
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-03-19
  */
 @Data

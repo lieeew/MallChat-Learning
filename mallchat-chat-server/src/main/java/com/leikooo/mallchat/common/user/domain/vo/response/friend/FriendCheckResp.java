@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Description: 好友校验
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-23
  */
 @Data

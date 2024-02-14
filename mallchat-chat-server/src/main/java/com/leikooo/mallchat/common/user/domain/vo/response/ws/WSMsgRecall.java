@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * Description:消息撤回的推送类
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-19
  */
 @Data

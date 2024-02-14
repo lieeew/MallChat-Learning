@@ -57,7 +57,8 @@ public class MPGenerator {
         strategyConfig.setEntityTableFieldAnnotationEnable(true);
         //todo 这里修改需要自动生成的表结构
         strategyConfig.setInclude(
-                "user"
+                "user_backpack",
+                "item_config"
         );
         //自动填充字段,在项目开发过程中,例如创建时间，修改时间,每次，都需要我们来指定，太麻烦了,设置为自动填充规则，就不需要我们赋值咯
         List<TableFill> list = new ArrayList<TableFill>();
@@ -77,7 +78,7 @@ public class MPGenerator {
     public static void assembleDev(DataSourceConfig dataSourceConfig) {
         dataSourceConfig.setDriverName("com.mysql.cj.jdbc.Driver");
         dataSourceConfig.setUsername("root");
-        dataSourceConfig.setPassword("xxxxx");
+        dataSourceConfig.setPassword("hsphsp");
         dataSourceConfig.setUrl("jdbc:mysql://localhost:3306/mallchat?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC");
     }
 }

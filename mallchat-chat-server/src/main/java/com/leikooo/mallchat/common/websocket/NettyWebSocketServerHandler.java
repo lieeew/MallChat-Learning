@@ -90,7 +90,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
         } else if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
             Channel channel = ctx.channel();
             String token = NettyUtil.getAttr(channel, NettyUtil.TOKEN);
-            if (StringUtils.isEmpty(token)) {
+            if (StringUtils.isNotBlank(token)) {
                 webSocketService.authorized(channel, token);
             }
         }

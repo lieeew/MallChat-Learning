@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 单聊房间表 Mapper 接口
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">abin</a>
+ * @author <a href="https://github.com/lieeew">abin</a>
  * @since 2023-07-22
  */
 //public interface RoomFriendMapper extends BaseMapper<RoomFriend> {

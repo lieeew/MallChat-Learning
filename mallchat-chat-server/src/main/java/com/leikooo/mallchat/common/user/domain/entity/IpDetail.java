@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 用户ip信息
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-03-19
  */
 @Data

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * Description: 物品枚举
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-19
  */
 @AllArgsConstructor

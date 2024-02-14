@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 用户联系人表 Mapper 接口
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-07-16
  */
 public interface UserFriendMapper extends BaseMapper<UserFriend> {

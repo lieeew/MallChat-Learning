@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class LoginServiceImpl implements LoginService {
     public static final int TOKEN_EXPIRE_TIME = 3;
+
     @Resource
     private JwtUtils jwtUtils;
 

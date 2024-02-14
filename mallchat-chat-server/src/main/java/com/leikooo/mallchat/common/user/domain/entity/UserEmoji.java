@@ -11,7 +11,7 @@ import java.util.Date;
  * 用户表情包
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-07-09
  */
 @Data

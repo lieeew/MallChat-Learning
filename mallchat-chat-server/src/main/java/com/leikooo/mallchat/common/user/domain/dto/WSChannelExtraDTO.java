@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Description: 记录和前端连接的一些映射信息
- * Author: <a href="https://github.com/zongzibinbin">leikooo</a>
+ * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-21
  */
 @Data
