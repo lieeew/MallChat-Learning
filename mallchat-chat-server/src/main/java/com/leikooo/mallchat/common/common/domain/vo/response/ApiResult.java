@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.common.domain.vo.response;
 
-import com.abin.mallchat.common.common.exception.ErrorEnum;
+import com.leikooo.mallchat.common.common.exception.ErrorEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,10 +15,13 @@ import lombok.Data;
 public class ApiResult<T> {
     @ApiModelProperty("成功标识true or false")
     private Boolean success;
+
     @ApiModelProperty("错误码")
     private Integer errCode;
+
     @ApiModelProperty("错误消息")
     private String errMsg;
+
     @ApiModelProperty("返回对象")
     private T data;
 
@@ -47,11 +50,10 @@ public class ApiResult<T> {
     public static <T> ApiResult<T> fail(ErrorEnum errorEnum) {
         ApiResult<T> result = new ApiResult<T>();
         result.setSuccess(Boolean.FALSE);
-        result.setErrCode(errorEnum.getErrorCode());
-        result.setErrMsg(errorEnum.getErrorMsg());
+        result.setErrCode(errorEnum.getCode());
+        result.setErrMsg(errorEnum.getDes());
         return result;
     }
-
     public boolean isSuccess() {
         return this.success;
     }

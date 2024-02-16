@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.user.service;
 
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 
 /**
  * <p>
@@ -12,4 +13,8 @@ import com.leikooo.mallchat.common.user.domain.entity.User;
  */
 public interface UserService {
     Long saveUser(User user);
+
+    UserInfoResp getUserInfo(Long uid);
+
+    void modifyName(Long uid, String name);
 }

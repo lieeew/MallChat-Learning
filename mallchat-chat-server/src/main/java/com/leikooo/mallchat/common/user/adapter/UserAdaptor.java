@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.user.adapter;
 
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
 import java.util.Date;
@@ -28,6 +29,16 @@ public class UserAdaptor {
                 .avatar(userInfo.getHeadImgUrl())
                 .sex(userInfo.getSex())
                 .updateTime(new Date())
+                .build();
+    }
+
+    public static UserInfoResp buildUserInfoResp(User user, Integer countByValidItemId) {
+        return UserInfoResp.builder()
+                .modifyNameChance(countByValidItemId)
+                .sex(user.getSex())
+                .name(user.getName())
+                .id(user.getId())
+                .avatar(user.getAvatar())
                 .build();
     }
 }

@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CursorPageBaseResp<T> {
-
     @ApiModelProperty("游标（下次翻页带上这参数）")
     private String cursor;
 

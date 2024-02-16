@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel("基础翻页返回")
 public class PageBaseResp<T> {
-
     @ApiModelProperty("当前页数")
     private Integer pageNo;
 

@@ -2,6 +2,7 @@ package com.leikooo.mallchat.common.user.domain.vo.response.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @ApiModel("用户详情")
+@Builder
 public class UserInfoResp {
     @ApiModelProperty(value = "用户id")
     private Long id;

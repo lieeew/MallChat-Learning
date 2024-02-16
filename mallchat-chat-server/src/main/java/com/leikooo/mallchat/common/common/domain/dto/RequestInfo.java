@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.common.domain.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -8,7 +9,9 @@ import lombok.Data;
  * Date: 2023-04-05
  */
 @Data
+@Builder
 public class RequestInfo {
     private Long uid;
+
     private String ip;
 }

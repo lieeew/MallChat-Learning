@@ -15,7 +15,6 @@ import javax.validation.constraints.Min;
 @Data
 @ApiModel("基础翻页请求")
 public class PageBaseReq {
-
     @ApiModelProperty("页面大小")
     @Min(0)
     @Max(50)
@@ -25,7 +24,7 @@ public class PageBaseReq {
     private Integer pageNo = 1;
 
     /**
-     * 获取mybatisPlus的page
+     * 获取 mybatisPlus 的 page
      *
      * @return
      */

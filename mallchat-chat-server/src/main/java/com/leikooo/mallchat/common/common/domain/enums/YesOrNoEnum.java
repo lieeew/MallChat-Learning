@@ -21,6 +21,7 @@ public enum YesOrNoEnum {
     ;
 
     private final Integer status;
+
     private final String desc;
 
     private static Map<Integer, YesOrNoEnum> cache;

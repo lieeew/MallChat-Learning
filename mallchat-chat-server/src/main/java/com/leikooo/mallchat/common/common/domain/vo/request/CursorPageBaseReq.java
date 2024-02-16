@@ -21,7 +21,6 @@ import javax.validation.constraints.Min;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CursorPageBaseReq {
-
     @ApiModelProperty("页面大小")
     @Min(0)
     @Max(100)

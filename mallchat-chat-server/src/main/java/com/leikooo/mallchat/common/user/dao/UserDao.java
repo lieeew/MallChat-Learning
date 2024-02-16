@@ -20,4 +20,17 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
     public User getUserByOpenId(String openId) {
         return lambdaQuery().eq(User::getOpenId, openId).one();
     }
+
+    public User getUserByName(String name) {
+        return lambdaQuery()
+                .eq(User::getName, name)
+                .one();
+    }
+
+    public boolean modifyName(Long uid, String name) {
+        return lambdaUpdate()
+                .eq(User::getId, uid)
+                .set(User::getName, name)
+                .update();
+    }
 }

@@ -1,7 +1,7 @@
 package com.leikooo.mallchat.common.common.domain.dto;
 
-import com.abin.mallchat.common.user.domain.enums.WSBaseResp;
-import com.abin.mallchat.common.user.domain.enums.WSPushTypeEnum;
+import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
+import com.leikooo.mallchat.common.user.domain.enums.WSPushTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,7 @@ public class PushMessageDTO implements Serializable {
     /**
      * 推送类型 1个人 2全员
      *
-     * @see com.abin.mallchat.common.user.domain.enums.WSPushTypeEnum
+     * @see com.leikooo.mallchat.common.user.domain.enums.WSPushTypeEnum
      */
     private Integer pushType;
 
