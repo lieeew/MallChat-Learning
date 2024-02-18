@@ -50,10 +50,11 @@ public class ApiResult<T> {
     public static <T> ApiResult<T> fail(ErrorEnum errorEnum) {
         ApiResult<T> result = new ApiResult<T>();
         result.setSuccess(Boolean.FALSE);
-        result.setErrCode(errorEnum.getCode());
-        result.setErrMsg(errorEnum.getDes());
+        result.setErrCode(errorEnum.getErrorCode());
+        result.setErrMsg(errorEnum.getErrorMsg());
         return result;
     }
+
     public boolean isSuccess() {
         return this.success;
     }

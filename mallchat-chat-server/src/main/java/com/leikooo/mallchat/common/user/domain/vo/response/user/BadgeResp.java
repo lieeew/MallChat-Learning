@@ -2,6 +2,7 @@ package com.leikooo.mallchat.common.user.domain.vo.response.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,9 +11,9 @@ import lombok.Data;
  * Date: 2023-03-22
  */
 @Data
+@Builder
 @ApiModel("徽章信息")
 public class BadgeResp {
-
     @ApiModelProperty(value = "徽章id")
     private Long id;
 

@@ -1,10 +1,15 @@
 package com.leikooo.mallchat.common.user.adapter;
 
+import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
+import com.leikooo.mallchat.common.user.domain.entity.ItemConfig;
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
+import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -18,7 +23,8 @@ public class UserAdaptor {
 
     /**
      * 构建授权后的用户信息
-     * @param id 用户 id 也叫 uniId
+     *
+     * @param id       用户 id 也叫 uniId
      * @param userInfo 微信用户信息
      * @return
      */
@@ -40,5 +46,20 @@ public class UserAdaptor {
                 .id(user.getId())
                 .avatar(user.getAvatar())
                 .build();
+    }
+
+    public static List<BadgeResp> buildBadgeResp(List<ItemConfig> itemConfigList, List<UserBackpack> userBadgeList, User user) {
+        Set<Long> obtainList = userBadgeList.stream().map(UserBackpack::getItemId).collect(Collectors.toSet());
+        return itemConfigList.stream().map(item ->
+                        BadgeResp.builder()
+                                .describe(item.getDescribe())
+                                .id(item.getId())
+                                .img(item.getImg())
+                                .obtain(obtainList.contains(item.getId()) ? YesOrNoEnum.YES.getStatus() : YesOrNoEnum.NO.getStatus())
+                                .wearing(Objects.equals(user.getItemId(), item.getId()) ? YesOrNoEnum.YES.getStatus() : YesOrNoEnum.NO.getStatus())
+                                .build()
+                )
+                .sorted(Comparator.comparing(BadgeResp::getWearing, Comparator.reverseOrder()).thenComparing(BadgeResp::getObtain, Comparator.reverseOrder()))
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,10 @@
 package com.leikooo.mallchat.common.user.service;
 
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,8 @@ public interface UserService {
     UserInfoResp getUserInfo(Long uid);
 
     void modifyName(Long uid, String name);
+
+    List<BadgeResp> getBadge(Long uid);
+
+    void wearingBadge(Long uid, Long itemId);
 }

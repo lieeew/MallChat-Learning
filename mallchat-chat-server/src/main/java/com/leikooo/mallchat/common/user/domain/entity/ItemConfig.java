@@ -32,6 +32,7 @@ public class ItemConfig implements Serializable {
 
     /**
      * 物品类型 1改名卡 2徽章
+     * @see com.leikooo.mallchat.common.user.domain.enums.ItemTypeEnum
      */
     @TableField("type")
     private Integer type;

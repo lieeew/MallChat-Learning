@@ -24,7 +24,6 @@ import java.util.Date;
 @NoArgsConstructor
 @TableName("user_backpack")
 public class UserBackpack implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     /**

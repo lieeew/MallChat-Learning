@@ -1,29 +1,22 @@
 package com.leikooo.mallchat.common.user.controller;
 
 
-import com.leikooo.mallchat.common.common.domain.dto.RequestInfo;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.util.RequestHolder;
-import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
-import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
-import com.leikooo.mallchat.common.user.domain.entity.User;
-import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
-import com.leikooo.mallchat.common.user.domain.enums.ItemEnum;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.ModifyNameReq;
+import com.leikooo.mallchat.common.user.domain.vo.request.user.WearingBadgeReq;
+import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import com.leikooo.mallchat.common.user.service.LoginService;
 import com.leikooo.mallchat.common.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
-import static com.leikooo.mallchat.common.common.domain.vo.response.ApiResult.success;
+import java.util.List;
 
 /**
  * <p>
@@ -49,13 +42,27 @@ public class UserController {
         return ApiResult.success(userService.getUserInfo(RequestHolder.get().getUid()));
     }
 
-    @PostMapping("/modifyName")
+    @PutMapping("/modifyName")
     @ApiOperation("修改用户名")
     public ApiResult<Void> modifyName(@Valid @RequestBody ModifyNameReq modifyNameReq) {
         userService.modifyName(RequestHolder.get().getUid(), modifyNameReq.getName());
         return ApiResult.success();
     }
 
+    @GetMapping("/getBadge")
+    @ApiOperation("获取徽章信息")
+    public ApiResult<List<BadgeResp>> getBadge() {
+        return ApiResult.success(userService.getBadge(RequestHolder.get().getUid()));
+    }
+
+    @PutMapping("/useItem")
+    @ApiOperation("佩戴徽章")
+    public ApiResult<Void> useItem(@Valid @RequestBody WearingBadgeReq req) {
+        userService.wearingBadge(RequestHolder.get().getUid(), req.getItemId());
+        return ApiResult.success();
+    }
+
+    @Profile("dev")
     @GetMapping("/public/getToken")
     @ApiOperation("获取 token 测试接口")
     public ApiResult<String> getToken(@RequestParam Long uid) {

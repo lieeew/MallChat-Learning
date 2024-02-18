@@ -6,6 +6,9 @@ import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
 import com.leikooo.mallchat.common.user.mapper.UserBackpackMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * <p>
  * 用户背包表 服务实现类
@@ -16,7 +19,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserBackpackDao extends ServiceImpl<UserBackpackMapper, UserBackpack> {
-
     public Integer countByValidItemId(Long uid, Long id) {
         return lambdaQuery()
                 .eq(UserBackpack::getUid, uid)
@@ -41,5 +43,13 @@ public class UserBackpackDao extends ServiceImpl<UserBackpackMapper, UserBackpac
                 .eq(UserBackpack::getStatus, YesOrNoEnum.NO.getStatus())
                 .set(UserBackpack::getStatus, YesOrNoEnum.YES.getStatus())
                 .update();
+    }
+
+    public List<UserBackpack> getUserBadge(Long uid, Set<Long> collect) {
+        return lambdaQuery()
+                .eq(UserBackpack::getUid, uid)
+                .eq(UserBackpack::getStatus, YesOrNoEnum.NO.getStatus())
+                .in(UserBackpack::getItemId, collect)
+                .list();
     }
 }
