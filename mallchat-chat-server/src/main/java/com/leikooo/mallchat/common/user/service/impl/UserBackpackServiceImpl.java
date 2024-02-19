@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import com.leikooo.mallchat.common.common.service.LockService;
 import com.leikooo.mallchat.common.common.util.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.UserBackpackAdaptor;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
@@ -20,7 +21,7 @@ import java.util.Objects;
 @Service
 public class UserBackpackServiceImpl implements UserBackpackService {
     @Resource
-    private RedissonClient redissonClient;
+    private LockService lockService;
 
     @Resource
     private UserBackpackDao userBackpackDao;
@@ -28,9 +29,7 @@ public class UserBackpackServiceImpl implements UserBackpackService {
     @Override
     public void acquireItem(Long uid, Long itemId, Integer messageType, String businessId) {
         String idempotentId = getIdempotent(itemId, messageType, businessId);
-        RLock lock = redissonClient.getLock("acquireItem:" + idempotentId);
-        AssertUtil.isTrue(lock.tryLock(), "请求太频繁，请稍后再试");
-        try {
+        lockService.executeWithLock(idempotentId, () -> {
             UserBackpack userBackpack = userBackpackDao.getByIdempotent(idempotentId);
             if (Objects.nonNull(userBackpack)) {
                 return;
@@ -38,9 +37,7 @@ public class UserBackpackServiceImpl implements UserBackpackService {
             // 这里还可以进行业务检查
             // 我们这里的改名卡不太重要就直接操作了
             userBackpackDao.save(UserBackpackAdaptor.buildNewUserBackpack(uid, itemId, idempotentId));
-        } finally {
-            lock.unlock();
-        }
+        });
     }
 
     /**
