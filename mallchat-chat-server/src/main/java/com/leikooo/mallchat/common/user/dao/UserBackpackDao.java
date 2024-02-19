@@ -52,4 +52,10 @@ public class UserBackpackDao extends ServiceImpl<UserBackpackMapper, UserBackpac
                 .in(UserBackpack::getItemId, collect)
                 .list();
     }
+
+    public UserBackpack getByIdempotent(String idempotentId) {
+        return lambdaQuery()
+                .eq(UserBackpack::getIdempotent, idempotentId)
+                .one();
+    }
 }

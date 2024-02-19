@@ -13,6 +13,7 @@ import java.lang.reflect.Member;
 @Getter
 @AllArgsConstructor
 public enum CommonErrorEnum implements ErrorEnum{
+    LOCK_LIMIT(-3, "请求太频繁，请稍后再试"),
     PARAM_INVALID(-2, "参数校验失败"),
     SYSTEM_ERROR(-1, "系统异常"),
     BUSINESS_ERROR(0, "业务异常"),
