@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.util;
+package com.leikooo.mallchat.common.common.utils;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.abin.mallchat.utils.JsonUtils;

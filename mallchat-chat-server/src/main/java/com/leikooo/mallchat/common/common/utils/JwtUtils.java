@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.util;
+package com.leikooo.mallchat.common.common.utils;
 
 
 import com.auth0.jwt.JWT;

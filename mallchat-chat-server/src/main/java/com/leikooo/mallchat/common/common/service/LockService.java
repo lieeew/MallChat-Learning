@@ -24,7 +24,7 @@ public class LockService {
     private RedissonClient redissonClient;
 
     @SneakyThrows
-    public <T> T executeWithLock(String lockKey, int timeout, TimeUnit timeUnit, Supplier<T> supplier) {
+    public <T> T executeWithLock(String lockKey, int timeout, TimeUnit timeUnit, SupplierWithThrowable<T> supplier) {
         RLock lock = redissonClient.getLock(lockKey);
         boolean isSuccess = lock.tryLock(timeout, timeUnit);
         if (!isSuccess) {
@@ -36,6 +36,7 @@ public class LockService {
             lock.unlock();
         }
     }
+
 
     @SneakyThrows
     public <T> T executeWithLock(String lockKey, Supplier<T> supplier) {
@@ -52,7 +53,7 @@ public class LockService {
     }
 
     @SneakyThrows
-    public <T> T executeWithLock(String lockKey, Runnable runnable) {
+    public void executeWithLock(String lockKey, Runnable runnable) {
         RLock lock = redissonClient.getLock(lockKey);
         boolean isSuccess = lock.tryLock(-1, TimeUnit.MICROSECONDS);
         if (!isSuccess) {
@@ -60,9 +61,10 @@ public class LockService {
         }
         try {
             runnable.run();
-            return null;
         } finally {
             lock.unlock();
         }
     }
 }
+
+

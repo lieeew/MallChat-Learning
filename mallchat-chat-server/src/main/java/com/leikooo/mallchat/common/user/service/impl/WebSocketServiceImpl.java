@@ -2,10 +2,8 @@ package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
-import cn.hutool.jwt.JWTUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.leikooo.mallchat.common.common.util.JwtUtils;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;

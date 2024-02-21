@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.util;
+package com.leikooo.mallchat.common.common.utils;
 
 import com.leikooo.mallchat.common.common.domain.dto.RequestInfo;
 

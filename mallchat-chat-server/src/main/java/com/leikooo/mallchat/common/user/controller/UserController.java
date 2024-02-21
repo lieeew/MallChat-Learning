@@ -2,7 +2,7 @@ package com.leikooo.mallchat.common.user.controller;
 
 
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
-import com.leikooo.mallchat.common.common.util.RequestHolder;
+import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.ModifyNameReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.WearingBadgeReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * <p>

@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.util;
 
-import com.leikooo.mallchat.common.common.util.RedisUtils;
+import com.leikooo.mallchat.common.common.utils.RedisUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

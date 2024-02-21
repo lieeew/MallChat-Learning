@@ -2,7 +2,7 @@ package com.leikooo.mallchat.common.common.interceptor;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import com.leikooo.mallchat.common.common.domain.dto.RequestInfo;
-import com.leikooo.mallchat.common.common.util.RequestHolder;
+import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

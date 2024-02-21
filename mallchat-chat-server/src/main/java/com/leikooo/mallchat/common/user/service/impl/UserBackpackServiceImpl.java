@@ -1,13 +1,11 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import com.leikooo.mallchat.common.common.annotation.RedissonLock;
 import com.leikooo.mallchat.common.common.service.LockService;
-import com.leikooo.mallchat.common.common.util.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.UserBackpackAdaptor;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
 import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
 import com.leikooo.mallchat.common.user.service.UserBackpackService;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,17 +25,16 @@ public class UserBackpackServiceImpl implements UserBackpackService {
     private UserBackpackDao userBackpackDao;
 
     @Override
+    @RedissonLock(key = "#uid")
     public void acquireItem(Long uid, Long itemId, Integer messageType, String businessId) {
         String idempotentId = getIdempotent(itemId, messageType, businessId);
-        lockService.executeWithLock(idempotentId, () -> {
-            UserBackpack userBackpack = userBackpackDao.getByIdempotent(idempotentId);
-            if (Objects.nonNull(userBackpack)) {
-                return;
-            }
-            // 这里还可以进行业务检查
-            // 我们这里的改名卡不太重要就直接操作了
-            userBackpackDao.save(UserBackpackAdaptor.buildNewUserBackpack(uid, itemId, idempotentId));
-        });
+        UserBackpack userBackpack = userBackpackDao.getByIdempotent(idempotentId);
+        if (Objects.nonNull(userBackpack)) {
+            return;
+        }
+        // 这里还可以进行业务检查
+        // 我们这里的改名卡不太重要就直接操作了
+        userBackpackDao.save(UserBackpackAdaptor.buildNewUserBackpack(uid, itemId, idempotentId));
     }
 
     /**

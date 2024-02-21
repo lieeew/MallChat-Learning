@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 /**
  * @author leikooo
- * @description
+ * @description 启动类
  */
 
 @SpringBootApplication(scanBasePackages = {"com.leikooo.mallchat"})

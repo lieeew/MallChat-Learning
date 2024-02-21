@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
-import com.leikooo.mallchat.common.common.util.AssertUtil;
+import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
 import com.leikooo.mallchat.common.user.dao.ItemConfigDao;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

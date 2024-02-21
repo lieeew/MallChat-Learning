@@ -2,8 +2,8 @@ package com.leikooo.mallchat.common.user.service.impl;
 
 import com.leikooo.mallchat.common.common.constant.RedisKey;
 import com.leikooo.mallchat.common.user.service.LoginService;
-import com.leikooo.mallchat.common.common.util.JwtUtils;
-import com.leikooo.mallchat.common.common.util.RedisUtils;
+import com.leikooo.mallchat.common.common.utils.JwtUtils;
+import com.leikooo.mallchat.common.common.utils.RedisUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 

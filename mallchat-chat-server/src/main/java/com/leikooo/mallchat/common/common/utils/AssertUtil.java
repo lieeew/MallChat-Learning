@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.util;
+package com.leikooo.mallchat.common.common.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.leikooo.mallchat.common.common.exception.BusinessException;
