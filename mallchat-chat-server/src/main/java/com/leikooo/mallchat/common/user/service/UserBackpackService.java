@@ -1,9 +1,6 @@
 package com.leikooo.mallchat.common.user.service;
 
 
-import com.leikooo.mallchat.common.common.domain.enums.IdempotentEnum;
-import org.springframework.stereotype.Service;
-
 /**
  * <p>
  * 用户背包表 服务类
@@ -15,8 +12,8 @@ import org.springframework.stereotype.Service;
 public interface UserBackpackService {
     /**
      * 获取物品
-     * @param uid
-     * @param itemId
+     * @param uid 用户 id
+     * @param itemId 物品 id
      * @param messageType @see com.leikooo.mallchat.common.common.domain.enums.IdempotentEnum
      * @param businessId
      */

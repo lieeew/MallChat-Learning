@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 /**
  * Description: 微信api交互接口
  *
- * @author <a href="https://github.com/lieeew">abin</a>
+ * @author <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-19
  */
 @Slf4j
@@ -34,15 +34,7 @@ public class WxPortalController {
 
     private final WxMpMessageRouter messageRouter;
 
-    @Resource
-    private WxMsgService wxMsgService;
-
-    @PostMapping("/test")
-    public String test(@RequestParam String code) throws WxErrorException {
-        WxMpQrcodeService qrcodeService = wxService.getQrcodeService();
-        WxMpQrCodeTicket wxMpQrCodeTicket = qrcodeService.qrCodeCreateTmpTicket(code, 10000);
-        return wxMpQrCodeTicket.getUrl();
-    }
+    private final WxMsgService wxMsgService;
 
     @GetMapping(produces = "text/plain;charset=utf-8")
     public String authGet(@RequestParam(name = "signature", required = false) String signature,
@@ -73,8 +65,9 @@ public class WxPortalController {
         } catch (Exception e) {
             log.error("callBack error", e);
         }
-        // todo 重定向到前端页面
-        return new RedirectView("https://www.bing.com");
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://mp.weixin.qq.com/s/m1SRsBG96kLJW5mPe4AVGA");
+        return redirectView;
     }
 
     @PostMapping(produces = "application/xml; charset=UTF-8")

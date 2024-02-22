@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static me.chanjar.weixin.common.api.WxConsts.EventType;
+import static me.chanjar.weixin.common.api.WxConsts.EventType.SCAN;
 import static me.chanjar.weixin.common.api.WxConsts.EventType.SUBSCRIBE;
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
 
@@ -28,13 +28,9 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
 @EnableConfigurationProperties(WxMpProperties.class)
 public class WxMpConfiguration {
     private final LogHandler logHandler;
-
     private final MsgHandler msgHandler;
-
     private final SubscribeHandler subscribeHandler;
-
     private final ScanHandler scanHandler;
-
     private final WxMpProperties properties;
 
     @Bean
@@ -71,7 +67,7 @@ public class WxMpConfiguration {
         newRouter.rule().async(false).msgType(EVENT).event(SUBSCRIBE).handler(this.subscribeHandler).end();
 
         // 扫码事件
-        newRouter.rule().async(false).msgType(EVENT).event(EventType.SCAN).handler(this.scanHandler).end();
+        newRouter.rule().async(false).msgType(EVENT).event(SCAN).handler(this.scanHandler).end();
 
         // 默认
         newRouter.rule().async(false).handler(this.msgHandler).end();

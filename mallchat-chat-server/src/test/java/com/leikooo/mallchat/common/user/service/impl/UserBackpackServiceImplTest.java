@@ -22,6 +22,6 @@ public class UserBackpackServiceImplTest {
 
     @Test
     public void acquireItem() {
-        userBackpackService.acquireItem(1L, ItemEnum.REG_TOP10_BADGE.getId(), IdempotentEnum.UID.getType(), "1");
+        userBackpackService.acquireItem(1L, ItemEnum.CONTRIBUTOR.getId(), IdempotentEnum.UID.getType(), "1");
     }
 }

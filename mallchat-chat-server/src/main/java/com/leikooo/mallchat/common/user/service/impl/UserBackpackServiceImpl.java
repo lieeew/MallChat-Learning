@@ -1,7 +1,7 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.leikooo.mallchat.common.common.annotation.RedissonLock;
-import com.leikooo.mallchat.common.common.service.LockService;
 import com.leikooo.mallchat.common.user.adapter.UserBackpackAdaptor;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
 import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
@@ -19,15 +19,19 @@ import java.util.Objects;
 @Service
 public class UserBackpackServiceImpl implements UserBackpackService {
     @Resource
-    private LockService lockService;
-
-    @Resource
     private UserBackpackDao userBackpackDao;
 
     @Override
-    @RedissonLock(key = "#uid")
     public void acquireItem(Long uid, Long itemId, Integer messageType, String businessId) {
         String idempotentId = getIdempotent(itemId, messageType, businessId);
+        // 1、可以自己注入自己然后调用 @Lazy @Resource private UserBackpackServiceImpl userBackpackServiceImpl;
+        // 2、可以使用 ((UserBackpackServiceImpl) AopContext.currentProxy()).doAcquireItem(uid, itemId, idempotentId);
+        // 3、使用 SpringUtil 获取 bean 调用
+        SpringUtil.getBean(this.getClass()).doAcquireItem(uid, itemId, idempotentId);
+    }
+
+    @RedissonLock(key = "#idempotentId", waitTime = 5000)
+    public void doAcquireItem(Long uid, Long itemId, String idempotentId) {
         UserBackpack userBackpack = userBackpackDao.getByIdempotent(idempotentId);
         if (Objects.nonNull(userBackpack)) {
             return;

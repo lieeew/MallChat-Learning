@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import com.leikooo.mallchat.common.common.event.UserRegisterEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
 import com.leikooo.mallchat.common.user.dao.ItemConfigDao;
@@ -15,6 +16,7 @@ import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import com.leikooo.mallchat.common.user.service.UserService;
 import com.leikooo.mallchat.common.user.service.cache.ItemCache;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,11 +44,15 @@ public class UserServiceImpl implements UserService {
     @Resource
     private ItemConfigDao itemConfigDao;
 
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Transactional
     @Override
     public Long saveUser(User user) {
         userDao.save(user);
-        // todo 推送注册成功事件
+        // 推送注册成功事件
+        applicationEventPublisher.publishEvent(new UserRegisterEvent(this, user));
         return user.getId();
     }
 
