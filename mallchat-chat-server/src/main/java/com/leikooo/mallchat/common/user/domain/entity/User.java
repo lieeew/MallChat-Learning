@@ -1,11 +1,14 @@
 package com.leikooo.mallchat.common.user.domain.entity;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -103,7 +106,7 @@ public class User implements Serializable {
     private Date updateTime;
 
     public void refreshIp(String ip) {
-        if (ipInfo == null) {
+        if (ObjectUtil.isNull(ipInfo)) {
             ipInfo = new IpInfo();
         }
         ipInfo.refreshIp(ip);

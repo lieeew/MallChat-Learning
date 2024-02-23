@@ -1,7 +1,7 @@
 package com.leikooo.mallchat.common.common.utils;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.abin.mallchat.utils.JsonUtils;
+import com.leikooo.mallchat.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.common.domain.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.leikooo.mallchat.common.common.exception.ErrorEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +13,7 @@ import lombok.Data;
  */
 @Data
 @ApiModel("基础返回体")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiResult<T> {
     @ApiModelProperty("成功标识true or false")
     private Boolean success;

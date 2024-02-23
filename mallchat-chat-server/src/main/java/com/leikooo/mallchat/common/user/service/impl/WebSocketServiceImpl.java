@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.leikooo.mallchat.common.common.event.UserOnlineEvent;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.dto.WSChannelExtraDTO;
@@ -11,17 +12,20 @@ import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.service.LoginService;
 import com.leikooo.mallchat.common.user.service.WebSocketService;
+import com.leikooo.mallchat.common.websocket.NettyUtil;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,6 +64,9 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void handleLoginReq(Channel channel) {
@@ -155,6 +162,10 @@ public class WebSocketServiceImpl implements WebSocketService {
     private void loginSuccess(Channel channel, WSBaseResp<?> wsBaseResp, User user) {
         WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
         wsChannelExtraDTO.setUid(user.getId());
+        // todo ip 相关
+        user.setUpdateTime(new Date());
+        user.refreshIp(NettyUtil.getAttr(channel, NettyUtil.IP));
+        applicationEventPublisher.publishEvent(new UserOnlineEvent(this, user));
         sendMsg(channel,wsBaseResp);
     }
 }
