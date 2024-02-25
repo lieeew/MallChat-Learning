@@ -4,6 +4,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import com.leikooo.mallchat.common.common.domain.dto.RequestInfo;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 

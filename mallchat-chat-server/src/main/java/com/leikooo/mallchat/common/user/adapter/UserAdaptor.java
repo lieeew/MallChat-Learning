@@ -62,4 +62,11 @@ public class UserAdaptor {
                 .sorted(Comparator.comparing(BadgeResp::getWearing, Comparator.reverseOrder()).thenComparing(BadgeResp::getObtain, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
     }
+
+    public static User buildBlackUser(User blockUser) {
+        return User.builder()
+                .id(blockUser.getId())
+                .status(YesOrNoEnum.YES.getStatus())
+                .build();
+    }
 }

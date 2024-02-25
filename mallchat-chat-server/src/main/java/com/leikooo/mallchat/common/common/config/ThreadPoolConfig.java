@@ -47,4 +47,18 @@ public class ThreadPoolConfig implements AsyncConfigurer {
         executor.initialize();
         return executor;
     }
+    @Bean(WS_EXECUTOR)
+    public ThreadPoolTaskExecutor websocketExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(16);
+        executor.setMaxPoolSize(16);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setQueueCapacity(1000);
+        executor.setThreadNamePrefix("websocketExecutor-executor-");
+        // 满了直接放弃
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
+        executor.setThreadFactory(new MyThreadFactory(executor));
+        executor.initialize();
+        return executor;
+    }
 }

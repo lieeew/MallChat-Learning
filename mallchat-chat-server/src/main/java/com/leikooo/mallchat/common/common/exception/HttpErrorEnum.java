@@ -18,7 +18,9 @@ import java.io.IOException;
 @Getter
 @AllArgsConstructor
 public enum HttpErrorEnum {
-    ACCESS_DEFINE(401, "登录失效请重新登录");
+    ACCESS_DEFINE(401, "登录失效请重新登录"),
+    USER_LOGIN_ACCESS_DEFINE(402, "您已被封禁"),
+    ;
 
     private final Integer code;
 

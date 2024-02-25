@@ -13,6 +13,7 @@ import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.service.IpService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,13 +23,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 通过继承 DisposableBean 实现优雅停机
+ *
  * @author <a href="https://github.com/lieeew">leikooo</a>
  * @date 2024/2/22
  * @description
  */
 @Service
 @Slf4j
-public class IpServiceImpl implements IpService {
+public class IpServiceImpl implements IpService, DisposableBean {
     public static final String GET_IP_INFO_REQUEST = "https://ip.taobao.com/outGetIpInfo?ip=%s&accessKey=alibaba-inc";
 
     /**
@@ -49,9 +52,6 @@ public class IpServiceImpl implements IpService {
             User user = userDao.getById(uid);
             IpInfo ipInfo = user.getIpInfo();
             String ip = ipInfo.isNeedRefresh();
-            if (StringUtils.isEmpty(ip)) {
-                return;
-            }
             IpDetail ipDetail = getIpDetailInfoThreeTime(ip);
             if (ObjectUtil.isNotNull(ipDetail)) {
                 ipInfo.refreshIpDetail(ipDetail);
@@ -65,6 +65,9 @@ public class IpServiceImpl implements IpService {
     }
 
     private IpDetail getIpDetailInfoThreeTime(String ip) {
+        if (StringUtils.isEmpty(ip)) {
+            return null;
+        }
         for (int i = 0; i < 3; i++) {
             IpDetail ipDetailInfo = getIpDetailInfo(ip);
             if (ObjectUtil.isNotNull(ipDetailInfo)) {
@@ -88,5 +91,16 @@ public class IpServiceImpl implements IpService {
             log.info("IpServiceImpl#getIpDetailInfo error", e);
         }
         return null;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        EXECUTOR.shutdown();
+        // 等待 30s 如果没有完成就没有完成
+        if (!EXECUTOR.awaitTermination(30, TimeUnit.SECONDS)) {
+            if (log.isErrorEnabled()) {
+                log.error("Timed out while waiting for executor [{}] to terminate", EXECUTOR);
+            }
+        }
     }
 }

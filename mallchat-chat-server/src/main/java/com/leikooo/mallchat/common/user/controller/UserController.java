@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.user.controller;
 
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
+import com.leikooo.mallchat.common.user.domain.vo.request.user.BlockUserReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.ModifyNameReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.WearingBadgeReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
@@ -59,6 +60,13 @@ public class UserController {
     @ApiOperation("佩戴徽章")
     public ApiResult<Void> useItem(@Valid @RequestBody WearingBadgeReq req) {
         userService.wearingBadge(RequestHolder.get().getUid(), req.getItemId());
+        return ApiResult.success();
+    }
+    @PutMapping("/black")
+    @ApiOperation("拉黑用户")
+    public ApiResult<Void> blockUser(@Valid @RequestBody BlockUserReq req) {
+        Long uid = RequestHolder.get().getUid();
+        userService.blockUser(uid, req.getUid());
         return ApiResult.success();
     }
 

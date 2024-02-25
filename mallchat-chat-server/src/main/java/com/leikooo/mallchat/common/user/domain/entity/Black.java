@@ -4,16 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * <p>
  * 黑名单
- * </p>
  *
  * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2023-05-21
@@ -21,6 +18,9 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("black")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Black implements Serializable {
 
     private static final long serialVersionUID = 1L;

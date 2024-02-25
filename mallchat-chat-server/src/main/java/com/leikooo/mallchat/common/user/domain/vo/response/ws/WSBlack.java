@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.user.domain.vo.response.ws;
 
+import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

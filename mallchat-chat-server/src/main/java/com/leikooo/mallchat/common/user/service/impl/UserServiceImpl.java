@@ -1,27 +1,32 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import com.leikooo.mallchat.common.common.event.UserBlackEvent;
 import com.leikooo.mallchat.common.common.event.UserRegisterEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
+import com.leikooo.mallchat.common.user.dao.BlackDao;
 import com.leikooo.mallchat.common.user.dao.ItemConfigDao;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
 import com.leikooo.mallchat.common.user.dao.UserDao;
-import com.leikooo.mallchat.common.user.domain.entity.ItemConfig;
-import com.leikooo.mallchat.common.user.domain.entity.User;
-import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
+import com.leikooo.mallchat.common.user.domain.entity.*;
+import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemTypeEnum;
+import com.leikooo.mallchat.common.user.domain.enums.RoleEnum;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
+import com.leikooo.mallchat.common.user.service.RoleService;
 import com.leikooo.mallchat.common.user.service.UserService;
 import com.leikooo.mallchat.common.user.service.cache.ItemCache;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +51,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private BlackDao blackDao;
 
     @Transactional
     @Override
@@ -96,5 +107,43 @@ public class UserServiceImpl implements UserService {
         AssertUtil.isNotEmpty(itemConfig, "该徽章不存在");
         // 佩戴徽章
         userDao.wearingBadge(uid, itemId);
+    }
+
+    /**
+     * 封禁用户
+     *
+     * @param uid      操作者 uid
+     * @param blockUid 被封号 uid
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void blockUser(Long uid, Integer blockUid) {
+        boolean hasPower = roleService.hasPower(uid, RoleEnum.CHAT_MANAGER);
+        AssertUtil.isTrue(hasPower, "您没有权限");
+        Black insertBlack = Black.builder()
+                .type(BlackTypeEnum.UID.getType())
+                .target(blockUid.toString())
+                .build();
+        blackDao.save(insertBlack);
+        User blockUser = userDao.getById(blockUid);
+        String creatIp = Optional.ofNullable(blockUser).map(User::getIpInfo).map(IpInfo::getCreateIp).orElse("");
+        String updateIp = Optional.ofNullable(blockUser).map(User::getIpInfo).map(IpInfo::getUpdateIp).orElse("");
+        if (StringUtils.equals(creatIp, updateIp)) {
+            blockIpIfNotEmpty(creatIp);
+        } else {
+            blockIpIfNotEmpty(creatIp);
+            blockIpIfNotEmpty(updateIp);
+        }
+        applicationEventPublisher.publishEvent(new UserBlackEvent(this, blockUser));
+    }
+
+    private void blockIpIfNotEmpty(String ip) {
+        if (StringUtils.isNotEmpty(ip)) {
+            Black build = Black.builder()
+                    .type(BlackTypeEnum.IP.getType())
+                    .target(ip)
+                    .build();
+            blackDao.save(build);
+        }
     }
 }

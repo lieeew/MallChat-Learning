@@ -24,4 +24,6 @@ public interface UserService {
     List<BadgeResp> getBadge(Long uid);
 
     void wearingBadge(Long uid, Long itemId);
+
+    void blockUser(Long uid, Integer blockUid);
 }

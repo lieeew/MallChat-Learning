@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.user.adapter;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
+import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSBlack;
 import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginSuccess;
 import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginUrl;
 import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSMessage;
@@ -50,5 +51,13 @@ public class WebSocketAdapter {
         WSBaseResp<Object> wsBaseResp = new WSBaseResp<>();
         wsBaseResp.setType(INVALIDATE_TOKEN.getType());
         return wsBaseResp;
+    }
+
+    public static WSBaseResp<?> buildBlackResp(Long id) {
+        WSBlack wsBlack = WSBlack.builder().uid(id).build();
+        return WSBaseResp.<WSBlack>builder()
+                .type(WSRespTypeEnum.BLACK.getType())
+                .data(wsBlack)
+                .build();
     }
 }

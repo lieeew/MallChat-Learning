@@ -65,7 +65,7 @@ public class NettyWebSocketServer {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         // 发送心跳包
-                        pipeline.addLast(new IdleStateHandler(60 * 5, 0, 0));
+                        pipeline.addLast(new IdleStateHandler(60, 0, 0));
                         // http 协议使用 http 解码器
                         pipeline.addLast(new HttpServerCodec());
                         // 以快方式写

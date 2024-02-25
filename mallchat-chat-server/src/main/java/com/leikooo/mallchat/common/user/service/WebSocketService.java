@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.user.service;
 
+import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
+import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSBlack;
 import io.netty.channel.Channel;
 
 /**
@@ -41,4 +43,6 @@ public interface WebSocketService {
     void waitAuthorized(Integer code);
 
     void authorized(Channel channel, String token);
+
+    void sendToAllOnline(WSBaseResp<?> wsBaseResp);
 }

@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.common.config;
 
+import com.leikooo.mallchat.common.common.interceptor.BlackInterceptor;
 import com.leikooo.mallchat.common.common.interceptor.CollectorInterceptor;
 import com.leikooo.mallchat.common.common.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +22,16 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Resource
     private CollectorInterceptor collectorInterceptor;
 
+    @Resource
+    private BlackInterceptor blackInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
                 .addPathPatterns("/capi/**");
         registry.addInterceptor(collectorInterceptor)
+                .addPathPatterns("/capi/**");
+        registry.addInterceptor(blackInterceptor)
                 .addPathPatterns("/capi/**");
     }
 }

@@ -1,6 +1,10 @@
 package com.leikooo.mallchat.common.user.domain.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 
 /**
  * Description: ws的基本返回信息体
@@ -8,6 +12,9 @@ import lombok.Data;
  * Date: 2023-03-19
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class WSBaseResp<T> {
     /**
      * ws推送给前端的消息
