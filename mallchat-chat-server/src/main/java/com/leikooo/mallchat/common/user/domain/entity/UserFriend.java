@@ -1,8 +1,7 @@
 package com.leikooo.mallchat.common.user.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,8 +15,11 @@ import java.util.Date;
  * @since 2023-07-16
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("user_friend")
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserFriend implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,7 +37,7 @@ public class UserFriend implements Serializable {
     private Long uid;
 
     /**
-     * 好友uid
+     * 好友 uid
      */
     @TableField("friend_uid")
     private Long friendUid;

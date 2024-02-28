@@ -30,6 +30,7 @@ public class CursorPageBaseReq {
     private String cursor;
 
     public Page plusPage() {
+        // 不需要查找总数
         return new Page(1, this.pageSize, false);
     }
 

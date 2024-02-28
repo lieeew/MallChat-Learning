@@ -21,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendCheckReq {
-
     @NotEmpty
     @Size(max = 50)
     @ApiModelProperty("校验好友的uid")

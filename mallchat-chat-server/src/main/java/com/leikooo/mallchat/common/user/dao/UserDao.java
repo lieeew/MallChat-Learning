@@ -40,4 +40,11 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
                 .set(User::getItemId, itemId)
                 .update();
     }
+
+    public Integer getUserStatus(Long uid) {
+        return lambdaQuery()
+                .eq(User::getId, uid)
+                .one()
+                .getStatus();
+    }
 }

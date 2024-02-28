@@ -24,6 +24,9 @@ public class FriendCheckResp {
     private List<FriendCheck> checkedList;
 
     @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class FriendCheck {
         private Long uid;
         private Boolean isFriend;
