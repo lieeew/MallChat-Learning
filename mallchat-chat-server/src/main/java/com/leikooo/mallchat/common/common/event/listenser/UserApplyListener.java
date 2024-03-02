@@ -27,8 +27,8 @@ public class UserApplyListener {
     @EventListener(UserApplyEvent.class)
     public void countUserApplyUnRead (UserApplyEvent userApplyEvent) {
         UserApply userApply = userApplyEvent.getUserApply();
-        int unReadCount = userApplyDao.getUnReadCount(userApply.getUid());
-        Long targetId = userApply.getTargetId();
-        webSocketService.sendToUid(WebSocketAdapter.buildApplySend(unReadCount, targetId), userApply.getUid());
+        int unReadCount = userApplyDao.getUnReadCount(userApply.getTargetId());
+        Long uid = userApply.getUid();
+        webSocketService.sendToUid(WebSocketAdapter.buildApplySend(unReadCount, uid), userApply.getUid());
     }
 }

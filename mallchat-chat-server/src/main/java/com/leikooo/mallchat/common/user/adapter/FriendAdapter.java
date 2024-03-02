@@ -1,5 +1,8 @@
 package com.leikooo.mallchat.common.user.adapter;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.leikooo.mallchat.common.common.utils.AssertUtil;
+import com.leikooo.mallchat.common.user.domain.entity.GenerateRoomKeyResult;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.entity.UserApply;
 import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
@@ -7,10 +10,9 @@ import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyRes
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -40,5 +42,13 @@ public class FriendAdapter {
                 .status(p.getStatus())
                 .type(p.getType())
                 .build()).collect(Collectors.toList());
+    }
+
+    public static GenerateRoomKeyResult generateRoomKey(Long uid, Long applyId) {
+        List<Long> collect = Stream.of(uid, applyId).sorted(Comparator.comparing(Long::shortValue)).collect(Collectors.toList());
+        return GenerateRoomKeyResult.builder()
+                .roomKey(collect.get(0) + "_" + collect.get(1))
+                .uidList(collect)
+                .build();
     }
 }

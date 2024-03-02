@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.chat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.leikooo.mallchat.common.user.domain.entity.Contact;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -11,10 +12,10 @@ import java.util.List;
  * 会话列表 Mapper 接口
  * </p>
  *
- * @author <a href="https://github.com/lieeew">abin</a>
+ * @author <a href="https://github.com/zongzibinbin">abin</a>
  * @since 2023-07-16
  */
-//public interface ContactMapper extends BaseMapper<Contact> {
-//
-//    void refreshOrCreateActiveTime(@Param("roomId") Long roomId, @Param("memberUidList") List<Long> memberUidList, @Param("msgId") Long msgId, @Param("activeTime") Date activeTime);
-//}
+public interface ContactMapper extends BaseMapper<Contact> {
+
+    void refreshOrCreateActiveTime(@Param("roomId") Long roomId, @Param("memberUidList") List<Long> memberUidList, @Param("msgId") Long msgId, @Param("activeTime") Date activeTime);
+}

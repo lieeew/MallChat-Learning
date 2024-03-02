@@ -23,5 +23,4 @@ public class FriendApproveReq {
     @NotNull
     @ApiModelProperty("申请id")
     private Long applyId;
-
 }

@@ -40,7 +40,7 @@ public class UserApplyDao extends ServiceImpl<UserApplyMapper, UserApply> {
 
     public int getUnReadCount(Long uid) {
         return lambdaQuery()
-                .eq(UserApply::getUid, uid)
+                .eq(UserApply::getTargetId, uid)
                 .count();
     }
 
@@ -52,9 +52,7 @@ public class UserApplyDao extends ServiceImpl<UserApplyMapper, UserApply> {
     }
 
     /**
-     *
-     *
-     * @param uid 就是 targetUid 因为自己是被申请的用户
+     * @param uid              就是 targetUid 因为自己是被申请的用户
      * @param waitReadApplyUid 申请人 uid 列表
      */
     public void readFriendApply(Long uid, Set<Long> waitReadApplyUid) {
@@ -62,6 +60,13 @@ public class UserApplyDao extends ServiceImpl<UserApplyMapper, UserApply> {
                 .eq(UserApply::getTargetId, uid)
                 .in(UserApply::getUid, waitReadApplyUid)
                 .set(UserApply::getReadStatus, ApplyReadStatusEnum.READ.getCode())
+                .update();
+    }
+
+    public void approveFriendApply(Long id) {
+        lambdaUpdate()
+                .eq(UserApply::getId, id)
+                .set(UserApply::getStatus, ApplyStatusEnum.AGREE.getCode())
                 .update();
     }
 }

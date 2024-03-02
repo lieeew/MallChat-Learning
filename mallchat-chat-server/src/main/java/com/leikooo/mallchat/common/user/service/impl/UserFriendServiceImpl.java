@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leikooo.mallchat.common.common.annotation.RedissonLock;
@@ -11,7 +12,9 @@ import com.leikooo.mallchat.common.common.domain.vo.response.PageBaseResp;
 import com.leikooo.mallchat.common.common.event.UserApplyEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.FriendAdapter;
+import com.leikooo.mallchat.common.user.adapter.FriendRoomAdapter;
 import com.leikooo.mallchat.common.user.adapter.UserApplyAdapter;
+import com.leikooo.mallchat.common.user.adapter.UserFriendAdapter;
 import com.leikooo.mallchat.common.user.dao.UserApplyDao;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.dao.UserFriendDao;
@@ -19,6 +22,7 @@ import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.entity.UserApply;
 import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
 import com.leikooo.mallchat.common.user.domain.enums.ApplyReadStatusEnum;
+import com.leikooo.mallchat.common.user.domain.enums.ApplyStatusEnum;
 import com.leikooo.mallchat.common.user.domain.enums.UserStatusEnum;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendApplyReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendApproveReq;
@@ -106,7 +110,45 @@ public class UserFriendServiceImpl implements UserFriendService {
     @RedissonLock(key = "user:friend:approve:#uid")
     @Override
     public void applyApprove(Long uid, FriendApproveReq req) {
+        Long applyId = req.getApplyId();
+        User user = userDao.getById(applyId);
+        AssertUtil.notEqual(user.getStatus(), UserStatusEnum.BLACK.getStatus(), "对方已经被封禁, 无法添加好友");
+        // 判断是否有请求
+        UserApply userApply = userApplyDao.isHaveApply(applyId, uid);
+        AssertUtil.isNotEmpty(userApply, "没有好友申请");
+        AssertUtil.equal(userApply.getTargetId(), uid, "不存在申请记录");
+        AssertUtil.equal(userApply.getStatus(), ApplyStatusEnum.WAIT_APPROVAL.getCode(), "已同意好友申请");
+        // 同意申请
+        userApplyDao.approveFriendApply(userApply.getId());
+        // 添加好友关系
+        creatUserFriend(uid, applyId);
+        // 创建房间
+        creatFriendRoom(uid, applyId);
+    }
 
+    /**
+     * 创建房间
+     *
+     * @param uid     被申请人的 uid 我自己
+     * @param applyId
+     */
+    private void creatFriendRoom(Long uid, Long applyId) {
+        String roomKey = FriendAdapter.generateRoomKey(uid, applyId).getRoomKey();
+        List<Long> uidList = FriendAdapter.generateRoomKey(uid, applyId).getUidList();
+        FriendRoomAdapter.buildFriendRoom(roomKey, uidList);
+    }
+
+    /**
+     * 创建好友关系（双向好友关系）
+     *
+     * @param targetUid targetUid 被申请人的 uid
+     * @param applyId   申请人 uid
+     */
+    private void creatUserFriend(Long targetUid, Long applyId) {
+        userFriendDao.saveBatch(ListUtil.of(
+                UserFriendAdapter.buildUserFriend(targetUid, applyId),
+                UserFriendAdapter.buildUserFriend(applyId, targetUid)
+        ));
     }
 
     @Override
@@ -126,6 +168,7 @@ public class UserFriendServiceImpl implements UserFriendService {
         return PageBaseResp.init((int) page.getCurrent(), (int) page.getSize(), page.getTotal(), FriendAdapter.buildFriendApplyPageResp(page.getRecords()));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void deleteFriend(Long uid, FriendDeleteReq req) {
         // 1、判断是否是好友
@@ -136,6 +179,8 @@ public class UserFriendServiceImpl implements UserFriendService {
         AssertUtil.notEqual(user.getStatus(), UserStatusEnum.BLACK.getStatus(), "对方已经被封禁, 已经自动删除对方所有好友");
         // 3、删除好友
         userFriendDao.deleteFriend(uid, req.getTargetUid());
+        // 4、删除房间
+        // todo 删除房间
     }
 
     /**
