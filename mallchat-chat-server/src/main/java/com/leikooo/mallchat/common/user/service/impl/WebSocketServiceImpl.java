@@ -126,11 +126,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public Boolean scanLoginSuccess(Integer loginCode, Long uid) {
+    public void scanLoginSuccess(Integer loginCode, Long uid) {
         Channel channel = WAITING_LOGIN_MAP.getIfPresent(loginCode);
         if (Objects.isNull(channel)) {
             // 没有对应的 channel
-            return false;
+            return;
         }
         // 移除 code
         WAITING_LOGIN_MAP.invalidate(loginCode);
@@ -139,7 +139,6 @@ public class WebSocketServiceImpl implements WebSocketService {
         // 获取登录的 user
         User user = userDao.getById(uid);
         loginSuccess(channel, WebSocketAdapter.buildLoginSuccessResp(user, token), user);
-        return true;
     }
 
     @Override
@@ -166,6 +165,15 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Override
     public void sendToAllOnline(WSBaseResp<?> wsBaseResp) {
         ONLINE_WS_MAP.forEach((channel, wsChannelExtraDTO) -> websocketExecutor.execute(() -> sendMsg(channel, wsBaseResp)));
+    }
+
+    @Override
+    public void sendToUid(WSBaseResp<?> wsResp, Long uid) {
+        ONLINE_WS_MAP.forEach((channel, wsChannelExtraDTO) -> {
+            if (uid.equals(wsChannelExtraDTO.getUid())) {
+                websocketExecutor.execute(() -> sendMsg(channel, wsResp));
+            }
+        });
     }
 
     /**

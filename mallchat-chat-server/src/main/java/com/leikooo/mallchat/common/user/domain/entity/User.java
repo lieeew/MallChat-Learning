@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.leikooo.mallchat.common.user.domain.enums.ChatActiveStatusEnum;
+import com.leikooo.mallchat.common.user.domain.enums.UserStatusEnum;
 import lombok.*;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -53,6 +53,7 @@ public class User implements Serializable {
 
     /**
      * 性别 1为男性，2为女性
+     * @see com.leikooo.mallchat.common.user.domain.enums.SexEnum
      */
     @TableField("sex")
     private Integer sex;
@@ -65,6 +66,7 @@ public class User implements Serializable {
 
     /**
      * 上下线状态 1在线 2离线
+     * @see ChatActiveStatusEnum
      */
     @TableField("active_status")
     private Integer activeStatus;
@@ -89,6 +91,7 @@ public class User implements Serializable {
 
     /**
      * 用户状态 0正常 1拉黑
+     * @see UserStatusEnum
      */
     @TableField("status")
     private Integer status;

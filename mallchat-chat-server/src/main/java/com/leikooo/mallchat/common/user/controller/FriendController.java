@@ -1,12 +1,18 @@
 package com.leikooo.mallchat.common.user.controller;
 
 import com.leikooo.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
+import com.leikooo.mallchat.common.common.domain.vo.request.PageBaseReq;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
+import com.leikooo.mallchat.common.common.domain.vo.response.PageBaseResp;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
+import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendApplyReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendCheckReq;
+import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendDeleteReq;
+import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendCheckResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
+import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendUnreadResp;
 import com.leikooo.mallchat.common.user.service.UserFriendService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -42,4 +48,33 @@ public class FriendController {
         return ApiResult.success(userFriendService.getFriendList(uid, req));
     }
 
+    @PostMapping("/apply")
+    @ApiOperation("申请添加好友")
+    public ApiResult<Void> applyAddFriend(@RequestBody @Valid FriendApplyReq req) {
+        Long uid = RequestHolder.get().getUid();
+        userFriendService.applyAddFriend(uid, req);
+        return ApiResult.success();
+    }
+
+    @GetMapping("/apply/unread")
+    @ApiOperation("获取未读好友申请数量")
+    public ApiResult<FriendUnreadResp> getUnreadFriendUnm() {
+        Long uid = RequestHolder.get().getUid();
+        return ApiResult.success(userFriendService.unread(uid));
+    }
+
+    @GetMapping("/apply/page")
+    @ApiOperation("好友申请列表")
+    public ApiResult<PageBaseResp<FriendApplyResp>> getFriendApplyList(@RequestBody @Valid PageBaseReq req) {
+        Long uid = RequestHolder.get().getUid();
+        return ApiResult.success(userFriendService.getFriendApplyList(uid, req));
+    }
+
+    @DeleteMapping()
+    @ApiOperation("删除好友")
+    public ApiResult<?> deleteFriend(@RequestParam @Valid FriendDeleteReq req) {
+        Long uid = RequestHolder.get().getUid();
+        userFriendService.deleteFriend(uid, req);
+        return ApiResult.success();
+    }
 }

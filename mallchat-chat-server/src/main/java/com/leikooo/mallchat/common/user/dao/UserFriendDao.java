@@ -9,8 +9,6 @@ import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
 import com.leikooo.mallchat.common.user.mapper.UserFriendMapper;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -35,5 +33,53 @@ public class UserFriendDao extends ServiceImpl<UserFriendMapper, UserFriend> {
                 .eq(UserFriend::getUid, uid)
                 .in(UserFriend::getFriendUid, uidList)
                 .list();
+    }
+
+    /**
+     * @param uid
+     * @param targetUid
+     * @return true 这个用户存在
+     */
+    public boolean isHaveUserFriend(Long uid, Long targetUid) {
+        return lambdaQuery()
+                .select(UserFriend::getUid, UserFriend::getUid)
+                .eq(UserFriend::getUid, uid)
+                .eq(UserFriend::getFriendUid, targetUid)
+                .nonEmptyOfEntity();
+    }
+
+    /**
+     * 获取我的某一个好友
+     *
+     * @param uid
+     * @param targetUid
+     * @return
+     */
+    public UserFriend getMyFriend(Long uid, Long targetUid) {
+        return lambdaQuery()
+                .eq(UserFriend::getUid, uid)
+                .eq(UserFriend::getFriendUid, targetUid)
+                .one();
+    }
+
+    public boolean deleteUserAllFriends(Long uid) {
+        return lambdaUpdate()
+                .set(UserFriend::getDeleteStatus, YesOrNoEnum.YES.getStatus())
+                .in(
+                        UserFriend::getFriendUid,
+                        lambdaQuery()
+                                .select(UserFriend::getFriendUid)
+                                .eq(UserFriend::getUid, uid)
+                                .list()
+                )
+                .update();
+    }
+
+    public void deleteFriend(Long uid, Long targetUid) {
+        lambdaUpdate()
+                .set(UserFriend::getDeleteStatus, YesOrNoEnum.YES.getStatus())
+                .eq(UserFriend::getUid, uid)
+                .eq(UserFriend::getFriendUid, targetUid)
+                .update();
     }
 }

@@ -5,9 +5,12 @@ import com.leikooo.mallchat.common.common.event.UserBlackEvent;
 import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.dao.UserDao;
+import com.leikooo.mallchat.common.user.dao.UserFriendDao;
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
 import com.leikooo.mallchat.common.user.service.WebSocketService;
 import com.leikooo.mallchat.common.user.service.cache.UserCache;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -20,6 +23,7 @@ import javax.annotation.Resource;
  * @date 2024/2/22
  * @description
  */
+@Slf4j
 @Component
 public class UserBlackListener {
     @Resource
@@ -30,6 +34,9 @@ public class UserBlackListener {
 
     @Resource
     private UserCache userCache;
+
+    @Resource
+    private UserFriendDao userFriendDao;
 
     @Async
     @TransactionalEventListener(value = UserBlackEvent.class, phase = TransactionPhase.AFTER_COMMIT)
@@ -51,4 +58,19 @@ public class UserBlackListener {
         userCache.evictBlackMap();
     }
 
+    /**
+     * 删除被拉黑的用户的所有好友
+     * todo 同时删除 ta 在的所有的群
+     *
+     * @param event
+     */
+    @Async
+    @TransactionalEventListener(value = UserBlackEvent.class, phase = TransactionPhase.AFTER_COMMIT)
+    public void deleteBlackUserFriends(UserBlackEvent event) {
+        User user = event.getUser();
+        boolean isSuccess = userFriendDao.deleteUserAllFriends(user.getId());
+        if (!isSuccess) {
+            log.error("删除黑名单用户好友失败 uid:{}", user.getId());
+        }
+    }
 }

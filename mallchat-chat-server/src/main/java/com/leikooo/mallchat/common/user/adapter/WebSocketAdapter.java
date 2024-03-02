@@ -3,10 +3,7 @@ package com.leikooo.mallchat.common.user.adapter;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
-import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSBlack;
-import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginSuccess;
-import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSLoginUrl;
-import com.leikooo.mallchat.common.user.domain.vo.response.ws.WSMessage;
+import com.leikooo.mallchat.common.user.domain.vo.response.ws.*;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 
 import static com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum.*;
@@ -58,6 +55,21 @@ public class WebSocketAdapter {
         return WSBaseResp.<WSBlack>builder()
                 .type(WSRespTypeEnum.BLACK.getType())
                 .data(wsBlack)
+                .build();
+    }
+
+    /**
+     * 发送给某一个 uid 的未阅读的消息
+     *
+     * @param unReadCount
+     * @param targetId
+     * @return
+     */
+    public static WSBaseResp<?> buildApplySend(int unReadCount, Long targetId) {
+        WSFriendApply data = WSFriendApply.builder().uid(targetId).unreadCount(unReadCount).build();
+        return WSBaseResp.<WSFriendApply>builder()
+                .data(data)
+                .type(APPLY.getType())
                 .build();
     }
 }

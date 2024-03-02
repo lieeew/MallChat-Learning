@@ -4,6 +4,7 @@ import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.user.domain.entity.ItemConfig;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
+import com.leikooo.mallchat.common.user.domain.enums.UserStatusEnum;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
@@ -66,7 +67,7 @@ public class UserAdaptor {
     public static User buildBlackUser(User blockUser) {
         return User.builder()
                 .id(blockUser.getId())
-                .status(YesOrNoEnum.YES.getStatus())
+                .status(UserStatusEnum.BLACK.getStatus())
                 .build();
     }
 }

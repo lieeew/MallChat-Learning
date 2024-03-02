@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 
 /**
- * Description: 好友校验
+ * Description: 联系人列表返回信息
  * @author  <a href="https://github.com/lieeew">leikooo</a>
  * Date: 2023-03-23
  */

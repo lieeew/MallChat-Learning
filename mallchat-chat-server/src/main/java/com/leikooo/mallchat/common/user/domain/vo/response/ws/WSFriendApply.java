@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class WSFriendApply {
     @ApiModelProperty("申请人")
     private Long uid;
+
     @ApiModelProperty("申请未读数")
     private Integer unreadCount;
 }

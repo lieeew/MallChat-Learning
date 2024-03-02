@@ -15,6 +15,7 @@ import java.util.*;
 
 /**
  * 校验工具类
+ * @description 当描述的情况成立的时候没事不抛出异常
  */
 public class AssertUtil {
 
@@ -110,14 +111,26 @@ public class AssertUtil {
         }
     }
 
-    //如果不是非空对象，则抛异常
+    /**
+     * null -> 抛异常
+     * ！null -> 不抛异常
+     *
+     * @param obj
+     * @param msg
+     */
     public static void isNotEmpty(Object obj, String msg) {
         if (isEmpty(obj)) {
             throwException(msg);
         }
     }
 
-    //如果不是非空对象，则抛异常
+    /**
+     * 如果不是非空对象，则抛异常
+     *
+     * @param obj
+     * @param errorEnum
+     * @param args
+     */
     public static void isNotEmpty(Object obj, ErrorEnum errorEnum, Object... args) {
         if (isEmpty(obj)) {
             throwException(errorEnum, args);
@@ -125,7 +138,8 @@ public class AssertUtil {
     }
 
     /**
-     * 如果不是非空对象，则抛异常
+     * ！null -> 异常
+     * null -> 不抛异常
      *
      * @param obj
      * @param msg

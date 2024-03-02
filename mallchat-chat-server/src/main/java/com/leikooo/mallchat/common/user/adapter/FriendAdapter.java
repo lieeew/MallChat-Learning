@@ -1,7 +1,9 @@
 package com.leikooo.mallchat.common.user.adapter;
 
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.entity.UserApply;
 import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
+import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
 import org.springframework.util.CollectionUtils;
 
@@ -29,5 +31,14 @@ public class FriendAdapter {
                     return friendResp;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public static List<FriendApplyResp> buildFriendApplyPageResp(List<UserApply> records) {
+        return records.stream().map(p -> FriendApplyResp.builder()
+                .uid(p.getUid())
+                .msg(p.getMsg())
+                .status(p.getStatus())
+                .type(p.getType())
+                .build()).collect(Collectors.toList());
     }
 }

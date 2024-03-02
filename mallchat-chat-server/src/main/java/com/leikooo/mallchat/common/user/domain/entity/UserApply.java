@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,8 +18,11 @@ import java.util.Date;
  * @since 2023-07-16
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @TableName("user_apply")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserApply implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,6 +41,7 @@ public class UserApply implements Serializable {
 
     /**
      * 申请类型 1加好友
+     * @see com.leikooo.mallchat.common.user.domain.enums.ApplyTypeEnum
      */
     @TableField("type")
     private Integer type;
@@ -57,12 +60,14 @@ public class UserApply implements Serializable {
 
     /**
      * 申请状态 1待审批 2同意
+     * @see com.leikooo.mallchat.common.user.domain.enums.ApplyStatusEnum
      */
     @TableField("status")
     private Integer status;
 
     /**
      * 阅读状态 1未读 2已读
+     * @see com.leikooo.mallchat.common.user.domain.enums.ApplyReadStatusEnum
      */
     @TableField("read_status")
     private Integer readStatus;

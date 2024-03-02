@@ -29,12 +29,12 @@ public class RedissonLockAspect {
     private LockService lockService;
 
     @Around("@annotation(redissonLock)")
-            public Object around(ProceedingJoinPoint proceedingJoinPoint, RedissonLock redissonLock) throws Throwable {
-                Method method = ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod();
-                String prefixKey = StringUtils.isEmpty(redissonLock.prefix()) ? SpElUtils.getMethodKey(method) : redissonLock.prefix();
-                String key = SpElUtils.parseSpEl(method, proceedingJoinPoint.getArgs(), redissonLock.key());
-                return lockService.executeWithLock(prefixKey + key, redissonLock.waitTime(), redissonLock.timeUnit(), new SupplierWithThrowable<Object>() {
-                    @Override
+    public Object around(ProceedingJoinPoint proceedingJoinPoint, RedissonLock redissonLock) throws Throwable {
+        Method method = ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod();
+        String prefixKey = StringUtils.isEmpty(redissonLock.prefix()) ? SpElUtils.getMethodKey(method) : redissonLock.prefix();
+        String key = SpElUtils.parseSpEl(method, proceedingJoinPoint.getArgs(), redissonLock.key());
+        return lockService.executeWithLock(prefixKey + key, redissonLock.waitTime(), redissonLock.timeUnit(), new SupplierWithThrowable<Object>() {
+            @Override
             public Object get() throws Throwable {
                 return proceedingJoinPoint.proceed();
             }

@@ -22,5 +22,6 @@ public class WSBaseResp<T> {
      * @see WSRespTypeEnum
      */
     private Integer type;
+
     private T data;
 }
