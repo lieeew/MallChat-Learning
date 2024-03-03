@@ -38,12 +38,12 @@ public class UserFriendDao extends ServiceImpl<UserFriendMapper, UserFriend> {
      * @param targetUid
      * @return true 这个用户存在
      */
-    public boolean isHaveUserFriend(Long uid, Long targetUid) {
+    public UserFriend getUserFriend(Long uid, Long targetUid) {
         return lambdaQuery()
                 .select(UserFriend::getUid, UserFriend::getUid)
                 .eq(UserFriend::getUid, uid)
                 .eq(UserFriend::getFriendUid, targetUid)
-                .nonEmptyOfEntity();
+                .one();
     }
 
     /**

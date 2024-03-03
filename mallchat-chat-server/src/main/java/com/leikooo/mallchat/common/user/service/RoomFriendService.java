@@ -13,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RoomFriendService {
 
-    RoomFriend creatFriendRoom(Long uid, Long applyId);
+    void creatFriendRoom(Long uid, Long applyId);
 }

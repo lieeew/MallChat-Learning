@@ -89,18 +89,19 @@ public class UserFriendServiceImpl implements UserFriendService {
     @Override
     public void applyAddFriend(Long uid, FriendApplyReq req) {
         // 判断是否是好友
-        boolean haveUserFriend = userFriendDao.isHaveUserFriend(uid, req.getTargetUid());
-        AssertUtil.isFalse(haveUserFriend, "已经是好友");
+        UserFriend userFriend = userFriendDao.getUserFriend(uid, req.getTargetUid());
+        AssertUtil.isEmpty(userFriend, "已经是好友");
         // 判断是否已经发送过申请
-        UserApply haveApply = userApplyDao.isHaveApply(uid, req.getTargetUid());
+        UserApply haveApply = userApplyDao.getUserApply(uid, req.getTargetUid());
         if (Objects.nonNull(haveApply)) {
             log.info("已有好友记录 uid:{} targetUid:{}", uid, req.getTargetUid());
             return;
         }
-        // 判断要加的好友我又没有申请过 (别人请求自己)
-        if (Objects.nonNull(userApplyDao.isHaveApply(req.getTargetUid(), uid))) {
+        // 判断要加的好友我有没有申请过 (别人请求自己)
+        if (Objects.nonNull(userApplyDao.getUserApply(req.getTargetUid(), uid))) {
             // 直接同意好友请求
             ((UserFriendService) AopContext.currentProxy()).applyApprove(uid, FriendApproveReq.builder().applyId(req.getTargetUid()).build());
+            return;
         }
         // 入库请求
         UserApply insert = UserApplyAdapter.buildUserApply(uid, req.getTargetUid(), req.getMsg());
@@ -110,14 +111,14 @@ public class UserFriendServiceImpl implements UserFriendService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @RedissonLock(key = "user:friend:approve:#uid")
+    @RedissonLock(key = "#uid")
     @Override
     public void applyApprove(Long uid, FriendApproveReq req) {
         Long applyId = req.getApplyId();
         User user = userDao.getById(applyId);
         AssertUtil.notEqual(user.getStatus(), UserStatusEnum.BLACK.getStatus(), "对方已经被封禁, 无法添加好友");
         // 判断是否有请求
-        UserApply userApply = userApplyDao.isHaveApply(applyId, uid);
+        UserApply userApply = userApplyDao.getUserApply(applyId, uid);
         AssertUtil.isNotEmpty(userApply, "没有好友申请");
         AssertUtil.equal(userApply.getTargetId(), uid, "不存在申请记录");
         AssertUtil.equal(userApply.getStatus(), ApplyStatusEnum.WAIT_APPROVAL.getCode(), "已同意好友申请");
@@ -164,8 +165,8 @@ public class UserFriendServiceImpl implements UserFriendService {
     @Override
     public void deleteFriend(Long uid, FriendDeleteReq req) {
         // 1、判断是否是好友
-        boolean haveUserFriend = userFriendDao.isHaveUserFriend(uid, req.getTargetUid());
-        AssertUtil.isFalse(haveUserFriend, "您和ta还未添加好友");
+        UserFriend userFriend = userFriendDao.getUserFriend(uid, req.getTargetUid());
+        AssertUtil.isNotEmpty(userFriend, "您和ta还未添加好友");
         // 2、判断好友状态
         User user = userDao.getById(req.getTargetUid());
         AssertUtil.notEqual(user.getStatus(), UserStatusEnum.BLACK.getStatus(), "对方已经被封禁, 已经自动删除对方所有好友");

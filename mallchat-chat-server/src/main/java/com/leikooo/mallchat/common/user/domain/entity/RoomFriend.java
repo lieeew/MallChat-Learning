@@ -62,6 +62,7 @@ public class RoomFriend implements Serializable {
 
     /**
      * 房间状态 0正常 1禁用(删好友了禁用)
+     * @see com.leikooo.mallchat.common.user.domain.enums.RoomStatusEnum
      */
     @TableField("status")
     private Integer status;

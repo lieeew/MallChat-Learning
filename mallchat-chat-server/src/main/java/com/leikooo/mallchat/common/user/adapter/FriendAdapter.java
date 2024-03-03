@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  */
 public class FriendAdapter {
 
-    public static final String SEPARATER = "_";
+    public static final String SEPARATOR = "_";
 
     public static List<FriendResp> buildFriendResp(List<UserFriend> list, List<User> userList) {
         Map<Long, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, user -> user));
@@ -50,7 +50,7 @@ public class FriendAdapter {
     public static GenerateRoomKeyResult generateRoomKey(Long uid, Long applyId) {
         List<Long> collect = Stream.of(uid, applyId).sorted(Comparator.comparing(Long::shortValue)).collect(Collectors.toList());
         return GenerateRoomKeyResult.builder()
-                .roomKey(collect.get(0) + SEPARATER + collect.get(1))
+                .roomKey(collect.stream().map(String::valueOf).collect(Collectors.joining(SEPARATOR)))
                 .uidList(collect)
                 .build();
     }

@@ -10,6 +10,7 @@ import com.leikooo.mallchat.common.user.domain.entity.Room;
 import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.user.domain.enums.RoomTypeEnum;
 import com.leikooo.mallchat.common.user.service.RoomFriendService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
  * @date 2024/3/2
  * @description
  */
+@Service
 public class RoomFriendServiceImpl implements RoomFriendService {
     @Resource
     private RoomFriendDao roomFriendDao;
@@ -26,7 +28,7 @@ public class RoomFriendServiceImpl implements RoomFriendService {
     private RoomDao roomDao;
 
     @Override
-    public RoomFriend creatFriendRoom(Long uid, Long applyId) {
+    public void creatFriendRoom(Long uid, Long applyId) {
         GenerateRoomKeyResult generateRoomKeyResult = FriendAdapter.generateRoomKey(uid, applyId);
         RoomFriend roomFriend = roomFriendDao.getById(generateRoomKeyResult.getRoomKey());
         if (ObjectUtil.isNotNull(roomFriend)) {
@@ -35,9 +37,7 @@ public class RoomFriendServiceImpl implements RoomFriendService {
             Room room = creatRoom(RoomTypeEnum.of(RoomTypeEnum.FRIEND.getType()));
             roomFriend = ChatAdapter.buildFriendRoom(room.getId(), generateRoomKeyResult.getRoomKey(), generateRoomKeyResult.getUidList());
             roomFriendDao.save(roomFriend);
-            return roomFriend;
         }
-        return roomFriend;
     }
 
     private Room creatRoom(RoomTypeEnum typeEnum) {

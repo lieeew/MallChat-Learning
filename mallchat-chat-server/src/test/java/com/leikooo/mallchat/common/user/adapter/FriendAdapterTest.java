@@ -10,9 +10,8 @@ import static org.junit.Assert.*;
  * @description
  */
 public class FriendAdapterTest {
-
     @Test
     public void generateRoomKey() {
-        FriendAdapter.generateRoomKey(12L, 16L);
+        FriendAdapter.generateRoomKey(1000L, 16L);
     }
 }

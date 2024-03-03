@@ -26,11 +26,9 @@ public class UserApplyDao extends ServiceImpl<UserApplyMapper, UserApply> {
     /**
      * @param uid
      * @param targetUid
-     * @return true 表示存在
      */
-    public UserApply isHaveApply(Long uid, Long targetUid) {
+    public UserApply getUserApply(Long uid, Long targetUid) {
         return lambdaQuery()
-                .select(UserApply::getUid, UserApply::getTargetId)
                 .eq(UserApply::getUid, uid)
                 .eq(UserApply::getTargetId, targetUid)
                 .eq(UserApply::getStatus, ApplyStatusEnum.WAIT_APPROVAL.getCode())

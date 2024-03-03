@@ -7,6 +7,7 @@ import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.domain.vo.response.PageBaseResp;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendApplyReq;
+import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendApproveReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendCheckReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.friend.FriendDeleteReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyResp;
@@ -72,9 +73,16 @@ public class FriendController {
 
     @DeleteMapping()
     @ApiOperation("删除好友")
-    public ApiResult<?> deleteFriend(@RequestParam @Valid FriendDeleteReq req) {
+    public ApiResult<?> deleteFriend(@RequestBody @Valid FriendDeleteReq req) {
         Long uid = RequestHolder.get().getUid();
         userFriendService.deleteFriend(uid, req);
+        return ApiResult.success();
+    }
+
+    @PutMapping("/apply")
+    @ApiOperation("审批同意")
+    public ApiResult<Void> applyApprove(@Valid @RequestBody FriendApproveReq request) {
+        userFriendService.applyApprove(RequestHolder.get().getUid(), request);
         return ApiResult.success();
     }
 }

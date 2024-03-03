@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.user.adapter;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.user.domain.entity.Room;
 import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
+import com.leikooo.mallchat.common.user.domain.enums.RoomStatusEnum;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ChatAdapter {
                 .uid1(uidList.get(0))
                 .uid2(uidList.get(1))
                 .roomKey(roomKey)
+                .status(RoomStatusEnum.NORMAL.getStatus())
                 .build();
     }
 
