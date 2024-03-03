@@ -12,7 +12,6 @@ import com.leikooo.mallchat.common.common.domain.vo.response.PageBaseResp;
 import com.leikooo.mallchat.common.common.event.UserApplyEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.FriendAdapter;
-import com.leikooo.mallchat.common.user.adapter.FriendRoomAdapter;
 import com.leikooo.mallchat.common.user.adapter.UserApplyAdapter;
 import com.leikooo.mallchat.common.user.adapter.UserFriendAdapter;
 import com.leikooo.mallchat.common.user.dao.UserApplyDao;
@@ -32,6 +31,7 @@ import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyRes
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendCheckResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendUnreadResp;
+import com.leikooo.mallchat.common.user.service.RoomFriendService;
 import com.leikooo.mallchat.common.user.service.UserFriendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
@@ -64,6 +64,9 @@ public class UserFriendServiceImpl implements UserFriendService {
 
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Resource
+    private RoomFriendService roomFriendService;
 
     @Override
     public CursorPageBaseResp<FriendResp> getFriendList(Long uid, CursorPageBaseReq req) {
@@ -123,20 +126,9 @@ public class UserFriendServiceImpl implements UserFriendService {
         // 添加好友关系
         creatUserFriend(uid, applyId);
         // 创建房间
-        creatFriendRoom(uid, applyId);
+        roomFriendService.creatFriendRoom(uid, applyId);
     }
 
-    /**
-     * 创建房间
-     *
-     * @param uid     被申请人的 uid 我自己
-     * @param applyId
-     */
-    private void creatFriendRoom(Long uid, Long applyId) {
-        String roomKey = FriendAdapter.generateRoomKey(uid, applyId).getRoomKey();
-        List<Long> uidList = FriendAdapter.generateRoomKey(uid, applyId).getUidList();
-        FriendRoomAdapter.buildFriendRoom(roomKey, uidList);
-    }
 
     /**
      * 创建好友关系（双向好友关系）

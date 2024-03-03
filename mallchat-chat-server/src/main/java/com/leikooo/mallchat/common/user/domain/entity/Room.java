@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import lombok.*;
 
 /**
  * <p>
@@ -18,6 +18,9 @@ import lombok.EqualsAndHashCode;
  * @since 2024-03-02
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @TableName("room")
 public class Room implements Serializable {
@@ -32,12 +35,14 @@ public class Room implements Serializable {
 
     /**
      * 房间类型 1群聊 2单聊
+     * @see com.leikooo.mallchat.common.user.domain.enums.RoomTypeEnum
      */
     @TableField("type")
     private Integer type;
 
     /**
      * 是否全员展示 0否 1是
+     * @see com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum
      */
     @TableField("hot_flag")
     private Integer hotFlag;

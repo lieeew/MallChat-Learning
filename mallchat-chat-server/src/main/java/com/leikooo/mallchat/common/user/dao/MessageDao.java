@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.user.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.leikooo.mallchat.common.chat.mapper.MessageMapper;
 import com.leikooo.mallchat.common.user.domain.entity.Message;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-03-02
  */
 @Service
-public class MessageDao extends ServiceImpl<MessageMapper, Message>  {
+public class MessageDao extends ServiceImpl<MessageMapper, Message> {
 
 }

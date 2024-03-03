@@ -1,9 +1,8 @@
 package com.leikooo.mallchat.common.user.dao;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leikooo.mallchat.common.chat.mapper.RoomMapper;
 import com.leikooo.mallchat.common.user.domain.entity.Room;
-import com.leikooo.mallchat.common.user.service.IRoomService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +14,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-03-02
  */
 @Service
-public class RoomDao extends ServiceImpl<RoomMapper, Room> implements IRoomService {
+public class RoomDao extends ServiceImpl<RoomMapper, Room> {
 
 }
