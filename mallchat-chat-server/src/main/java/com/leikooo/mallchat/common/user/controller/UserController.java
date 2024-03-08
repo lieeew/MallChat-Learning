@@ -3,8 +3,10 @@ package com.leikooo.mallchat.common.user.controller;
 
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
+import com.leikooo.mallchat.common.user.domain.dto.SummeryInfoDTO;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.BlockUserReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.ModifyNameReq;
+import com.leikooo.mallchat.common.user.domain.vo.request.user.SummeryInfoReq;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.WearingBadgeReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
@@ -20,9 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * <p>
  * 用户表 前端控制器
- * </p>
  *
  * @author <a href="https://github.com/lieeew">leikooo</a>
  * @since 2024-02-07
@@ -41,6 +41,12 @@ public class UserController {
     @ApiOperation("获取用户信息")
     public ApiResult<UserInfoResp> getUserInfo() {
         return ApiResult.success(userService.getUserInfo(RequestHolder.get().getUid()));
+    }
+
+    @PostMapping("/public/summary/userInfo/batch")
+    @ApiOperation("用户聚合信息-返回的代表需要刷新的")
+    public ApiResult<List<SummeryInfoDTO>> getSummeryUserInfo(@Valid @RequestBody SummeryInfoReq req) {
+        return ApiResult.success(userService.getSummeryUserInfo(req));
     }
 
     @PutMapping("/modifyName")

@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.user.service.cache;
 
+import com.leikooo.mallchat.common.common.constant.RedisKey;
+import com.leikooo.mallchat.common.common.utils.RedisUtils;
 import com.leikooo.mallchat.common.user.dao.BlackDao;
 import com.leikooo.mallchat.common.user.dao.UserRoleDao;
 import com.leikooo.mallchat.common.user.domain.entity.Black;
@@ -49,5 +51,10 @@ public class UserCache {
     @CacheEvict(value = "userCache", key = "'blackMap'")
     public void evictBlackMap() {
         log.info("black map has evict");
+    }
+
+    public List<Long> getUserModifyTime(List<Long> uidList) {
+        List<String> keys = uidList.stream().map(uid -> RedisKey.getKey(RedisKey.USER_MODIFY_STRING, uid)).collect(Collectors.toList());
+        return RedisUtils.mget(keys, Long.class);
     }
 }

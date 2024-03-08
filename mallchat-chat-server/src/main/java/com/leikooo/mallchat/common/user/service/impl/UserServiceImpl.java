@@ -8,16 +8,20 @@ import com.leikooo.mallchat.common.user.dao.BlackDao;
 import com.leikooo.mallchat.common.user.dao.ItemConfigDao;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
 import com.leikooo.mallchat.common.user.dao.UserDao;
+import com.leikooo.mallchat.common.user.domain.dto.SummeryInfoDTO;
 import com.leikooo.mallchat.common.user.domain.entity.*;
 import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.RoleEnum;
+import com.leikooo.mallchat.common.user.domain.vo.request.user.SummeryInfoReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 import com.leikooo.mallchat.common.user.service.RoleService;
 import com.leikooo.mallchat.common.user.service.UserService;
 import com.leikooo.mallchat.common.user.service.cache.ItemCache;
+import com.leikooo.mallchat.common.user.service.cache.UserCache;
+import com.leikooo.mallchat.common.user.service.cache.UserSummaryCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -57,6 +61,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private BlackDao blackDao;
+
+    @Resource
+    private UserCache userCache;
+
+    @Resource
+    private UserSummaryCache userSummaryCache;
 
     @Transactional
     @Override
@@ -135,6 +145,35 @@ public class UserServiceImpl implements UserService {
             blockIpIfNotEmpty(updateIp);
         }
         applicationEventPublisher.publishEvent(new UserBlackEvent(this, blockUser));
+    }
+
+    @Override
+    public List<SummeryInfoDTO> getSummeryUserInfo(SummeryInfoReq summeryInfoReq) {
+        List<SummeryInfoReq.infoReq> reqList = summeryInfoReq.getReqList();
+        List<Long> uidList = needLoad(reqList);
+        Map<Long, SummeryInfoDTO> batch = userSummaryCache.getBatch(uidList);
+        return uidList.stream().map(uid -> batch.containsKey(uid) ? batch.get(uid) : SummeryInfoDTO.skip(uid)).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private List<Long> needLoad(List<SummeryInfoReq.infoReq> reqList) {
+        List<Long> uidList = reqList.stream().map(SummeryInfoReq.infoReq::getUid).collect(Collectors.toList());
+        List<Long> userModifyTime = userCache.getUserModifyTime(uidList);
+        Map<Long, Long> userModifyTimeMap = IntStream.range(0, reqList.size())
+                .boxed()
+                .collect(Collectors.toMap(uidList::get, userModifyTime::get));
+        return reqList.stream()
+                .filter(infoReq -> {
+                    // 检测刷新时间
+                    Long lastModifyTime = Optional.ofNullable(infoReq).map(SummeryInfoReq.infoReq::getLastModifyTime).orElse(null);
+                    if (Objects.isNull(lastModifyTime)) {
+                        // 没有刷新时间，直接返回对应的 uid
+                        return true;
+                    }
+                    // 检测是否需要刷新
+                    return Objects.nonNull(userModifyTimeMap.get(infoReq.getUid())) && lastModifyTime < userModifyTimeMap.get(infoReq.getUid());
+                }).filter(Objects::nonNull)
+                .map(SummeryInfoReq.infoReq::getUid)
+                .collect(Collectors.toList());
     }
 
     private void blockIpIfNotEmpty(String ip) {

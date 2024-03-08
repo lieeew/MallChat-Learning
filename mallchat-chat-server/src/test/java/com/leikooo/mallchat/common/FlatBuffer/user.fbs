@@ -1,0 +1,6 @@
+namespace YourSchema;
+
+table User {
+  id: int;
+  name: string;
+}

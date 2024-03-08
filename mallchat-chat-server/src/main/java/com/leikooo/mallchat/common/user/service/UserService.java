@@ -1,6 +1,8 @@
 package com.leikooo.mallchat.common.user.service;
 
+import com.leikooo.mallchat.common.user.domain.dto.SummeryInfoDTO;
 import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.vo.request.user.SummeryInfoReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
 
@@ -26,4 +28,6 @@ public interface UserService {
     void wearingBadge(Long uid, Long itemId);
 
     void blockUser(Long uid, Integer blockUid);
+
+    List<SummeryInfoDTO> getSummeryUserInfo(SummeryInfoReq summeryInfoReq);
 }

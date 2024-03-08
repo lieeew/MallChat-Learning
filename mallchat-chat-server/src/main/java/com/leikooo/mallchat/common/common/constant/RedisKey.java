@@ -28,6 +28,11 @@ public class RedisKey {
      */
     public static final String USER_BACKPACK_STRING = "user:backpack:id_%d";
 
+    /**
+     * 用户 modify 时间
+     */
+    public static final String USER_MODIFY_STRING = "user:modify:uid_%d";
+
     public static String getKey(String redisKey, Object... args) {
         return BASE_REDIS_KEY + String.format(redisKey, args);
     }
