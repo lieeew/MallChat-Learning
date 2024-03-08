@@ -1,8 +1,8 @@
 package com.leikooo.mallchat.common.common.aspect;
 
 import com.leikooo.mallchat.common.common.annotation.RedissonLock;
-import com.leikooo.mallchat.common.common.service.LockService;
-import com.leikooo.mallchat.common.common.service.SupplierWithThrowable;
+import com.leikooo.mallchat.common.common.service.lock.LockService;
+import com.leikooo.mallchat.common.common.service.lock.SupplierWithThrowable;
 import com.leikooo.mallchat.common.common.utils.SpElUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

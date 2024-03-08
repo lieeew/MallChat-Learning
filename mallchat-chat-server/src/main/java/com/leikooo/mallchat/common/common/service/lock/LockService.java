@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.service;
+package com.leikooo.mallchat.common.common.service.lock;
 
 import com.leikooo.mallchat.common.common.exception.BusinessException;
 import com.leikooo.mallchat.common.common.exception.CommonErrorEnum;

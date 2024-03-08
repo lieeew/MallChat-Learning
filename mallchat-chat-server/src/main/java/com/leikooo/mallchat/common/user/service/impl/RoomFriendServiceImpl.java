@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.FriendAdapter;
 import com.leikooo.mallchat.common.user.adapter.ChatAdapter;
 import com.leikooo.mallchat.common.user.dao.RoomDao;
@@ -13,6 +14,7 @@ import com.leikooo.mallchat.common.user.service.RoomFriendService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -38,6 +40,13 @@ public class RoomFriendServiceImpl implements RoomFriendService {
             roomFriend = ChatAdapter.buildFriendRoom(room.getId(), generateRoomKeyResult.getRoomKey(), generateRoomKeyResult.getUidList());
             roomFriendDao.save(roomFriend);
         }
+    }
+
+    @Override
+    public void deleteFriendRoom(List<Long> uidList) {
+        AssertUtil.isTrue(uidList.size() == 2, "好友数量不对");
+        GenerateRoomKeyResult generateRoomKeyResult = FriendAdapter.generateRoomKey(uidList.get(0), uidList.get(1));
+        roomFriendDao.deleteFriendRoom(generateRoomKeyResult.getRoomKey());
     }
 
     private Room creatRoom(RoomTypeEnum typeEnum) {

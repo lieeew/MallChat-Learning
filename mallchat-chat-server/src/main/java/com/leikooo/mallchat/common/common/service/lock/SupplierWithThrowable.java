@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.common.service;
+package com.leikooo.mallchat.common.common.service.lock;
 
 import com.leikooo.mallchat.common.common.aspect.RedissonLockAspect;
 

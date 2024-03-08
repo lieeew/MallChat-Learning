@@ -3,6 +3,8 @@ package com.leikooo.mallchat.common.user.service;
 import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 单聊房间表 服务类
@@ -14,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface RoomFriendService {
 
     void creatFriendRoom(Long uid, Long applyId);
+
+    void deleteFriendRoom(List<Long> uidList);
 }

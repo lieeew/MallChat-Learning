@@ -13,7 +13,22 @@ public class RedisKey {
      */
     public static final String USER_TOKEN = "user:token:uid_%s";
 
+    /**
+     * 用户的信息汇总
+     */
+    public static final String USER_SUMMARY_STRING = "user:summary:uid_%d";
+
+    /**
+     * 用户的物品 key
+     */
+    public static final String USER_ITEM_STRING = "user:item:item_%d";
+
+    /**
+     * 用户的背包 key
+     */
+    public static final String USER_BACKPACK_STRING = "user:backpack:id_%d";
+
     public static String getKey(String redisKey, Object... args) {
-        return BASE_REDIS_KEY + String.format(USER_TOKEN, args);
+        return BASE_REDIS_KEY + String.format(redisKey, args);
     }
 }

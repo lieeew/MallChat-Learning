@@ -78,6 +78,9 @@ public class UserFriendDao extends ServiceImpl<UserFriendMapper, UserFriend> {
                 .set(UserFriend::getDeleteStatus, YesOrNoEnum.YES.getStatus())
                 .eq(UserFriend::getUid, uid)
                 .eq(UserFriend::getFriendUid, targetUid)
+                .or()
+                .eq(UserFriend::getUid, targetUid)
+                .eq(UserFriend::getFriendUid, uid)
                 .update();
     }
 }
