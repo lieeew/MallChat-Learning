@@ -7,6 +7,10 @@ import com.leikooo.mallchat.common.user.mapper.UserMapper;
 import com.leikooo.mallchat.common.user.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.Optional;
+import java.util.OptionalLong;
+
 /**
  * <p>
  * 用户表 服务实现类
@@ -46,5 +50,14 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
                 .eq(User::getId, uid)
                 .one()
                 .getStatus();
+    }
+
+    public Long getLastModifyTime(Long uid) {
+        return Optional.ofNullable(lambdaQuery()
+                        .select(User::getUpdateTime)
+                        .eq(User::getId, uid)
+                        .one()).map(User::getUpdateTime)
+                .map(Date::getTime)
+                .orElse(null);
     }
 }

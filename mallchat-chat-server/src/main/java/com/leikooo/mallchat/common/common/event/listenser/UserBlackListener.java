@@ -68,9 +68,7 @@ public class UserBlackListener {
     @TransactionalEventListener(value = UserBlackEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void deleteBlackUserFriends(UserBlackEvent event) {
         User user = event.getUser();
-        boolean isSuccess = userFriendDao.deleteUserAllFriends(user.getId());
-        if (!isSuccess) {
-            log.error("删除黑名单用户好友失败 uid:{}", user.getId());
-        }
+        userFriendDao.deleteUserAllFriends(user.getId());
+        userCache.userInfoChange(user.getId());
     }
 }

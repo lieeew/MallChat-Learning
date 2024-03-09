@@ -33,6 +33,11 @@ public class RedisKey {
      */
     public static final String USER_MODIFY_STRING = "user:modify:uid_%d";
 
+    /**
+     * 用户信息
+     */
+    public static final String USER_INFO_STRING = "user:info:uid_%d";
+
     public static String getKey(String redisKey, Object... args) {
         return BASE_REDIS_KEY + String.format(redisKey, args);
     }

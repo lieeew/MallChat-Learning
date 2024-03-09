@@ -2,10 +2,15 @@ package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.leikooo.mallchat.common.common.annotation.RedissonLock;
+import com.leikooo.mallchat.common.common.event.ItemReceiveEvent;
 import com.leikooo.mallchat.common.user.adapter.UserBackpackAdaptor;
 import com.leikooo.mallchat.common.user.dao.UserBackpackDao;
+import com.leikooo.mallchat.common.user.domain.entity.ItemConfig;
 import com.leikooo.mallchat.common.user.domain.entity.UserBackpack;
+import com.leikooo.mallchat.common.user.domain.enums.ItemTypeEnum;
 import com.leikooo.mallchat.common.user.service.UserBackpackService;
+import com.leikooo.mallchat.common.user.service.cache.ItemCache;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +25,12 @@ import java.util.Objects;
 public class UserBackpackServiceImpl implements UserBackpackService {
     @Resource
     private UserBackpackDao userBackpackDao;
+
+    @Resource
+    private ItemCache itemCache;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void acquireItem(Long uid, Long itemId, Integer messageType, String businessId) {
@@ -36,9 +47,20 @@ public class UserBackpackServiceImpl implements UserBackpackService {
         if (Objects.nonNull(userBackpack)) {
             return;
         }
-        // 这里还可以进行业务检查
-        // 我们这里的改名卡不太重要就直接操作了
-        userBackpackDao.save(UserBackpackAdaptor.buildNewUserBackpack(uid, itemId, idempotentId));
+        // 业务检查
+        ItemConfig itemConfig = itemCache.getById(itemId);
+        // 徽章类型做唯一性检查
+        if (ItemTypeEnum.BADGE.getType().equals(itemConfig.getType())) {
+            Integer countByValidItemId = userBackpackDao.getCountByValidItemId(uid, itemId);
+            if (countByValidItemId > 0) {
+                // 已经有徽章了不发
+                return;
+            }
+        }
+        UserBackpack insert = UserBackpackAdaptor.buildNewUserBackpack(uid, itemId, idempotentId);
+        userBackpackDao.save(insert);
+        // 发送时间
+        applicationEventPublisher.publishEvent(new ItemReceiveEvent(this, insert));
     }
 
     /**

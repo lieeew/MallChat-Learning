@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.user.service.impl;
 import cn.hutool.core.thread.NamedThreadFactory;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.http.HttpUtil;
+import com.leikooo.mallchat.common.user.service.cache.UserCache;
 import com.leikooo.mallchat.utils.JsonUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
@@ -46,6 +47,9 @@ public class IpServiceImpl implements IpService, DisposableBean {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private UserCache userCache;
+
     @Override
     public void refreshIpDetailAsync(Long uid) {
         EXECUTOR.execute(() -> {
@@ -60,6 +64,8 @@ public class IpServiceImpl implements IpService, DisposableBean {
                         .ipInfo(ipInfo)
                         .build();
                 userDao.updateById(updateUser);
+                // 刷新用户信息缓存
+                userCache.userInfoChange(uid);
             }
         });
     }

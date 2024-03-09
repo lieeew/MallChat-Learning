@@ -58,4 +58,12 @@ public class UserBackpackDao extends ServiceImpl<UserBackpackMapper, UserBackpac
                 .eq(UserBackpack::getIdempotent, idempotentId)
                 .one();
     }
+
+    public Integer getCountByValidItemId(Long uid, Long itemId) {
+        return lambdaQuery()
+                .eq(UserBackpack::getUid, uid)
+                .eq(UserBackpack::getItemId, itemId)
+                .eq(UserBackpack::getStatus, YesOrNoEnum.NO.getStatus())
+                .count();
+    }
 }

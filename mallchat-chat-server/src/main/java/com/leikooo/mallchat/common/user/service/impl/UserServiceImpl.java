@@ -96,6 +96,8 @@ public class UserServiceImpl implements UserService {
         AssertUtil.isTrue(result, "使用改名卡失败");
         boolean modifyName = userDao.modifyName(uid, name);
         AssertUtil.isTrue(modifyName, "修改用户名失败");
+        // 刷新缓存
+        userCache.userInfoChange(uid);
     }
 
     @Override
@@ -117,6 +119,7 @@ public class UserServiceImpl implements UserService {
         AssertUtil.isNotEmpty(itemConfig, "该徽章不存在");
         // 佩戴徽章
         userDao.wearingBadge(uid, itemId);
+        userCache.userInfoChange(uid);
     }
 
     /**
@@ -150,27 +153,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SummeryInfoDTO> getSummeryUserInfo(SummeryInfoReq summeryInfoReq) {
         List<SummeryInfoReq.infoReq> reqList = summeryInfoReq.getReqList();
-        List<Long> uidList = needLoad(reqList);
-        Map<Long, SummeryInfoDTO> batch = userSummaryCache.getBatch(uidList);
-        return uidList.stream().map(uid -> batch.containsKey(uid) ? batch.get(uid) : SummeryInfoDTO.skip(uid)).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Long> needLoadUidList = needLoad(reqList);
+        Map<Long, SummeryInfoDTO> batch = userSummaryCache.getBatch(needLoadUidList);
+        return reqList.stream()
+                .map(uid -> needLoadUidList.contains(uid.getUid()) ? batch.get(uid.getUid()) : SummeryInfoDTO.skip(uid.getUid()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private List<Long> needLoad(List<SummeryInfoReq.infoReq> reqList) {
         List<Long> uidList = reqList.stream().map(SummeryInfoReq.infoReq::getUid).collect(Collectors.toList());
-        List<Long> userModifyTime = userCache.getUserModifyTime(uidList);
-        Map<Long, Long> userModifyTimeMap = IntStream.range(0, reqList.size())
-                .boxed()
-                .collect(Collectors.toMap(uidList::get, userModifyTime::get));
+        Map<Long, Long> userModifyTimeMap = userCache.getUserModifyTime(uidList);
         return reqList.stream()
                 .filter(infoReq -> {
                     // 检测刷新时间
                     Long lastModifyTime = Optional.ofNullable(infoReq).map(SummeryInfoReq.infoReq::getLastModifyTime).orElse(null);
-                    if (Objects.isNull(lastModifyTime)) {
+                    if (Objects.isNull(lastModifyTime) || Objects.isNull(userModifyTimeMap.get(infoReq.getUid()))) {
                         // 没有刷新时间，直接返回对应的 uid
                         return true;
                     }
                     // 检测是否需要刷新
-                    return Objects.nonNull(userModifyTimeMap.get(infoReq.getUid())) && lastModifyTime < userModifyTimeMap.get(infoReq.getUid());
+                    return lastModifyTime < userModifyTimeMap.get(infoReq.getUid());
                 }).filter(Objects::nonNull)
                 .map(SummeryInfoReq.infoReq::getUid)
                 .collect(Collectors.toList());
