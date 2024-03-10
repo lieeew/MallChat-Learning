@@ -64,15 +64,6 @@ public class UserCache {
         for (int i = 0; i < uidList.size(); i++) {
             userModifyTimeMap.put(uidList.get(i), lastModifyTime.get(i));
         }
-        uidList.forEach(uid -> {
-            if (Objects.isNull(userModifyTimeMap.get(uid))) {
-                // 获取用户最后修改的时间设置到 redis 之中
-                Optional.ofNullable(userDao.getLastModifyTime(uid)).ifPresent(time -> {
-                    refreshUserModifyTime(uid, time);
-                    userModifyTimeMap.put(uid, time);
-                });
-            }
-        });
         return userModifyTimeMap;
     }
 

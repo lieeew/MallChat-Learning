@@ -6,6 +6,7 @@ import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.ItemEnum;
 import com.leikooo.mallchat.common.user.service.UserBackpackService;
+import com.leikooo.mallchat.common.user.service.cache.UserCache;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -25,6 +26,9 @@ public class UserRegisterListener {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private UserCache userCache;
 
     /**
      * 这个是不是加 @Async 依据的是这个发这个改名卡是不是重要
@@ -50,5 +54,11 @@ public class UserRegisterListener {
         if (countNum < 100) {
             userBackpackService.acquireItem(user.getId(), ItemEnum.REG_TOP100_BADGE.getId(), IdempotentEnum.UID.getType(), user.getId().toString());
         }
+    }
+
+    @TransactionalEventListener(value = UserRegisterEvent.class, phase = TransactionPhase.AFTER_COMMIT)
+    public void saveModifyTime(UserRegisterEvent event) {
+        long time = event.getUser().getUpdateTime().getTime();
+        userCache.refreshUserModifyTime(time);
     }
 }
