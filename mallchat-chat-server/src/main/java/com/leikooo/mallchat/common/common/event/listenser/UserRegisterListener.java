@@ -58,7 +58,8 @@ public class UserRegisterListener {
 
     @TransactionalEventListener(value = UserRegisterEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void saveModifyTime(UserRegisterEvent event) {
-        long time = event.getUser().getUpdateTime().getTime();
-        userCache.refreshUserModifyTime(time);
+        User user = event.getUser();
+        long time = user.getUpdateTime().getTime();
+        userCache.refreshUserModifyTime(user.getId(), time);
     }
 }

@@ -31,7 +31,7 @@ import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyRes
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendCheckResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendUnreadResp;
-import com.leikooo.mallchat.common.user.service.RoomFriendService;
+import com.leikooo.mallchat.common.chat.service.RoomFriendService;
 import com.leikooo.mallchat.common.user.service.UserFriendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;

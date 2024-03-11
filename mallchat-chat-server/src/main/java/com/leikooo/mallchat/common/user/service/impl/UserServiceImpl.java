@@ -88,9 +88,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyName(Long uid, String name) {
         User user = userDao.getUserByName(name);
-        AssertUtil.isNotEmpty(user, "用户名已经存在");
+        AssertUtil.isEmpty(user, "用户名已经存在");
         UserBackpack firstValidItem = userBackpackDao.getFirstValidItem(uid, ItemEnum.MODIFY_NAME_CARD.getId());
-        AssertUtil.isEmpty(firstValidItem, "没有修改名字的道具, 等活动获取~");
+        AssertUtil.isNotEmpty(firstValidItem, "没有修改名字的道具, 等活动获取~");
         // 使用改名卡
         boolean result = userBackpackDao.useItem(firstValidItem.getId());
         AssertUtil.isTrue(result, "使用改名卡失败");
