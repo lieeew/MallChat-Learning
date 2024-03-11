@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * Description: 成员角色枚举
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-03-19
  */
 @AllArgsConstructor

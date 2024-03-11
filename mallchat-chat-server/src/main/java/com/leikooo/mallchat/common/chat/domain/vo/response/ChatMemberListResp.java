@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Description: 群成员列表的成员信息
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-03-23
  */
 @Data

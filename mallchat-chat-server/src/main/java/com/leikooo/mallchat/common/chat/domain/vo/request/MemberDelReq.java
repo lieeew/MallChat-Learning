@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Description: 移除群成员
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-03-29
  */
 @Data

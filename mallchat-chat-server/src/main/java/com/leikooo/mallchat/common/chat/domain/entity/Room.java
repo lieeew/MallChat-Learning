@@ -1,12 +1,12 @@
 package com.leikooo.mallchat.common.chat.domain.entity;
 
-import com.abin.mallchat.common.chat.domain.enums.HotFlagEnum;
-import com.abin.mallchat.common.chat.domain.enums.RoomTypeEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.leikooo.mallchat.common.chat.domain.enums.HotFlagEnum;
+import com.leikooo.mallchat.common.chat.domain.enums.RoomTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,7 +18,7 @@ import java.util.Date;
  * 房间表
  * </p>
  *
- * @author <a href="https://github.com/zongzibinbin">abin</a>
+ * @author <a href="https://github.com/zongzibinbin">leikooo</a>
  * @since 2023-07-16
  */
 @Data
@@ -36,7 +36,7 @@ public class Room implements Serializable {
     /**
      * 房间类型 1群聊 2单聊
      *
-     * @see com.abin.mallchat.common.chat.domain.enums.RoomTypeEnum
+     * @see com.leikooo.mallchat.common.chat.domain.enums.RoomTypeEnum
      */
     @TableField("type")
     private Integer type;
@@ -44,7 +44,7 @@ public class Room implements Serializable {
     /**
      * 是否全员展示 0否 1是
      *
-     * @see com.abin.mallchat.common.chat.domain.enums.HotFlagEnum
+     * @see com.leikooo.mallchat.common.chat.domain.enums.HotFlagEnum
      */
     @TableField("hot_flag")
     private Integer hotFlag;

@@ -1,8 +1,8 @@
 package com.leikooo.mallchat.common.chat.domain.entity.msg;
 
-import com.abin.mallchat.common.common.utils.discover.domain.UrlInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * Description: 消息扩展属性
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-05-28
  */
 @Data

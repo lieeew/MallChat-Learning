@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.vo.response.msg;
 
-import com.abin.mallchat.common.common.utils.discover.domain.UrlInfo;
+import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Description: 文本消息返回体
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-06-04
  */
 @Data
@@ -22,11 +22,14 @@ import java.util.Map;
 public class TextMsgResp {
     @ApiModelProperty("消息内容")
     private String content;
+
     @ApiModelProperty("消息链接映射")
     private Map<String, UrlInfo> urlContentMap;
+
     @ApiModelProperty("艾特的uid")
     private List<Long> atUidList;
     @ApiModelProperty("父消息，如果没有父消息，返回的是null")
+
     private ReplyMsg reply;
 
     @Data

@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * Description: 房间详情
- * Author: <a href="https://github.com/zongzibinbin">abin</a>
+ * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-07-22
  */
 @Data
