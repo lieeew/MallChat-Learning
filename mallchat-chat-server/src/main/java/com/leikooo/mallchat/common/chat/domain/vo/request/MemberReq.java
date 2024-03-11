@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.vo.request;
 
-import com.abin.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
+import com.leikooo.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
