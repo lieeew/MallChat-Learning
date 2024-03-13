@@ -1,14 +1,11 @@
 package com.leikooo.mallchat.common.user.adapter;
 
-import cn.hutool.core.collection.CollectionUtil;
-import com.leikooo.mallchat.common.common.utils.AssertUtil;
-import com.leikooo.mallchat.common.user.domain.entity.GenerateRoomKeyResult;
+import com.leikooo.mallchat.common.user.domain.dto.GenerateRoomKeyResult;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.entity.UserApply;
 import com.leikooo.mallchat.common.user.domain.entity.UserFriend;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendApplyResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.friend.FriendResp;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;

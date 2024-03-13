@@ -25,19 +25,40 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageExtra implements Serializable {
     private static final long serialVersionUID = 1L;
-    //url跳转链接
+
+    /**
+     * url跳转链接
+     */
     private Map<String, UrlInfo> urlContentMap;
-    //消息撤回详情
+
+    /**
+     * 消息撤回详情
+     */
     private MsgRecall recall;
-    //艾特的uid
+
+    /**
+     * 艾特的 uid
+     */
     private List<Long> atUidList;
-    //文件消息
+
+    /**
+     * 文件消息
+     */
     private FileMsgDTO fileMsg;
-    //图片消息
+
+    /**
+     * 图片消息
+     */
     private ImgMsgDTO imgMsgDTO;
-    //语音消息
+
+    /**
+     * 语音消息
+     */
     private SoundMsgDTO soundMsgDTO;
-    //文件消息
+
+    /**
+     * 文件消息
+     */
     private VideoMsgDTO videoMsgDTO;
 
     /**

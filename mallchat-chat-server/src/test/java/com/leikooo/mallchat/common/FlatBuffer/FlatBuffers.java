@@ -1,8 +1,5 @@
 package com.leikooo.mallchat.common.FlatBuffer;
 
-import com.google.flatbuffers.FlatBufferBuilder;
-import com.google.flatbuffers.FlatBufferBuilder;
-
 import java.nio.ByteBuffer;
 
 /**

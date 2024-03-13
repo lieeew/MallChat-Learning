@@ -1,8 +1,5 @@
 package com.leikooo.mallchat.common.chat.service;
 
-import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
-import com.baomidou.mybatisplus.extension.service.IService;
-
 import java.util.List;
 
 /**

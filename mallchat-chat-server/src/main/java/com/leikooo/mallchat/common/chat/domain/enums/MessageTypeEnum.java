@@ -27,6 +27,7 @@ public enum MessageTypeEnum {
     ;
 
     private final Integer type;
+
     private final String desc;
 
     private static Map<Integer, MessageTypeEnum> cache;

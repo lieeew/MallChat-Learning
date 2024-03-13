@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leikooo.mallchat.common.chat.domain.enums.HotFlagEnum;
 import com.leikooo.mallchat.common.chat.domain.enums.RoomTypeEnum;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,8 +21,11 @@ import java.util.Date;
  * @since 2023-07-16
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("room")
+@EqualsAndHashCode(callSuper = false)
 public class Room implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,14 +1,14 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.leikooo.mallchat.common.chat.domain.entity.Room;
+import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.FriendAdapter;
 import com.leikooo.mallchat.common.user.adapter.ChatAdapter;
 import com.leikooo.mallchat.common.chat.dao.RoomDao;
 import com.leikooo.mallchat.common.chat.dao.RoomFriendDao;
-import com.leikooo.mallchat.common.user.domain.entity.GenerateRoomKeyResult;
-import com.leikooo.mallchat.common.user.domain.entity.Room;
-import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
+import com.leikooo.mallchat.common.user.domain.dto.GenerateRoomKeyResult;
 import com.leikooo.mallchat.common.user.domain.enums.RoomTypeEnum;
 import com.leikooo.mallchat.common.chat.service.RoomFriendService;
 import org.springframework.stereotype.Service;

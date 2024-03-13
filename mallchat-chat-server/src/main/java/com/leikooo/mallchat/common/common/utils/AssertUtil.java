@@ -74,9 +74,7 @@ public class AssertUtil {
         Set<ConstraintViolation<T>> constraintViolations = validator.validate(obj);
         if (constraintViolations.size() > 0) {
             Map<String, String> errorMessages = new HashMap<>();
-            Iterator<ConstraintViolation<T>> iterator = constraintViolations.iterator();
-            while (iterator.hasNext()) {
-                ConstraintViolation<T> violation = iterator.next();
+            for (ConstraintViolation<T> violation : constraintViolations) {
                 errorMessages.put(violation.getPropertyPath().toString(), violation.getMessage());
             }
             return errorMessages;

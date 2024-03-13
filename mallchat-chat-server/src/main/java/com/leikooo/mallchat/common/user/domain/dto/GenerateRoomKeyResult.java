@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.user.domain.entity;
+package com.leikooo.mallchat.common.user.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,19 +1,16 @@
 package com.leikooo.mallchat.common.chat.domain.vo.request;
 
-import com.abin.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
+import com.leikooo.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * Description:
  * @author : <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-07-17
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
 @AllArgsConstructor

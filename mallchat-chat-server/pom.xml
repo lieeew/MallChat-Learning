@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.leikooo</groupId>
-            <artifactId>mallchat-commen-starter</artifactId>
+            <artifactId>mallchat-common-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

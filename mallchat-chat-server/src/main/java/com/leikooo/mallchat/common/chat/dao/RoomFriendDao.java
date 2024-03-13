@@ -1,9 +1,9 @@
 package com.leikooo.mallchat.common.chat.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.chat.mapper.RoomFriendMapper;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
-import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.user.domain.enums.RoomStatusEnum;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +30,11 @@ public class RoomFriendDao extends ServiceImpl<RoomFriendMapper, RoomFriend> {
                 .eq(RoomFriend::getRoomKey, roomKey)
                 .set(RoomFriend::getStatus, RoomStatusEnum.DISABLE.getStatus())
                 .update();
+    }
+
+    public RoomFriend getRoomFriendByRoomId(Long id) {
+        return lambdaQuery()
+                .eq(RoomFriend::getRoomId, id)
+                .one();
     }
 }

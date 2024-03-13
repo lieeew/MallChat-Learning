@@ -1,7 +1,7 @@
 package com.leikooo.mallchat.common.chat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.leikooo.mallchat.common.user.domain.entity.Room;
+import com.leikooo.mallchat.common.chat.domain.entity.Room;
 
 /**
  * <p>

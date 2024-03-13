@@ -50,19 +50,9 @@
         <dependencies>
             <dependency>
                 <groupId>com.leikooo</groupId>
-                <artifactId>mallchat-commen-starter</artifactId>
+                <artifactId>mallchat-common-starter</artifactId>
                 <version>${version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.leikooo</groupId>-->
-<!--                <artifactId>mallchat-oss-starter</artifactId>-->
-<!--                <version>${version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.leikooo</groupId>-->
-<!--                <artifactId>mallchat-transaction</artifactId>-->
-<!--                <version>${version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>

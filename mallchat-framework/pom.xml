@@ -12,7 +12,8 @@
     <artifactId>mallchat-framework</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>mallchat-commen-starter</module>
+        <module>mallchat-common-starter</module>
+        <module>mallchat-transaction</module>
     </modules>
 
     <properties>

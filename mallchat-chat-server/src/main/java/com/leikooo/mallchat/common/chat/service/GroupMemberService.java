@@ -1,8 +1,5 @@
 package com.leikooo.mallchat.common.chat.service;
 
-import com.leikooo.mallchat.common.user.domain.entity.GroupMember;
-import com.baomidou.mybatisplus.extension.service.IService;
-
 /**
  * <p>
  * 群成员表 服务类

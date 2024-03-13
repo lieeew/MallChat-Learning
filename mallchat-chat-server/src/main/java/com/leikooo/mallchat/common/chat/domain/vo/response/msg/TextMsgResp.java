@@ -28,8 +28,8 @@ public class TextMsgResp {
 
     @ApiModelProperty("艾特的uid")
     private List<Long> atUidList;
-    @ApiModelProperty("父消息，如果没有父消息，返回的是null")
 
+    @ApiModelProperty("父消息，如果没有父消息，返回的是null")
     private ReplyMsg reply;
 
     @Data
@@ -39,16 +39,22 @@ public class TextMsgResp {
     public static class ReplyMsg {
         @ApiModelProperty("消息id")
         private Long id;
+
         @ApiModelProperty("用户uid")
         private Long uid;
+
         @ApiModelProperty("用户名称")
         private String username;
+
         @ApiModelProperty("消息类型 1正常文本 2.撤回消息")
         private Integer type;
+
         @ApiModelProperty("消息内容不同的消息类型，见父消息内容体")
         private Object body;
+
         @ApiModelProperty("是否可消息跳转 0否 1是")
         private Integer canCallback;
+
         @ApiModelProperty("跳转间隔的消息条数")
         private Integer gapCount;
     }

@@ -1,8 +1,8 @@
 package com.leikooo.mallchat.common.chat.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.leikooo.mallchat.common.chat.domain.entity.Contact;
 import com.leikooo.mallchat.common.chat.mapper.ContactMapper;
-import com.leikooo.mallchat.common.user.domain.entity.Contact;
 import org.springframework.stereotype.Service;
 
 /**

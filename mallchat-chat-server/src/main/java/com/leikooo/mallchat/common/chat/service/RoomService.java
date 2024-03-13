@@ -1,8 +1,5 @@
 package com.leikooo.mallchat.common.chat.service;
 
-import com.leikooo.mallchat.common.user.domain.entity.Room;
-import com.baomidou.mybatisplus.extension.service.IService;
-
 /**
  * <p>
  * 房间表 服务类

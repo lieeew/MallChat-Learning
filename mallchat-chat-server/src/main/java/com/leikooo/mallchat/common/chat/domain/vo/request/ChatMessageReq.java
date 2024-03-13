@@ -32,7 +32,7 @@ public class ChatMessageReq {
     private Integer msgType;
 
     /**
-     * @see com.abin.mallchat.common.chat.domain.entity.msg
+     * @see com.leikooo.mallchat.common.chat.domain.entity.msg
      */
     @ApiModelProperty("消息内容，类型不同传值不同，见https://www.yuque.com/snab/mallcaht/rkb2uz5k1qqdmcmd")
     @NotNull

@@ -1,8 +1,8 @@
 package com.leikooo.mallchat.common.user.adapter;
 
+import com.leikooo.mallchat.common.chat.domain.entity.Room;
+import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
-import com.leikooo.mallchat.common.user.domain.entity.Room;
-import com.leikooo.mallchat.common.user.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.user.domain.enums.RoomStatusEnum;
 
 import java.util.List;
