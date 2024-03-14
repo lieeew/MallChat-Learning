@@ -4,12 +4,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leikooo.mallchat.transaction.domain.entity.SecureInvokeRecord;
 
 /**
- * <p>
- * 本地消息表 Mapper 接口
- * </p>
- *
+ * Description:
  * @author <a href="https://github.com/lieeew">leikooo</a>
- * @since 2024-03-13
+ * @date 2023-08-06
  */
 public interface SecureInvokeRecordMapper extends BaseMapper<SecureInvokeRecord> {
 
