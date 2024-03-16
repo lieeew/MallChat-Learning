@@ -8,6 +8,7 @@ import com.leikooo.mallchat.common.chat.domain.vo.request.msg.TextMsgReq;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
  * @date 2024/3/12
  * @description
  */
+@Component
 public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq>{
     @Resource
     private MessageDao messageDao;

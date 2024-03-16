@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.transaction.service;
 
+import java.util.Objects;
+
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
  * @date 2024/3/14
@@ -9,7 +11,7 @@ public class SecureInvokeHolder {
     public static final ThreadLocal<Boolean> IN_TRANSACTION = new ThreadLocal<>();
 
     public static Boolean getIsInTransaction() {
-        return IN_TRANSACTION.get();
+        return Objects.nonNull(IN_TRANSACTION.get());
     }
 
     public static void setInTransaction() {

@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.user.adapter;
 
+import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
@@ -70,6 +71,13 @@ public class WebSocketAdapter {
         return WSBaseResp.<WSFriendApply>builder()
                 .data(data)
                 .type(APPLY.getType())
+                .build();
+    }
+
+    public static WSBaseResp<?> buildNewMsgResp(ChatMessageResp chatMessageResp) {
+        return WSBaseResp.<ChatMessageResp>builder()
+                .type(MESSAGE.getType())
+                .data(chatMessageResp)
                 .build();
     }
 }

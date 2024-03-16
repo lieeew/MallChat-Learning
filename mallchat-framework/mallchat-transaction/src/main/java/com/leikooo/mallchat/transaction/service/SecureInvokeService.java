@@ -10,6 +10,8 @@ import com.leikooo.mallchat.transaction.domain.entity.SecureInvokeRecord;
 import com.leikooo.mallchat.utils.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -17,6 +19,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -38,8 +41,9 @@ public class SecureInvokeService {
 
     public static final double RETRY_INTERVAL_MINUTES = 2D;
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "*/10 * * * * ?")
     public void retryUnsuccessfulRecord() {
+        log.info("SecureInvokeService retryUnsuccessfulRecord thread name: {}", Thread.currentThread().getName());
         List<SecureInvokeRecord> waitRetryRecords = recordDao.getWaitRetryRecords();
         waitRetryRecords.forEach(this::doAsync);
     }
@@ -91,10 +95,10 @@ public class SecureInvokeService {
 
     private void retryRecord(SecureInvokeRecord record, Exception e) {
         SecureInvokeRecord secureInvokeRecord = new SecureInvokeRecord();
-        BeanUtil.copyProperties(record, secureInvokeRecord);
-        secureInvokeRecord.setFailReason(e.getMessage());
+        BeanUtils.copyProperties(record, secureInvokeRecord);
+        secureInvokeRecord.setFailReason(ExceptionUtils.getStackTrace(e));
         secureInvokeRecord.setNextRetryTime(getNextRetryTime(record.getRetryTimes()));
-        if (secureInvokeRecord.getRetryTimes() > secureInvokeRecord.getMaxRetryTimes()) {
+        if (secureInvokeRecord.getRetryTimes() >= secureInvokeRecord.getMaxRetryTimes()) {
             secureInvokeRecord.setStatus(SecureInvokeRecord.STATUS_FAIL);
         } else {
             secureInvokeRecord.setRetryTimes(record.getRetryTimes() + 1);

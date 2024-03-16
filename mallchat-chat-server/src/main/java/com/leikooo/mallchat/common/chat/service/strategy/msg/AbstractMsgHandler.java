@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.chat.service.strategy.msg;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.leikooo.mallchat.common.chat.dao.MessageDao;
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum;
@@ -9,6 +10,7 @@ import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,6 @@ import java.lang.reflect.ParameterizedType;
  * @date 2024/3/11
  * @description
  */
-@Component
 public abstract class AbstractMsgHandler<Req> {
     @Resource
     private MessageDao messageDao;
@@ -31,7 +32,7 @@ public abstract class AbstractMsgHandler<Req> {
     @PostConstruct
     private void init() {
         ParameterizedType genericSuperclass = (ParameterizedType) this.getClass().getGenericSuperclass();
-        bodyClass = (Class<Req>) genericSuperclass.getActualTypeArguments()[0];
+        this.bodyClass = (Class<Req>) genericSuperclass.getActualTypeArguments()[0];
         MsgHandlerFactory.register(getMessageType().getType(), this);
     }
 
@@ -39,10 +40,11 @@ public abstract class AbstractMsgHandler<Req> {
 
     public void check(Req req, Long roomId, Long uid) {
 
-    };
+    }
 
-    private Long checkAndSave(ChatMessageReq req, Long uid) {
-        Req parseBody = parseBody(req.getBody());
+    @Transactional(rollbackFor = Exception.class)
+    public Long checkAndSave(ChatMessageReq req, Long uid) {
+        Req parseBody = this.parseBody(req.getBody());
         AssertUtil.allCheckValidate(parseBody);
         check(parseBody, req.getRoomId(), uid);
         Message message = Message.builder().fromUid(uid).roomId(req.getRoomId()).status(MessageStatusEnum.of(MessageStatusEnum.NORMAL.getStatus()).getStatus()).build();
@@ -50,11 +52,6 @@ public abstract class AbstractMsgHandler<Req> {
         // 子类扩展
         saveMsg(message, parseBody);
         return message.getId();
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public Long checkAndSaveMsg(ChatMessageReq req, Long uid) {
-        return ((AbstractMsgHandler<?>) AopContext.currentProxy()).checkAndSave(req, uid);
     }
 
     public abstract void saveMsg(Message msg, Req body);

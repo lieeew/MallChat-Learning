@@ -14,5 +14,6 @@ public class TestConsumer implements RocketMQListener<String> {
     @Override
     public void onMessage(String dto) {
         System.out.println("收到消息{}" + dto);
+        return null;
     }
 }

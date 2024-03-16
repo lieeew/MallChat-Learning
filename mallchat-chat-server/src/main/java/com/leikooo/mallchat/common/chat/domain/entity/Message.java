@@ -20,11 +20,11 @@ import java.util.Date;
  * @since 2023-03-25
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@TableName(value = "message", autoResultMap = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@TableName(value = "message", autoResultMap = true)
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;

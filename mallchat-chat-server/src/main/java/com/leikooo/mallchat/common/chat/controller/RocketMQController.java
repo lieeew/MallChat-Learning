@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.chat.controller;
 
+import com.leikooo.mallchat.common.common.constant.MQConstant;
+import com.leikooo.mallchat.common.common.domain.dto.MsgSendMessageDTO;
 import com.leikooo.mallchat.transaction.service.MqProducer;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,7 @@ public class RocketMQController {
 
     @GetMapping("/sendMsg")
     @Transactional
-    public void sendMsg(String topic, String body, String key) {
-        mqProducer.sendSecureMsg(topic, body, key);
+    public void sendMsg(String topic, Long body, String key) {
+        mqProducer.sendSecureMsg(topic,new MsgSendMessageDTO(body), key);
     }
 }

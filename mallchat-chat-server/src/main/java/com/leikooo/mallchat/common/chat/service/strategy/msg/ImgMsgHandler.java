@@ -6,6 +6,7 @@ import com.leikooo.mallchat.common.chat.domain.entity.msg.ImgMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Optional;
  * @date 2024/3/12
  * @description
  */
+@Component
 public class ImgMsgHandler extends AbstractMsgHandler<ImgMsgDTO> {
     @Resource
     private MessageDao messageDao;

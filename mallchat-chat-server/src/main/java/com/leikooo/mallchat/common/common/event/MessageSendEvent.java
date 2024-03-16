@@ -10,10 +10,10 @@ import org.springframework.context.ApplicationEvent;
  */
 @Getter
 public class MessageSendEvent extends ApplicationEvent {
-    public MessageSendEvent(Object source, Long roomId) {
+    public MessageSendEvent(Object source, Long messageId) {
         super(source);
-        this.roomId = roomId;
+        this.messageId = messageId;
     }
 
-    private final Long roomId;
+    private final Long messageId;
 }

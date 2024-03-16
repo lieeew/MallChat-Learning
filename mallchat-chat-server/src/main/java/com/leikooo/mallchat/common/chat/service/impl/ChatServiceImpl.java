@@ -1,28 +1,30 @@
 package com.leikooo.mallchat.common.chat.service.impl;
 
 import com.leikooo.mallchat.common.chat.dao.GroupMemberDao;
-import com.leikooo.mallchat.common.chat.dao.MessageDao;
 import com.leikooo.mallchat.common.chat.dao.RoomDao;
 import com.leikooo.mallchat.common.chat.dao.RoomFriendDao;
 import com.leikooo.mallchat.common.chat.domain.entity.GroupMember;
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.entity.Room;
 import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
-import com.leikooo.mallchat.common.chat.domain.enums.MessageType;
+import com.leikooo.mallchat.common.chat.domain.entity.msg.BaseFileDTO;
+import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
-import com.leikooo.mallchat.common.chat.domain.vo.response.ChatRoomResp;
-import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.common.event.MessageSendEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
+import com.leikooo.mallchat.common.user.dao.UserDao;
+import com.leikooo.mallchat.utils.JsonUtils;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
 import static com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory.msgHandlerMap;
@@ -50,8 +52,24 @@ public class ChatServiceImpl implements ChatService {
     public void sendMsg(Long uid, ChatMessageReq req) {
         check(uid, req);
         AbstractMsgHandler<?> msgHandler = msgHandlerMap.get(req.getMsgType());
-        Long messageId = msgHandler.checkAndSaveMsg(req, uid);
+        Long messageId = msgHandler.checkAndSave(req, uid);
         applicationEventPublisher.publishEvent(new MessageSendEvent(this, messageId));
+    }
+
+    @Override
+    public ChatMessageResp getChatMessageResp(Message message, Long userId) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(message.getStatus());
+        String className = messageTypeEnum.getClazz().getSimpleName();
+        Object invoke = Class.forName(MessageExtra.class.getName()).getDeclaredMethod("get" + className).invoke(message.getExtra(), null);
+        ChatMessageResp.Message chatMessageMessage = ChatMessageResp.Message.builder()
+                .type(message.getType())
+                .sendTime(message.getCreateTime())
+                .roomId(message.getRoomId())
+                .body(invoke)
+                .build();
+        return ChatMessageResp.builder().message(chatMessageMessage)
+                .fromUser(ChatMessageResp.UserInfo.builder().uid(userId).build())
+                .build();
     }
 
     private void check(Long uid, ChatMessageReq req) {

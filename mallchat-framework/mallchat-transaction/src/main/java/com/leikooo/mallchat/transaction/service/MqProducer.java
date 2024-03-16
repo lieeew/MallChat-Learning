@@ -17,12 +17,12 @@ public class MqProducer {
     private RocketMQTemplate rocketMQTemplate;
 
     @SecureInvoke
-    public void sendSecureMsg(String topic, Object body, String key) {
+    public void sendSecureMsg(String topic, Object body, Object key) {
         Message<Object> msg = MessageBuilder.withPayload(body).setHeader("KEYS", key).build();
         rocketMQTemplate.send(topic, msg);
     }
 
-    public void sendMsg(String topic, Object body, String key) {
+    public void sendMsg(String topic, Object body, Object key) {
         Message<Object> msg = MessageBuilder.withPayload(body).setHeader("KEYS", key).build();
         rocketMQTemplate.send(topic, msg);
     }
