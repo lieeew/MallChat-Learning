@@ -20,8 +20,13 @@ import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.utils.JsonUtils;
 import org.checkerframework.checker.units.qual.C;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
@@ -49,8 +54,10 @@ public class ChatServiceImpl implements ChatService {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void sendMsg(Long uid, ChatMessageReq req) {
         check(uid, req);
+        // 这个调用方式会导致事务失效，对应的实例是不是 Spring 代理对象
         AbstractMsgHandler<?> msgHandler = msgHandlerMap.get(req.getMsgType());
         Long messageId = msgHandler.checkAndSave(req, uid);
         applicationEventPublisher.publishEvent(new MessageSendEvent(this, messageId));
@@ -58,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatMessageResp getChatMessageResp(Message message, Long userId) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(message.getStatus());
+        MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(message.getType());
         String className = messageTypeEnum.getClazz().getSimpleName();
         Object invoke = Class.forName(MessageExtra.class.getName()).getDeclaredMethod("get" + className).invoke(message.getExtra(), null);
         ChatMessageResp.Message chatMessageMessage = ChatMessageResp.Message.builder()

@@ -12,7 +12,10 @@ import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -44,10 +47,15 @@ public abstract class AbstractMsgHandler<Req> {
 
     @Transactional(rollbackFor = Exception.class)
     public Long checkAndSave(ChatMessageReq req, Long uid) {
+        // 这个可以获取事务的详细信息
+//        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+//            String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
+//            TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+//        }
         Req parseBody = this.parseBody(req.getBody());
         AssertUtil.allCheckValidate(parseBody);
         check(parseBody, req.getRoomId(), uid);
-        Message message = Message.builder().fromUid(uid).roomId(req.getRoomId()).status(MessageStatusEnum.of(MessageStatusEnum.NORMAL.getStatus()).getStatus()).build();
+        Message message = Message.builder().fromUid(uid).type(req.getMsgType()).roomId(req.getRoomId()).status(MessageStatusEnum.of(MessageStatusEnum.NORMAL.getStatus()).getStatus()).build();
         messageDao.save(message);
         // 子类扩展
         saveMsg(message, parseBody);

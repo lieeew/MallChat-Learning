@@ -5,8 +5,14 @@ import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.ImgMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
+import org.apache.ibatis.transaction.Transaction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Resource;
 import java.util.Optional;
