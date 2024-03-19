@@ -28,7 +28,7 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class AbstractMsgHandler<Req> {
     @Resource
-    private MessageDao messageDao;
+    protected MessageDao messageDao;
 
     private Class<Req> bodyClass;
 
@@ -47,7 +47,7 @@ public abstract class AbstractMsgHandler<Req> {
 
     @Transactional(rollbackFor = Exception.class)
     public Long checkAndSave(ChatMessageReq req, Long uid) {
-        // 这个可以获取事务的详细信息
+//        这个可以获取事务的详细信息
 //        if (TransactionSynchronizationManager.isActualTransactionActive()) {
 //            String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
 //            TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();

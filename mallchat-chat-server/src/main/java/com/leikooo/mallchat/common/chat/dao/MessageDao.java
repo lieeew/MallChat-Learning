@@ -2,8 +2,11 @@ package com.leikooo.mallchat.common.chat.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum;
 import com.leikooo.mallchat.common.chat.mapper.MessageMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>

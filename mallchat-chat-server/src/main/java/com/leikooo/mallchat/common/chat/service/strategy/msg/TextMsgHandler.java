@@ -19,7 +19,7 @@ import java.util.Optional;
  * @description
  */
 @Component
-public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq>{
+public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq> {
     @Resource
     private MessageDao messageDao;
 
@@ -39,7 +39,7 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq>{
         });
 
         Optional.ofNullable(textMsgReq).map(TextMsgReq::getAtUidList).ifPresent(atUidList -> {
-              atUidList.forEach(atUid -> AssertUtil.isTrue(Optional.ofNullable(userDao.getById(atUid)).isPresent(), "艾特的用户不存在"));
+            atUidList.forEach(atUid -> AssertUtil.isTrue(Optional.ofNullable(userDao.getById(atUid)).isPresent(), "艾特的用户不存在"));
         });
 
         Optional.ofNullable(textMsgReq).map(TextMsgReq::getContent).ifPresent(content -> {

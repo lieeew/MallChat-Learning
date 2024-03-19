@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.chat.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.leikooo.mallchat.common.chat.domain.entity.MessageMark;
 
 /**
  * <p>
@@ -10,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author <a href="https://github.com/zongzibinbin">abin</a>
  * @since 2023-04-08
  */
-//public interface MessageMarkMapper extends BaseMapper<MessageMark> {
-//
-//}
+public interface MessageMarkMapper extends BaseMapper<MessageMark> {
+
+}

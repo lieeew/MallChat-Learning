@@ -1,7 +1,5 @@
 package com.leikooo.mallchat.common.chat.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
 /**
  * <p>
  * 微信消息表 Mapper 接口

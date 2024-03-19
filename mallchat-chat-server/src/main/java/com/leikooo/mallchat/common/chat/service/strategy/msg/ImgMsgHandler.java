@@ -24,8 +24,8 @@ import java.util.Optional;
  */
 @Component
 public class ImgMsgHandler extends AbstractMsgHandler<ImgMsgDTO> {
-    @Resource
-    private MessageDao messageDao;
+
+    private MessageExtra messageExtra;
 
     @Override
     protected MessageTypeEnum getMessageType() {
@@ -34,10 +34,15 @@ public class ImgMsgHandler extends AbstractMsgHandler<ImgMsgDTO> {
 
     @Override
     public void saveMsg(Message msg, ImgMsgDTO body) {
-        MessageExtra messageExtra = MessageExtra.builder().imgMsgDTO(Optional.ofNullable(body).orElse(new ImgMsgDTO())).build();
+        messageExtra = MessageExtra.builder().imgMsgDTO(Optional.ofNullable(body).orElse(new ImgMsgDTO())).build();
         Message message = new Message();
         BeanUtils.copyProperties(msg, message);
         message.setExtra(messageExtra);
         messageDao.updateById(message);
+    }
+
+    @Override
+    public Object showMsg() {
+        return messageExtra;
     }
 }

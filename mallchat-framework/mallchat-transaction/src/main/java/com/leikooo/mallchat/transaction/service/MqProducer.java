@@ -16,7 +16,7 @@ public class MqProducer {
     @Resource
     private RocketMQTemplate rocketMQTemplate;
 
-    @SecureInvoke
+    @SecureInvoke(async = false)
     public void sendSecureMsg(String topic, Object body, Object key) {
         Message<Object> msg = MessageBuilder.withPayload(body).setHeader("KEYS", key).build();
         rocketMQTemplate.send(topic, msg);
