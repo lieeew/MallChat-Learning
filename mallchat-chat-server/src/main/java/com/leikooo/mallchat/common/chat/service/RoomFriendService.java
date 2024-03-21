@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.chat.service;
 
+import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ import java.util.List;
  */
 public interface RoomFriendService {
 
-    void creatFriendRoom(Long uid, Long applyId);
+    RoomFriend creatFriendRoom(Long uid, Long applyId);
 
     void deleteFriendRoom(List<Long> uidList);
 }

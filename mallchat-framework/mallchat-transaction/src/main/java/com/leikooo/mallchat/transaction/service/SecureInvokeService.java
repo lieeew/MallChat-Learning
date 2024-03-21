@@ -41,7 +41,8 @@ public class SecureInvokeService {
 
     public static final double RETRY_INTERVAL_MINUTES = 2D;
 
-    @Scheduled(cron = "*/10 * * * * ?")
+    // todo 正式上线之后再打开
+//    @Scheduled(cron = "*/10 * * * * ?")
     public void retryUnsuccessfulRecord() {
         log.info("SecureInvokeService retryUnsuccessfulRecord thread name: {}", Thread.currentThread().getName());
         List<SecureInvokeRecord> waitRetryRecords = recordDao.getWaitRetryRecords();

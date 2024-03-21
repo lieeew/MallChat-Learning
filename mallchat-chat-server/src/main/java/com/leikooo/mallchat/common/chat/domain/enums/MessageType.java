@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public enum MessageType {
     NORMAL_MESSAGE(1, "正常消息"),
 
-    RECALL_MESSAGE(1, "正常消息"),
+    RECALL_MESSAGE(1, "撤回消息"),
     ;
 
     private final Integer type;

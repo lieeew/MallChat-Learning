@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.vo.request;
 
+import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,7 @@ public class ChatMessageReq {
 
     /**
      * @see com.leikooo.mallchat.common.chat.domain.entity.msg
+     * @see com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp
      */
     @ApiModelProperty("消息内容，类型不同传值不同，见https://www.yuque.com/snab/mallcaht/rkb2uz5k1qqdmcmd")
     @NotNull

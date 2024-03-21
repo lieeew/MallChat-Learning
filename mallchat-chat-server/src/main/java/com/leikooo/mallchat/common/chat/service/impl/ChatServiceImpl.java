@@ -1,20 +1,15 @@
 package com.leikooo.mallchat.common.chat.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ObjectUtil;
 import com.leikooo.mallchat.common.chat.dao.GroupMemberDao;
 import com.leikooo.mallchat.common.chat.dao.MessageMarkDao;
 import com.leikooo.mallchat.common.chat.dao.RoomDao;
 import com.leikooo.mallchat.common.chat.dao.RoomFriendDao;
 import com.leikooo.mallchat.common.chat.domain.entity.*;
-import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
-import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
-import com.leikooo.mallchat.common.chat.service.adapter.MessageAdapter;
+import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
@@ -26,13 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import static com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory.msgHandlerMap;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>

@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.user.adapter;
+package com.leikooo.mallchat.common.chat.adaptor;
 
 import com.leikooo.mallchat.common.chat.domain.entity.Room;
 import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;

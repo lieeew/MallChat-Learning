@@ -16,6 +16,4 @@ public class HotRoomCache {
     public void refreshActiveTime(Long roomId, Date date) {
         RedisUtils.zAdd(RedisKey.getKey(RedisKey.HOT_ROOM_ZSET), roomId, date.getTime());
     }
-
-    public void save
 }

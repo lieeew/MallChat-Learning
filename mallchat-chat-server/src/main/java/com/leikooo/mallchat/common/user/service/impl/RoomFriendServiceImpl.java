@@ -5,7 +5,7 @@ import com.leikooo.mallchat.common.chat.domain.entity.Room;
 import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.user.adapter.FriendAdapter;
-import com.leikooo.mallchat.common.user.adapter.ChatAdapter;
+import com.leikooo.mallchat.common.chat.adaptor.ChatAdapter;
 import com.leikooo.mallchat.common.chat.dao.RoomDao;
 import com.leikooo.mallchat.common.chat.dao.RoomFriendDao;
 import com.leikooo.mallchat.common.user.domain.dto.GenerateRoomKeyResult;
@@ -30,7 +30,7 @@ public class RoomFriendServiceImpl implements RoomFriendService {
     private RoomDao roomDao;
 
     @Override
-    public void creatFriendRoom(Long uid, Long applyId) {
+    public RoomFriend creatFriendRoom(Long uid, Long applyId) {
         GenerateRoomKeyResult generateRoomKeyResult = FriendAdapter.generateRoomKey(uid, applyId);
         RoomFriend roomFriend = roomFriendDao.getById(generateRoomKeyResult.getRoomKey());
         if (ObjectUtil.isNotNull(roomFriend)) {
@@ -40,6 +40,7 @@ public class RoomFriendServiceImpl implements RoomFriendService {
             roomFriend = ChatAdapter.buildFriendRoom(room.getId(), generateRoomKeyResult.getRoomKey(), generateRoomKeyResult.getUidList());
             roomFriendDao.save(roomFriend);
         }
+        return roomFriend;
     }
 
     @Override

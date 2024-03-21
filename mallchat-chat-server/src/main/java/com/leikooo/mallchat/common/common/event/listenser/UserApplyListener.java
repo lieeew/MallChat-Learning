@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.common.event.listenser;
 
+import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
+import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.common.event.UserApplyEvent;
 import com.leikooo.mallchat.common.user.adapter.WebSocketAdapter;
 import com.leikooo.mallchat.common.user.dao.UserApplyDao;
@@ -25,10 +27,10 @@ public class UserApplyListener {
     private WebSocketService webSocketService;
 
     @EventListener(UserApplyEvent.class)
-    public void countUserApplyUnRead (UserApplyEvent userApplyEvent) {
+    public void countUserApplyUnRead(UserApplyEvent userApplyEvent) {
         UserApply userApply = userApplyEvent.getUserApply();
         int unReadCount = userApplyDao.getUnReadCount(userApply.getTargetId());
         Long uid = userApply.getUid();
-        webSocketService.sendToUid(WebSocketAdapter.buildApplySend(unReadCount, uid), userApply.getUid());
+        webSocketService.sendToUid(WebSocketAdapter.buildApplySend(unReadCount, uid), userApply.getTargetId());
     }
 }

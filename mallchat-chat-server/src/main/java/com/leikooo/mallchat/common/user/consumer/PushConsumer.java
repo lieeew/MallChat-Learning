@@ -7,6 +7,7 @@ import com.leikooo.mallchat.common.user.service.WebSocketService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
  * @description
  */
 @Slf4j
+@Component
 @RocketMQMessageListener(topic = MQConstant.PUSH_TOPIC, consumerGroup = MQConstant.PUSH_GROUP)
 public class PushConsumer implements RocketMQListener<PushMessageDTO> {
     @Resource

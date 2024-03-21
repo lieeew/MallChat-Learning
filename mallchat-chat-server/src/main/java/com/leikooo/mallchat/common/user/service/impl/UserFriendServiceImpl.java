@@ -4,6 +4,9 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
+import com.leikooo.mallchat.common.chat.domain.entity.RoomFriend;
+import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.common.annotation.RedissonLock;
 import com.leikooo.mallchat.common.common.domain.vo.request.CursorPageBaseReq;
 import com.leikooo.mallchat.common.common.domain.vo.request.PageBaseReq;
@@ -69,6 +72,9 @@ public class UserFriendServiceImpl implements UserFriendService {
     @Resource
     private RoomFriendService roomFriendService;
 
+    @Resource
+    private ChatService chatService;
+
     @Override
     public CursorPageBaseResp<FriendResp> getFriendList(Long uid, CursorPageBaseReq req) {
         CursorPageBaseResp<UserFriend> userFriendList = userFriendDao.getUserFriendList(uid, req);
@@ -128,7 +134,9 @@ public class UserFriendServiceImpl implements UserFriendService {
         // 添加好友关系
         creatUserFriend(uid, applyId);
         // 创建房间
-        roomFriendService.creatFriendRoom(uid, applyId);
+        RoomFriend roomFriend = roomFriendService.creatFriendRoom(uid, applyId);
+        // 发送一个同意消息 「我们已经是好友了，开始聊天吧」
+        chatService.sendMsg(uid, MessageAdapter.buildAgreeMsg(uid, roomFriend.getRoomId()));
     }
 
 

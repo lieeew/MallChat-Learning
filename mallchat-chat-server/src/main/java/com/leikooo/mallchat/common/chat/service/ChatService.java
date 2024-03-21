@@ -16,10 +16,7 @@ public interface ChatService {
     void sendMsg(Long uid, ChatMessageReq req);
 
     /**
-     *
-     * @param message
      * @param receiveUid 接受消息的 uid，可 null
-     * @return
      */
     ChatMessageResp getChatMessageResp(Message message, Long receiveUid);
 

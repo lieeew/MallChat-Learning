@@ -37,4 +37,10 @@ public class RoomFriendDao extends ServiceImpl<RoomFriendMapper, RoomFriend> {
                 .eq(RoomFriend::getRoomId, id)
                 .one();
     }
+
+    public RoomFriend getRoomFriendByRoomKey(String roomKey) {
+        return lambdaQuery()
+                .eq(RoomFriend::getRoomKey, roomKey)
+                .one();
+    }
 }

@@ -1,20 +1,19 @@
-package com.leikooo.mallchat.common.chat.service.adapter;
+package com.leikooo.mallchat.common.chat.adaptor;
 
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.entity.MessageMark;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
+import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory.msgHandlerMap;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -27,7 +26,7 @@ public class MessageAdapter {
         return messages.stream().filter(Objects::nonNull).map(message -> {
             ChatMessageResp chatMessageResp = new ChatMessageResp();
             chatMessageResp.setMessage(buildMessage(message, messageMarks, message.getFromUid()));
-            chatMessageResp.setFromUser(buildFromUserInfo(message));
+            chatMessageResp.setFromUser(buildFromUserInfo(message.getFromUid()));
             return chatMessageResp;
         }).collect(Collectors.toList());
     }
@@ -39,8 +38,8 @@ public class MessageAdapter {
         return messageVO;
     }
 
-    private static ChatMessageResp.UserInfo buildFromUserInfo(Message message) {
-        return ChatMessageResp.UserInfo.builder().uid(message.getFromUid()).build();
+    private static ChatMessageResp.UserInfo buildFromUserInfo(Long uid) {
+        return ChatMessageResp.UserInfo.builder().uid(uid).build();
     }
 
     private static ChatMessageResp.MessageMark buildMessageMark(Long messageId, List<MessageMark> marks, Long receiveUid) {
@@ -74,4 +73,15 @@ public class MessageAdapter {
         return messageMark;
     }
 
+    public static ChatMessageReq buildTextMsg(Long uid, String msg, Long roomId) {
+        return null;
+    }
+
+    public static ChatMessageReq buildAgreeMsg(Long uid, Long roomId) {
+        ChatMessageReq chatMessageReq = new ChatMessageReq();
+        chatMessageReq.setMsgType(MessageTypeEnum.TEXT.getType());
+        chatMessageReq.setRoomId(roomId);
+        chatMessageReq.setBody(TextMsgResp.builder().content("我们已经是好友了，开始聊天吧").build());
+        return chatMessageReq;
+    }
 }

@@ -1,6 +1,5 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -178,7 +177,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void sendToUid(WSBaseResp<?> wsResp, Long uid) {
-       ONLINE_UID_MAP.get(uid).forEach(channel -> sendMsg(channel, wsResp));
+        ONLINE_UID_MAP.get(uid).forEach(channel -> sendMsg(channel, wsResp));
     }
 
     @Override
@@ -189,9 +188,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     /**
      * 1、发送登录成功的消息
      * 2、更新 ONLINE_WS_MAP 里面与 channel 绑定的对象的属性
-     *
-     * @param channel
-     * @param user
+     * 3、更新 ONLINE_UID_MAP 里面的数据
      */
     private void loginSuccess(Channel channel, WSBaseResp<?> wsBaseResp, User user) {
         // 更新 ONLINE_UID_MAP
