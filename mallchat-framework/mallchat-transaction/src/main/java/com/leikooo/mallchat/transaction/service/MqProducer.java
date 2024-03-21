@@ -22,8 +22,8 @@ public class MqProducer {
         rocketMQTemplate.send(topic, msg);
     }
 
-    public void sendMsg(String topic, Object body, Object key) {
-        Message<Object> msg = MessageBuilder.withPayload(body).setHeader("KEYS", key).build();
+    public void sendMsg(String topic, Object body) {
+        Message<Object> msg = MessageBuilder.withPayload(body).build();
         rocketMQTemplate.send(topic, msg);
     }
 }

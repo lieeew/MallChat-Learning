@@ -15,7 +15,13 @@ import java.util.List;
 public interface ChatService {
     void sendMsg(Long uid, ChatMessageReq req);
 
-    ChatMessageResp getChatMessageResp(Message message, Long userId) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException;
+    /**
+     *
+     * @param message
+     * @param receiveUid 接受消息的 uid，可 null
+     * @return
+     */
+    ChatMessageResp getChatMessageResp(Message message, Long receiveUid);
 
     List<ChatMessageResp> getMsgRespBatch(List<Message> messages, Long receiveUid);
 }

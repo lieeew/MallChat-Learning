@@ -38,6 +38,11 @@ public class RedisKey {
      */
     public static final String USER_INFO_STRING = "user:info:uid_%d";
 
+    /**
+     * 热门群聊 key
+     */
+    public static final String HOT_ROOM_ZSET = "hot:room:zset";
+
     public static String getKey(String redisKey, Object... args) {
         return BASE_REDIS_KEY + String.format(redisKey, args);
     }

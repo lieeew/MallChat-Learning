@@ -5,6 +5,9 @@ import com.leikooo.mallchat.common.chat.domain.entity.Contact;
 import com.leikooo.mallchat.common.chat.mapper.ContactMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * <p>
  * 会话列表 服务实现类
@@ -16,4 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContactDao extends ServiceImpl<ContactMapper, Contact> {
 
+    public void refreshOrCreateActiveTime(Long roomId, List<Long> memberUidList, Long msgId, Date activeTime) {
+        baseMapper.refreshOrCreateActiveTime(roomId, memberUidList, msgId, activeTime);
+    }
 }

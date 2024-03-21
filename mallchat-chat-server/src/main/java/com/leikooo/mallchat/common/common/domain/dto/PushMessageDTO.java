@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.common.domain.dto;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import com.leikooo.mallchat.common.user.domain.enums.WSPushTypeEnum;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * Date: 2023-08-12
  */
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class PushMessageDTO implements Serializable {
@@ -23,6 +25,7 @@ public class PushMessageDTO implements Serializable {
      * 推送的ws消息
      */
     private WSBaseResp<?> wsBaseMsg;
+
     /**
      * 推送的uid
      */

@@ -29,7 +29,7 @@ public class WSMsgMark {
         /**
          * @see com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum
          */
-        @ApiModelProperty("标记类型 1点赞 2举报")
+        @ApiModelProperty("标记类型 0点踩 1点赞 2举报")
         private Integer markType;
         @ApiModelProperty("被标记的数量")
         private Integer markCount;

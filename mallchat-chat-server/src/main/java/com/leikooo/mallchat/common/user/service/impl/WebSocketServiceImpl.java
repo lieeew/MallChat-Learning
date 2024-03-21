@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -29,9 +30,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -46,6 +49,12 @@ public class WebSocketServiceImpl implements WebSocketService {
      * 管理所有的用户连接，包括登录、未登录
      */
     private static final Map<Channel, WSChannelExtraDTO> ONLINE_WS_MAP = new ConcurrentHashMap<>();
+
+    /**
+     * 所有在线的用户和对应的socket
+     */
+    private static final ConcurrentHashMap<Long, CopyOnWriteArrayList<Channel>> ONLINE_UID_MAP = new ConcurrentHashMap<>();
+
 
     public static final Duration EXPIRE_MINUTES = Duration.ofHours(1);
 
@@ -169,11 +178,12 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void sendToUid(WSBaseResp<?> wsResp, Long uid) {
-        ONLINE_WS_MAP.forEach((channel, wsChannelExtraDTO) -> {
-            if (uid.equals(wsChannelExtraDTO.getUid())) {
-                websocketExecutor.execute(() -> sendMsg(channel, wsResp));
-            }
-        });
+       ONLINE_UID_MAP.get(uid).forEach(channel -> sendMsg(channel, wsResp));
+    }
+
+    @Override
+    public void sendToUidList(WSBaseResp<?> wsResp, List<Long> uidList) {
+        uidList.forEach(uid -> sendToUid(wsResp, uid));
     }
 
     /**
@@ -184,12 +194,31 @@ public class WebSocketServiceImpl implements WebSocketService {
      * @param user
      */
     private void loginSuccess(Channel channel, WSBaseResp<?> wsBaseResp, User user) {
-        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
-        wsChannelExtraDTO.setUid(user.getId());
-        // todo ip 相关
+        // 更新 ONLINE_UID_MAP
+        online(channel, user.getId());
+        ONLINE_WS_MAP.get(channel).setUid(user.getId());
         user.setUpdateTime(new Date());
         user.refreshIp(NettyUtil.getAttr(channel, NettyUtil.IP));
-        applicationEventPublisher.publishEvent(new UserOnlineEvent(this, user));
         sendMsg(channel, wsBaseResp);
+        applicationEventPublisher.publishEvent(new UserOnlineEvent(this, user));
+    }
+
+    /**
+     * 把 uid 放到对应的 ONLINE_UID_MAP
+     */
+    private void online(Channel channel, Long uid) {
+        getOrInitChannelExt(channel).setUid(uid);
+        ONLINE_UID_MAP.putIfAbsent(uid, new CopyOnWriteArrayList<>());
+        ONLINE_UID_MAP.get(uid).add(channel);
+        NettyUtil.setAttr(channel, NettyUtil.UID, uid);
+    }
+
+    /**
+     * 如果在线列表不存在，就先把该 channel 放进在线列表
+     */
+    private WSChannelExtraDTO getOrInitChannelExt(Channel channel) {
+        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.getOrDefault(channel, new WSChannelExtraDTO());
+        WSChannelExtraDTO old = ONLINE_WS_MAP.putIfAbsent(channel, wsChannelExtraDTO);
+        return Objects.isNull(old) ? wsChannelExtraDTO : old;
     }
 }

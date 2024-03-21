@@ -1,11 +1,15 @@
 package com.leikooo.mallchat.common.user.adapter;
 
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
+import com.leikooo.mallchat.common.common.domain.dto.PushMessageDTO;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
+import com.leikooo.mallchat.common.user.domain.enums.WSPushTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
 import com.leikooo.mallchat.common.user.domain.vo.response.ws.*;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+
+import java.util.List;
 
 import static com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum.*;
 
@@ -79,5 +83,16 @@ public class WebSocketAdapter {
                 .type(MESSAGE.getType())
                 .data(chatMessageResp)
                 .build();
+    }
+
+    /**
+     * 推送给 hot 群聊的所有人
+     */
+    public static PushMessageDTO buildPushAllMsg(ChatMessageResp chatMessageResp) {
+        return new PushMessageDTO(chatMessageResp.getFromUser().getUid(), buildNewMsgResp(chatMessageResp));
+    }
+
+    public static PushMessageDTO buildPushMsg(ChatMessageResp chatMessageResp, List<Long> roomUsersId) {
+        return new PushMessageDTO(roomUsersId, buildNewMsgResp(chatMessageResp));
     }
 }

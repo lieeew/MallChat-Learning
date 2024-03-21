@@ -32,6 +32,8 @@ public abstract class AbstractMsgHandler<Req> {
 
     private Class<Req> bodyClass;
 
+    protected Object extraMessage;
+
     @PostConstruct
     private void init() {
         ParameterizedType genericSuperclass = (ParameterizedType) this.getClass().getGenericSuperclass();
@@ -56,6 +58,7 @@ public abstract class AbstractMsgHandler<Req> {
         AssertUtil.allCheckValidate(parseBody);
         check(parseBody, req.getRoomId(), uid);
         Message message = Message.builder().fromUid(uid).type(req.getMsgType()).roomId(req.getRoomId()).status(MessageStatusEnum.of(MessageStatusEnum.NORMAL.getStatus()).getStatus()).build();
+        extraMessage = parseBody;
         messageDao.save(message);
         // 子类扩展
         saveMsg(message, parseBody);
@@ -69,5 +72,9 @@ public abstract class AbstractMsgHandler<Req> {
             return (Req) body;
         }
         return BeanUtil.toBean(body, bodyClass);
+    }
+
+    public Object showMsg() {
+        return extraMessage;
     }
 }

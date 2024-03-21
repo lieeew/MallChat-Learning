@@ -3,6 +3,8 @@ package com.leikooo.mallchat.common.user.service;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
 import io.netty.channel.Channel;
 
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
  */
@@ -38,4 +40,6 @@ public interface WebSocketService {
     void sendToAllOnline(WSBaseResp<?> wsBaseResp);
 
     void sendToUid(WSBaseResp<?> wsResp, Long uid);
+
+    void sendToUidList(WSBaseResp<?> wsResp, List<Long> uidList);
 }

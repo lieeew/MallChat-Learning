@@ -1,5 +1,9 @@
 package com.leikooo.mallchat.common.chat.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.leikooo.mallchat.common.chat.dao.GroupMemberDao;
 import com.leikooo.mallchat.common.chat.dao.MessageMarkDao;
 import com.leikooo.mallchat.common.chat.dao.RoomDao;
@@ -11,6 +15,7 @@ import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.chat.service.adapter.MessageAdapter;
+import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.common.event.MessageSendEvent;
@@ -23,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,25 +62,14 @@ public class ChatServiceImpl implements ChatService {
         check(uid, req);
         // 这个调用方式会导致事务失效，对应的实例是不是 Spring 代理对象, 但是这样调用 checkAndSave 方法还是会在事务中执行
         // 而且我通过 new 对象创建对象调用对应的方法也是可以在事务中执行的，而且 this.这个类的方法也是在事务中执行的
-        AbstractMsgHandler<?> msgHandler = msgHandlerMap.get(req.getMsgType());
+        AbstractMsgHandler<?> msgHandler = MsgHandlerFactory.getStrategyNoNull(req.getMsgType());
         Long messageId = msgHandler.checkAndSave(req, uid);
         applicationEventPublisher.publishEvent(new MessageSendEvent(this, messageId));
     }
 
     @Override
-    public ChatMessageResp getChatMessageResp(Message message, Long userId) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(message.getType());
-        String className = messageTypeEnum.getClazz().getSimpleName();
-        Object invoke = Class.forName(MessageExtra.class.getName()).getDeclaredMethod("get" + className).invoke(message.getExtra(), null);
-        ChatMessageResp.Message chatMessageMessage = ChatMessageResp.Message.builder()
-                .type(message.getType())
-                .sendTime(message.getCreateTime())
-                .roomId(message.getRoomId())
-                .body(invoke)
-                .build();
-        return ChatMessageResp.builder().message(chatMessageMessage)
-                .fromUser(ChatMessageResp.UserInfo.builder().uid(userId).build())
-                .build();
+    public ChatMessageResp getChatMessageResp(Message message, Long receiveUid) {
+        return CollUtil.getFirst(getMsgRespBatch(Collections.singletonList(message), receiveUid));
     }
 
     @Override
@@ -83,8 +78,7 @@ public class ChatServiceImpl implements ChatService {
             return new ArrayList<>();
         }
         List<MessageMark> validMessageMark = messageMarkDao.getValidMessageMark(receiveUid, messages);
-        MessageAdapter.buildMsgResp(validMessageMark, messages);
-        return null;
+        return MessageAdapter.buildMsgResp(validMessageMark, messages);
     }
 
     private void check(Long uid, ChatMessageReq req) {

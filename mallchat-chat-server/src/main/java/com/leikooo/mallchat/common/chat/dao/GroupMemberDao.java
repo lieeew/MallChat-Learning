@@ -6,6 +6,8 @@ import com.leikooo.mallchat.common.chat.mapper.GroupMemberMapper;
 ;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 群成员表 服务实现类
@@ -22,5 +24,12 @@ public class GroupMemberDao extends ServiceImpl<GroupMemberMapper, GroupMember> 
                 .eq(GroupMember::getGroupId, roomId)
                 .eq(GroupMember::getUid, uid)
                 .one();
+    }
+
+    public List<GroupMember> getUsersByGroupId(Long groupId) {
+        return lambdaQuery()
+                .select(GroupMember::getUid)
+                .eq(GroupMember::getGroupId, groupId)
+                .list();
     }
 }

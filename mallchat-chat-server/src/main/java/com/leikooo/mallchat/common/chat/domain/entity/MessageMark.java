@@ -46,7 +46,7 @@ public class MessageMark implements Serializable {
     private Long uid;
 
     /**
-     * 标记类型 1点赞 2举报
+     * 标记类型 标记类型 0点踩 1点赞 2举报
      *
      * @see com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum
      */

@@ -1,6 +1,8 @@
 package com.leikooo.mallchat.common.chat.service.factory;
 
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
+import com.leikooo.mallchat.common.common.exception.CommonErrorEnum;
+import com.leikooo.mallchat.common.common.utils.AssertUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,5 +17,11 @@ public class MsgHandlerFactory {
 
     public static void register(Integer type, AbstractMsgHandler<?> handler) {
         msgHandlerMap.put(type, handler);
+    }
+
+    public static AbstractMsgHandler<?> getStrategyNoNull(Integer markType) {
+        AbstractMsgHandler<?> strategy = msgHandlerMap.get(markType);
+        AssertUtil.isNotEmpty(strategy, CommonErrorEnum.SYSTEM_ERROR);
+        return strategy;
     }
 }
