@@ -59,4 +59,9 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgReq> {
         });
         messageDao.updateById(message);
     }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getContent();
+    }
 }

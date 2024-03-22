@@ -1,5 +1,7 @@
 package com.leikooo.mallchat.common.common.event.listenser;
 
+import com.leikooo.mallchat.common.chat.dao.MessageMarkDao;
+import com.leikooo.mallchat.common.chat.domain.entity.MessageMark;
 import com.leikooo.mallchat.common.common.constant.MQConstant;
 import com.leikooo.mallchat.common.common.domain.dto.MsgSendMessageDTO;
 import com.leikooo.mallchat.common.common.event.MessageSendEvent;

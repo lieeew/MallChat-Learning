@@ -28,4 +28,9 @@ public class RecallMsgHandler extends AbstractMsgHandler<MsgRecall> {
         message.setExtra(messageExtra);
         messageDao.updateById(message);
     }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getExtra().getRecall();
+    }
 }

@@ -1,8 +1,6 @@
 package com.leikooo.mallchat.common.chat.service.strategy.msg;
 
-import com.leikooo.mallchat.common.chat.dao.MessageDao;
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
-import com.leikooo.mallchat.common.chat.domain.entity.msg.ImgMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.SoundMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
@@ -28,5 +26,10 @@ public class SoundMsgHandler extends AbstractMsgHandler<SoundMsgDTO> {
         BeanUtils.copyProperties(msg, message);
         message.setExtra(messageExtra);
         messageDao.updateById(message);
+    }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getExtra().getSoundMsgDTO();
     }
 }

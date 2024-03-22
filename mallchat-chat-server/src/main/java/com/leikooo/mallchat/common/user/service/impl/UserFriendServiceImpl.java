@@ -136,7 +136,7 @@ public class UserFriendServiceImpl implements UserFriendService {
         // 创建房间
         RoomFriend roomFriend = roomFriendService.creatFriendRoom(uid, applyId);
         // 发送一个同意消息 「我们已经是好友了，开始聊天吧」
-        chatService.sendMsg(uid, MessageAdapter.buildAgreeMsg(uid, roomFriend.getRoomId()));
+        chatService.sendMsg(uid, MessageAdapter.buildAgreeMsg(roomFriend.getRoomId()));
     }
 
 

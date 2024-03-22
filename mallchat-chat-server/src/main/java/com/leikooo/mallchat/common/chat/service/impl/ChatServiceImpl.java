@@ -1,11 +1,10 @@
 package com.leikooo.mallchat.common.chat.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.leikooo.mallchat.common.chat.dao.GroupMemberDao;
-import com.leikooo.mallchat.common.chat.dao.MessageMarkDao;
-import com.leikooo.mallchat.common.chat.dao.RoomDao;
-import com.leikooo.mallchat.common.chat.dao.RoomFriendDao;
+import com.leikooo.mallchat.common.chat.dao.*;
 import com.leikooo.mallchat.common.chat.domain.entity.*;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
@@ -13,18 +12,19 @@ import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
+import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.event.MessageSendEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
+import com.leikooo.mallchat.common.common.utils.CursorUtils;
+import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
+import com.leikooo.mallchat.common.user.service.cache.UserCache;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -47,6 +47,15 @@ public class ChatServiceImpl implements ChatService {
 
     @Resource
     private MessageMarkDao messageMarkDao;
+
+    @Resource
+    private MessageDao messageDao;
+
+    @Resource
+    private ContactDao contactDao;
+
+    @Resource
+    private UserCache userCache;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,6 +80,31 @@ public class ChatServiceImpl implements ChatService {
         }
         List<MessageMark> validMessageMark = messageMarkDao.getValidMessageMark(receiveUid, messages);
         return MessageAdapter.buildMsgResp(validMessageMark, messages);
+    }
+
+    @Override
+    public CursorPageBaseResp<ChatMessageResp> getMsgPage(ChatMessagePageReq req, Long uid) {
+        filterBlockUser(uid);
+        Long lastMessageId = getLastMessageId(req.getRoomId(), uid);
+        CursorPageBaseResp<Message> cursorPage = messageDao.getCursorPage(req.getRoomId(), req, lastMessageId);
+        return CursorPageBaseResp.init(cursorPage, getMsgRespBatch(cursorPage.getList(), uid));
+    }
+
+    private void filterBlockUser(Long uid) {
+        HashMap<Integer, Set<String>> blackMap = userCache.getBlackMap();
+        Set<String> blockUidList = blackMap.get(BlackTypeEnum.UID.getType());
+        AssertUtil.isFalse(Objects.nonNull(blockUidList) && blockUidList.contains(uid.toString()), "用户已被封禁");
+    }
+
+    private Long getLastMessageId(Long roomId, Long uid) {
+        Room room = roomDao.getById(roomId);
+        AssertUtil.isNotEmpty(room, "房间不存在");
+        if (room.isHotRoom()) {
+            return null;
+        }
+        Contact contact = contactDao.getLastMessageId(roomId, uid);
+        AssertUtil.isNotEmpty(contact, "房间不存在");
+        return contact.getLastMsgId();
     }
 
     private void check(Long uid, ChatMessageReq req) {

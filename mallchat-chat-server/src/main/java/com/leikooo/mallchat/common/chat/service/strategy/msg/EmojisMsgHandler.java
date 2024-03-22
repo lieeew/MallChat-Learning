@@ -28,4 +28,9 @@ public class EmojisMsgHandler extends AbstractMsgHandler<EmojisMsgDTO> {
         message.setExtra(messageExtra);
         messageDao.updateById(message);
     }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getExtra().getEmojisMsgDTO();
+    }
 }

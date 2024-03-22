@@ -40,4 +40,9 @@ public class ImgMsgHandler extends AbstractMsgHandler<ImgMsgDTO> {
         message.setExtra(messageExtra);
         messageDao.updateById(message);
     }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getExtra().getImgMsgDTO();
+    }
 }

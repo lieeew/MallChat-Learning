@@ -31,9 +31,6 @@ public class UserCache {
     private BlackDao blackDao;
 
     @Resource
-    private UserDao userDao;
-
-    @Resource
     private UserSummaryCache userSummaryCache;
 
     @Cacheable(value = "userCache", key = "'roles' + #uid")

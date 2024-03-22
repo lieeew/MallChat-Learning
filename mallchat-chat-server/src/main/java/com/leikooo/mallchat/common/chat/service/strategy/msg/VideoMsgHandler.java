@@ -32,4 +32,9 @@ public class VideoMsgHandler extends AbstractMsgHandler<VideoMsgDTO> {
         message.setExtra(MessageExtra.builder().videoMsgDTO(body).build());
         messageDao.updateById(message);
     }
+
+    @Override
+    public Object showMsg(Message message) {
+        return message.getExtra().getVideoMsgDTO();
+    }
 }

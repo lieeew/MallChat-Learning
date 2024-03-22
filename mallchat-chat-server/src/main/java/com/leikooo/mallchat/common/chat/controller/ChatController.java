@@ -1,14 +1,15 @@
 package com.leikooo.mallchat.common.chat.controller;
 
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
+import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
+import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,5 +30,12 @@ public class ChatController {
     public ApiResult<Void> sendMsg(@RequestBody @Valid ChatMessageReq req) {
         chatService.sendMsg(RequestHolder.get().getUid(), req);
         return ApiResult.success();
+    }
+
+    @GetMapping("public/msg/page")
+    @ApiOperation("消息列表")
+    // todo 限流控制
+    public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid @RequestBody ChatMessagePageReq req) {
+        return ApiResult.success(chatService.getMsgPage(req, RequestHolder.get().getUid()));
     }
 }

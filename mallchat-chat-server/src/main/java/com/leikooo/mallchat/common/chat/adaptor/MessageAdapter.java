@@ -33,7 +33,7 @@ public class MessageAdapter {
 
     private static ChatMessageResp.Message buildMessage(Message message, List<MessageMark> marks, Long receiveUid) {
         ChatMessageResp.Message messageVO = ChatMessageResp.Message.builder().id(message.getId()).roomId(message.getRoomId()).sendTime(message.getCreateTime()).type(message.getType()).build();
-        messageVO.setBody((MsgHandlerFactory.getStrategyNoNull(message.getType())).showMsg());
+        messageVO.setBody((MsgHandlerFactory.getStrategyNoNull(message.getType())).showMsg(message));
         messageVO.setMessageMark(buildMessageMark(message.getId(), marks, receiveUid));
         return messageVO;
     }
@@ -77,7 +77,7 @@ public class MessageAdapter {
         return null;
     }
 
-    public static ChatMessageReq buildAgreeMsg(Long uid, Long roomId) {
+    public static ChatMessageReq buildAgreeMsg(Long roomId) {
         ChatMessageReq chatMessageReq = new ChatMessageReq();
         chatMessageReq.setMsgType(MessageTypeEnum.TEXT.getType());
         chatMessageReq.setRoomId(roomId);
