@@ -24,4 +24,10 @@ public class UserRoleDao extends ServiceImpl<UserRoleMapper, UserRole> {
                 .eq(UserRole::getUid, Objects.requireNonNull(uid))
                 .list();
     }
+
+    public List<UserRole> getRoles(Long uid) {
+        return lambdaQuery()
+                .eq(UserRole::getUid, uid)
+                .list();
+    }
 }

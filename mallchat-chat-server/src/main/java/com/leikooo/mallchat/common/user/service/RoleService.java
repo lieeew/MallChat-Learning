@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.user.service;
 
-import com.leikooo.mallchat.common.user.domain.enums.RoleEnum;
+import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
 
 /**
  * <p>
@@ -15,8 +15,8 @@ public interface RoleService {
      * 判断是否有权限
      *
      * @param uid uid
-     * @param roleEnum
+     * @param userRoleEnum
      * @return
      */
-    boolean hasPower(Long uid, RoleEnum roleEnum);
+    boolean hasPower(Long uid, UserRoleEnum userRoleEnum);
 }

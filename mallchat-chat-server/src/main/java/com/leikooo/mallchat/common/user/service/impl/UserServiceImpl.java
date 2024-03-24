@@ -13,7 +13,7 @@ import com.leikooo.mallchat.common.user.domain.entity.*;
 import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemEnum;
 import com.leikooo.mallchat.common.user.domain.enums.ItemTypeEnum;
-import com.leikooo.mallchat.common.user.domain.enums.RoleEnum;
+import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
 import com.leikooo.mallchat.common.user.domain.vo.request.user.SummeryInfoReq;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.BadgeResp;
 import com.leikooo.mallchat.common.user.domain.vo.response.user.UserInfoResp;
@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -131,7 +130,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void blockUser(Long uid, Integer blockUid) {
-        boolean hasPower = roleService.hasPower(uid, RoleEnum.CHAT_MANAGER);
+        boolean hasPower = roleService.hasPower(uid, UserRoleEnum.CHAT_MANAGER);
         AssertUtil.isTrue(hasPower, "您没有权限");
         Black insertBlack = Black.builder()
                 .type(BlackTypeEnum.UID.getType())

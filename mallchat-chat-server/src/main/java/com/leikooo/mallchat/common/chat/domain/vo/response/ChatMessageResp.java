@@ -49,7 +49,7 @@ public class ChatMessageResp {
         private Date sendTime;
 
         /**
-         * @see com.leikooo.mallchat.common.chat.domain.enums.MessageType
+         * @see com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum
          */
         @ApiModelProperty("消息类型 1正常文本 2.撤回消息")
         private Integer type;

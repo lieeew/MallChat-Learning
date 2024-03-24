@@ -2,6 +2,8 @@ package com.leikooo.mallchat.common.chat.adaptor;
 
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.entity.MessageMark;
+import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
+import com.leikooo.mallchat.common.chat.domain.entity.msg.MsgRecall;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
@@ -10,6 +12,7 @@ import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,5 +86,11 @@ public class MessageAdapter {
         chatMessageReq.setRoomId(roomId);
         chatMessageReq.setBody(TextMsgResp.builder().content("我们已经是好友了，开始聊天吧").build());
         return chatMessageReq;
+    }
+
+    public static MessageExtra buildRecallExtra(Long recallUid, Date date) {
+        return MessageExtra.builder()
+                .recall(MsgRecall.builder().recallUid(recallUid).recallTime(date).build())
+                .build();
     }
 }

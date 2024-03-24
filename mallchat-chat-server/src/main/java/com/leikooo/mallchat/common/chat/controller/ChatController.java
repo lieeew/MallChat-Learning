@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.chat.controller;
 
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
@@ -35,7 +36,14 @@ public class ChatController {
     @GetMapping("public/msg/page")
     @ApiOperation("消息列表")
     // todo 限流控制
-    public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid @RequestBody ChatMessagePageReq req) {
+    public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid @RequestParam ChatMessagePageReq req) {
         return ApiResult.success(chatService.getMsgPage(req, RequestHolder.get().getUid()));
+    }
+
+    @PostMapping("/msg/recall")
+    @ApiOperation("撤回消息")
+    public ApiResult<ChatMessageResp> recallMsg(@Valid @RequestBody ChatMessageBaseReq req) {
+        chatService.recallMsg(req, RequestHolder.get().getUid());
+        return ApiResult.success();
     }
 }

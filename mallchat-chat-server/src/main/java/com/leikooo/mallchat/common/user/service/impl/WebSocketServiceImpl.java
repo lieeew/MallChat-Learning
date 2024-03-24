@@ -170,14 +170,18 @@ public class WebSocketServiceImpl implements WebSocketService {
         loginSuccess(channel, WebSocketAdapter.buildAuthorizedResp(user, token), user);
     }
 
+    // todo 后面修改成 ONLINE_UID_MAP
     @Override
     public void sendToAllOnline(WSBaseResp<?> wsBaseResp) {
-        ONLINE_WS_MAP.forEach((channel, wsChannelExtraDTO) -> websocketExecutor.execute(() -> sendMsg(channel, wsBaseResp)));
+        ONLINE_WS_MAP.forEach((channel, wsChannelExtraDTO) -> sendMsg(channel, wsBaseResp));
     }
 
+    // todo 后面修改成 ONLINE_UID_MAP
     @Override
     public void sendToUid(WSBaseResp<?> wsResp, Long uid) {
-        ONLINE_UID_MAP.get(uid).forEach(channel -> sendMsg(channel, wsResp));
+        ONLINE_WS_MAP.entrySet().stream().filter(entry -> Objects.equals(entry.getValue().getUid(), uid))
+                .map(Map.Entry::getKey)
+                .forEach(channel -> sendMsg(channel, wsResp));
     }
 
     @Override

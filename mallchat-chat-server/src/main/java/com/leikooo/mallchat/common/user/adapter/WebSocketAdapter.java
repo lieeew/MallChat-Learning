@@ -1,15 +1,16 @@
 package com.leikooo.mallchat.common.user.adapter;
 
+import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.common.domain.dto.PushMessageDTO;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.WSBaseResp;
-import com.leikooo.mallchat.common.user.domain.enums.WSPushTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum;
 import com.leikooo.mallchat.common.user.domain.vo.response.ws.*;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.leikooo.mallchat.common.user.domain.enums.WSRespTypeEnum.*;
 
@@ -94,5 +95,12 @@ public class WebSocketAdapter {
 
     public static PushMessageDTO buildPushMsg(ChatMessageResp chatMessageResp, List<Long> roomUsersId) {
         return new PushMessageDTO(roomUsersId, buildNewMsgResp(chatMessageResp));
+    }
+
+    public static WSBaseResp<?> buildRecallMessage(Message msg, User user) {
+        return WSBaseResp.<String>builder()
+                .type(RECALL.getType())
+                .data(Objects.equals(msg.getFromUid(), user.getId()) ? "\"" + user.getName() + "\"撤回了一条消息" : "管理员撤回了\"" + user.getName() + "\"消息")
+                .build();
     }
 }

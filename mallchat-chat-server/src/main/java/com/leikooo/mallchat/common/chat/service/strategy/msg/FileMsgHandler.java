@@ -6,6 +6,7 @@ import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.SoundMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
  * @date 2024/3/18
  * @description
  */
+@Component
 public class FileMsgHandler extends AbstractMsgHandler<FileMsgDTO> {
     @Override
     protected MessageTypeEnum getMessageType() {

@@ -5,8 +5,11 @@ import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MsgRecall;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.SoundMsgDTO;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
+import com.leikooo.mallchat.common.chat.service.cache.MsgCache;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -14,6 +17,7 @@ import java.util.Optional;
  * @date 2024/3/18
  * @description
  */
+@Component
 public class RecallMsgHandler extends AbstractMsgHandler<MsgRecall> {
     @Override
     protected MessageTypeEnum getMessageType() {
@@ -33,4 +37,5 @@ public class RecallMsgHandler extends AbstractMsgHandler<MsgRecall> {
     public Object showMsg(Message message) {
         return message.getExtra().getRecall();
     }
+
 }

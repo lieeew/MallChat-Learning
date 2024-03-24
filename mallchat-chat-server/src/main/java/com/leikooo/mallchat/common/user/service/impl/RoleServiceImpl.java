@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.user.service.impl;
 
-import com.leikooo.mallchat.common.user.domain.enums.RoleEnum;
+import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
 import com.leikooo.mallchat.common.user.service.RoleService;
 import com.leikooo.mallchat.common.user.service.cache.UserCache;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ public class RoleServiceImpl implements RoleService {
     private UserCache userCache;
 
     @Override
-    public boolean hasPower(Long uid, RoleEnum roleEnum) {
-        return isAdmin(uid) || userCache.getRoles(uid).contains(roleEnum.getId());
+    public boolean hasPower(Long uid, UserRoleEnum userRoleEnum) {
+        return isAdmin(uid) || userCache.getRoles(uid).contains(userRoleEnum.getCode());
     }
 
     public boolean isAdmin(Long uid) {
-        return userCache.getRoles(uid).contains(RoleEnum.ADMIN.getId());
+        return userCache.getRoles(uid).contains(UserRoleEnum.ADMIN.getCode());
     }
 }

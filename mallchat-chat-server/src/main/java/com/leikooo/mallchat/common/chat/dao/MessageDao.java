@@ -29,4 +29,11 @@ public class MessageDao extends ServiceImpl<MessageMapper, Message> {
             wrapper.le(Objects.nonNull(lastMessageId), Message::getId, lastMessageId);
         }, Message::getId);
     }
+
+    public Message getRoomMessage(Long roomId, Long msgId) {
+        return lambdaQuery()
+                .eq(Message::getRoomId, roomId)
+                .eq(Message::getId, msgId)
+                .one();
+    }
 }

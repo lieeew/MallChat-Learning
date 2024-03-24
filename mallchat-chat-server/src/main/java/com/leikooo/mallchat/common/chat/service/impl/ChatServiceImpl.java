@@ -2,22 +2,35 @@ package com.leikooo.mallchat.common.chat.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.leikooo.mallchat.common.chat.dao.*;
+import com.leikooo.mallchat.common.chat.domain.dto.ChatMsgRecallDTO;
 import com.leikooo.mallchat.common.chat.domain.entity.*;
+import com.leikooo.mallchat.common.chat.domain.entity.msg.MsgRecall;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
+import com.leikooo.mallchat.common.chat.service.cache.MsgCache;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
+import com.leikooo.mallchat.common.chat.service.strategy.msg.RecallMsgHandler;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
+import com.leikooo.mallchat.common.common.event.MessageRecallEvent;
 import com.leikooo.mallchat.common.common.event.MessageSendEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.common.utils.CursorUtils;
+import com.leikooo.mallchat.common.user.dao.UserDao;
+import com.leikooo.mallchat.common.user.dao.UserRoleDao;
+import com.leikooo.mallchat.common.user.domain.entity.User;
+import com.leikooo.mallchat.common.user.domain.entity.UserRole;
 import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
+import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
 import com.leikooo.mallchat.common.user.service.cache.UserCache;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +38,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -57,6 +71,12 @@ public class ChatServiceImpl implements ChatService {
     @Resource
     private UserCache userCache;
 
+    @Resource
+    private UserRoleDao userRoleDao;
+
+    @Resource
+    private MsgCache msgCache;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void sendMsg(Long uid, ChatMessageReq req) {
@@ -88,6 +108,45 @@ public class ChatServiceImpl implements ChatService {
         Long lastMessageId = getLastMessageId(req.getRoomId(), uid);
         CursorPageBaseResp<Message> cursorPage = messageDao.getCursorPage(req.getRoomId(), req, lastMessageId);
         return CursorPageBaseResp.init(cursorPage, getMsgRespBatch(cursorPage.getList(), uid));
+    }
+
+    @Override
+    public void recallMsg(ChatMessageBaseReq req, Long uid) {
+        checkMessage(req);
+        // 判断是否有权限
+        checkAuthorize(uid, req.getMsgId());
+        //执行消息撤回
+        recallMessage(req.getMsgId(), uid, req.getRoomId());
+    }
+
+    private void recallMessage(Long msgId, Long recallUid, Long roomId) {
+        Message message = new Message();
+        BeanUtils.copyProperties(msgCache.getMsg(msgId), message);
+        message.setType(MessageTypeEnum.RECALL.getType());
+        message.setExtra(MessageAdapter.buildRecallExtra(recallUid, new Date()));
+        messageDao.updateById(message);
+        applicationEventPublisher.publishEvent(new MessageRecallEvent(this, new ChatMsgRecallDTO(msgId, roomId, recallUid)));
+    }
+
+    /**
+     * 判断消息是否存在
+     */
+    private void checkMessage(ChatMessageBaseReq req) {
+        Message message = msgCache.getMsg(req.getMsgId());
+        AssertUtil.isNotEmpty(message, "消息不存在");
+        AssertUtil.equal(message.getRoomId(), req.getRoomId(), "消息不存在");
+        AssertUtil.notEqual(message.getStatus(), MessageStatusEnum.DELETE.getStatus(), "消息不存在");
+        AssertUtil.notEqual(message.getType(), MessageTypeEnum.RECALL.getType(), "消息已经被撤回");
+    }
+
+    private void checkAuthorize(Long uid, Long msgId) {
+        Set<Long> userRoles = Optional.ofNullable(userRoleDao.getRoles(uid)).orElse(Collections.emptyList()).stream().map(UserRole::getRoleId).collect(Collectors.toSet());
+        if (userRoles.contains(UserRoleEnum.ADMIN.getCode())) {
+            return;
+        }
+        // 不是管理员，也不是消息发送者 「无权限操作」
+        Long fromUid = Optional.of(msgCache.getMsg(msgId)).map(Message::getFromUid).orElse(-1L);
+        AssertUtil.equal(fromUid, uid, "无权限操作");
     }
 
     private void filterBlockUser(Long uid) {
