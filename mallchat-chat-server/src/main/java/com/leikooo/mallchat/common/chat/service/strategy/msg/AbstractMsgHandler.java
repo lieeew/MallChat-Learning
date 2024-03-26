@@ -20,6 +20,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/lieeew">leikooo</a>
@@ -72,4 +73,6 @@ public abstract class AbstractMsgHandler<Req> {
     }
 
     public abstract Object showMsg(Message message);
+
+    public abstract Object showRelayMsg(Message message);
 }

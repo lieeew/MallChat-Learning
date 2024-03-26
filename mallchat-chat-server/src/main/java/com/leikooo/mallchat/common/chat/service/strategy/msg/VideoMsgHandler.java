@@ -37,4 +37,9 @@ public class VideoMsgHandler extends AbstractMsgHandler<VideoMsgDTO> {
     public Object showMsg(Message message) {
         return message.getExtra().getVideoMsgDTO();
     }
+
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "视频";
+    }
 }

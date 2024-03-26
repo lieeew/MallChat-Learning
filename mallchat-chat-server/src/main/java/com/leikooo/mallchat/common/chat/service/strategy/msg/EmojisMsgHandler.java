@@ -35,4 +35,9 @@ public class EmojisMsgHandler extends AbstractMsgHandler<EmojisMsgDTO> {
     public Object showMsg(Message message) {
         return message.getExtra().getEmojisMsgDTO();
     }
+
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "图片";
+    }
 }

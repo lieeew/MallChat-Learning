@@ -42,6 +42,7 @@ public class MessageRecallListener {
         Long msgId = chatMsgRecallDTO.getMsgId();
         msgCache.evictMsg(msgId);
     }
+
     @EventListener(classes = MessageRecallEvent.class)
     public void sendRecallMsg(MessageRecallEvent messageRecallEvent) {
         ChatMsgRecallDTO chatMsgRecallDTO = messageRecallEvent.getChatMsgRecallDTO();

@@ -54,24 +54,12 @@ public class Message implements Serializable {
     private String content;
 
     /**
-     * 回复的消息内容
-     */
-    @TableField("reply_msg_id")
-    private Long replyMsgId;
-
-    /**
      * 消息状态 0正常 1删除
      *
      * @see com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum
      */
     @TableField("status")
     private Integer status;
-
-    /**
-     * 与回复消息的间隔条数
-     */
-    @TableField("gap_count")
-    private Integer gapCount;
 
     /**
      * 消息类型 1正常文本 2.撤回消息

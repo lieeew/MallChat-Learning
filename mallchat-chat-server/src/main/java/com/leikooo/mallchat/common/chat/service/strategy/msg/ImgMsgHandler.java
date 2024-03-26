@@ -45,4 +45,9 @@ public class ImgMsgHandler extends AbstractMsgHandler<ImgMsgDTO> {
     public Object showMsg(Message message) {
         return message.getExtra().getImgMsgDTO();
     }
+
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "图片";
+    }
 }

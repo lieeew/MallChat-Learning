@@ -38,4 +38,9 @@ public class RecallMsgHandler extends AbstractMsgHandler<MsgRecall> {
         return message.getExtra().getRecall();
     }
 
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "消息不存在~";
+    }
+
 }

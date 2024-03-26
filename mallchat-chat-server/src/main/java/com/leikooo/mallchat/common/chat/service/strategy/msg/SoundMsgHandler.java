@@ -34,4 +34,9 @@ public class SoundMsgHandler extends AbstractMsgHandler<SoundMsgDTO> {
     public Object showMsg(Message message) {
         return message.getExtra().getSoundMsgDTO();
     }
+
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "语音";
+    }
 }

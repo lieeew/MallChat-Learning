@@ -35,4 +35,9 @@ public class FileMsgHandler extends AbstractMsgHandler<FileMsgDTO> {
     public Object showMsg(Message message) {
         return message.getExtra().getFileMsg();
     }
+
+    @Override
+    public Object showRelayMsg(Message message) {
+        return "图片";
+    }
 }

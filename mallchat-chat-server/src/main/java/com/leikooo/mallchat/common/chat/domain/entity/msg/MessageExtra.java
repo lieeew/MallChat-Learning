@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.entity.msg;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;
@@ -25,6 +26,16 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageExtra implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 回复的消息内容
+     */
+    private Long replyMsgId;
+
+    /**
+     * 与回复消息的间隔条数
+     */
+    private Integer gapCount;
 
     /**
      * url跳转链接
