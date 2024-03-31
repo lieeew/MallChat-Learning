@@ -1,7 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.enums;
 
 import com.leikooo.mallchat.common.chat.domain.entity.msg.*;
-import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public enum MessageTypeEnum {
-    TEXT(1, "正常消息", TextMsgResp.class),
+    TEXT(1, "正常消息", TextMsgDTO.class),
     RECALL(2, "撤回消息", MsgRecall.class),
     IMG(3, "图片", ImgMsgDTO.class),
     FILE(4, "文件", FileMsgDTO.class),

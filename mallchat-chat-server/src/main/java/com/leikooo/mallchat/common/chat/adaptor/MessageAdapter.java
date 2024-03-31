@@ -12,10 +12,7 @@ import com.leikooo.mallchat.common.chat.domain.vo.response.msg.TextMsgResp;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +34,7 @@ public class MessageAdapter {
     private static ChatMessageResp.Message buildMessage(Message message, List<MessageMark> marks, Long receiveUid) {
         ChatMessageResp.Message messageVO = ChatMessageResp.Message.builder().id(message.getId()).roomId(message.getRoomId()).sendTime(message.getCreateTime()).type(message.getType()).build();
         messageVO.setBody((MsgHandlerFactory.getStrategyNoNull(message.getType())).showMsg(message));
-        messageVO.setMessageMark(buildMessageMark(message.getId(), marks, receiveUid));
+        messageVO.setMessageMark(buildMessageMark(marks, receiveUid));
         return messageVO;
     }
 
@@ -45,35 +42,22 @@ public class MessageAdapter {
         return ChatMessageResp.UserInfo.builder().uid(uid).build();
     }
 
-    private static ChatMessageResp.MessageMark buildMessageMark(Long messageId, List<MessageMark> marks, Long receiveUid) {
-        Map<Long, List<MessageMark>> markMap = marks.stream().collect(Collectors.groupingBy(MessageMark::getMsgId));
-        ChatMessageResp.MessageMark messageMark = new ChatMessageResp.MessageMark();
-        markMap.forEach((msgId, msgMark) -> {
-            if (!Objects.equals(msgId, messageId)) {
-                return;
-            }
-            msgMark.forEach(mark -> {
-                if (Objects.equals(mark.getStatus(), YesOrNoEnum.YES.getStatus())) {
-                    // 消息失效
-                    return;
-                }
-                if (Objects.equals(mark.getType(), MessageMarkTypeEnum.LIKE.getType())) {
-                    messageMark.setLikeCount(messageMark.getLikeCount() + 1);
-                }
-                if (Objects.equals(mark.getType(), MessageMarkTypeEnum.REPORT.getType())) {
-                    messageMark.setDislikeCount(messageMark.getDislikeCount() + 1);
-                }
-                if (Objects.nonNull(receiveUid) && Objects.equals(mark.getUid(), receiveUid)) {
-                    if (Objects.equals(mark.getType(), MessageMarkTypeEnum.LIKE.getType())) {
-                        messageMark.setUserLike(YesOrNoEnum.YES.getStatus());
-                    }
-                    if (Objects.equals(mark.getType(), MessageMarkTypeEnum.REPORT.getType())) {
-                        messageMark.setUserDislike(YesOrNoEnum.YES.getStatus());
-                    }
-                }
-            });
-        });
-        return messageMark;
+    private static ChatMessageResp.MessageMark buildMessageMark(List<MessageMark> marks, Long receiveUid) {
+        Map<Integer, List<MessageMark>> typeMap = marks.stream().collect(Collectors.groupingBy(MessageMark::getType));
+        List<MessageMark> likeMarks = typeMap.getOrDefault(MessageMarkTypeEnum.LIKE.getType(), new ArrayList<>());
+        List<MessageMark> dislikeMarks = typeMap.getOrDefault(MessageMarkTypeEnum.DISLIKE.getType(), new ArrayList<>());
+        ChatMessageResp.MessageMark mark = new ChatMessageResp.MessageMark();
+        mark.setUserLike(Optional.ofNullable(receiveUid)
+                .filter(uid -> likeMarks.stream().anyMatch(messageMark -> Objects.equals(messageMark.getUid(), uid)))
+                .map(a -> YesOrNoEnum.YES.getStatus())
+                .orElse(YesOrNoEnum.NO.getStatus()));
+        mark.setUserDislike(Optional.ofNullable(receiveUid)
+                .filter(uid -> dislikeMarks.stream().anyMatch(messageMark -> Objects.equals(messageMark.getUid(), uid)))
+                .map(a -> YesOrNoEnum.YES.getStatus())
+                .orElse(YesOrNoEnum.NO.getStatus()));
+        mark.setLikeCount(likeMarks.size());
+        mark.setDislikeCount(dislikeMarks.size());
+        return mark;
     }
 
     public static ChatMessageReq buildTextMsg(Long uid, String msg, Long roomId) {

@@ -1,4 +1,4 @@
-package com.leikooo.mallchat.common.chat.domain.vo.request.msg;
+package com.leikooo.mallchat.common.chat.domain.entity.msg;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,16 +11,15 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
- * Description: 文本消息入参
- * @author : <a href="https://github.com/zongzibinbin">abin</a>
- * Date: 2023-06-04
+ * @author <a href="https://github.com/lieeew">leikooo</a>
+ * @date 2024/3/30
+ * @description
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TextMsgReq {
-
+public class TextMsgDTO {
     @NotBlank(message = "内容不能为空")
     @Size(max = 1024, message = "消息内容过长，服务器扛不住啊，兄dei")
     @ApiModelProperty("消息内容")

@@ -1,6 +1,5 @@
 package com.leikooo.mallchat.common.chat.domain.entity.msg;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;

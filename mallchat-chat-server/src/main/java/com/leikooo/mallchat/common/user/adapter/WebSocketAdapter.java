@@ -90,7 +90,7 @@ public class WebSocketAdapter {
      * 推送给 hot 群聊的所有人
      */
     public static PushMessageDTO buildPushAllMsg(ChatMessageResp chatMessageResp) {
-        return new PushMessageDTO(chatMessageResp.getFromUser().getUid(), buildNewMsgResp(chatMessageResp));
+        return new PushMessageDTO(buildNewMsgResp(chatMessageResp));
     }
 
     public static PushMessageDTO buildPushMsg(ChatMessageResp chatMessageResp, List<Long> roomUsersId) {
