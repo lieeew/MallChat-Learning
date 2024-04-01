@@ -24,7 +24,7 @@ public class UserInfoCache extends AbstractRedisStringBatchCache<Long, User> {
 
     @Override
     protected String getKey(Long req) {
-        return RedisKey.getKey(RedisKey.BASE_REDIS_KEY, req);
+        return RedisKey.getKey(RedisKey.USER_INFO_STRING, req);
     }
 
     @Override

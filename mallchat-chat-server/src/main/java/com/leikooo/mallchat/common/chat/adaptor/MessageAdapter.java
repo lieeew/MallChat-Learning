@@ -77,4 +77,16 @@ public class MessageAdapter {
                 .recall(MsgRecall.builder().recallUid(recallUid).recallTime(date).build())
                 .build();
     }
+
+    public static TextMsgResp.ReplyMsg buildTextReplyMsg(Message message, Message replyMsg, String userName) {
+        return TextMsgResp.ReplyMsg.builder()
+                .type(MessageTypeEnum.TEXT.getType())
+                .canCallback(YesOrNoEnum.YES.getStatus())
+                .uid(replyMsg.getFromUid())
+                .id(replyMsg.getId())
+                .username(userName)
+                .gapCount(message.getExtra().getGapCount())
+                .body(MsgHandlerFactory.getStrategyNoNull(replyMsg.getType()).showRelayMsg(replyMsg))
+                .build();
+    }
 }

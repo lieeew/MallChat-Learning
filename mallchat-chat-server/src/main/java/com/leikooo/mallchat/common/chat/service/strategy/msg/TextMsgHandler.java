@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.chat.service.strategy.msg;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
 import com.leikooo.mallchat.common.chat.dao.MessageDao;
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MessageExtra;
@@ -85,19 +86,28 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
 
     public void checkAtUser(TextMsgDTO textMsgReq, Long uid) {
         List<Long> atUserIds = Optional.ofNullable(textMsgReq).map(TextMsgDTO::getAtUidList)
-                .filter(CollectionUtil::isNotEmpty)
-                .orElse(new ArrayList<>())
+                .filter(CollectionUtil::isNotEmpty).orElse(new ArrayList<>())
                 .stream().distinct().collect(Collectors.toList());
         if (CollectionUtil.isEmpty(atUserIds)) {
             return;
         }
+        if (isAtAllUser(atUserIds)) {
+            checkAtUserRole(uid);
+            return;
+        }
+        checkAtUser(atUserIds);
+    }
+
+    private void checkAtUserRole(Long uid) {
+        // 判断是否有权限
+        AssertUtil.isTrue(roleService.hasPower(uid, UserRoleEnum.CHAT_MANAGER), "没有权限艾特所有人");
+    }
+
+    private void checkAtUser(List<Long> atUserIds) {
         Map<Long, User> userInfoBatch = userInfoCache.getBatch(atUserIds);
         long effectiveCount = userInfoBatch.values().stream().filter(Objects::nonNull).count();
-        AssertUtil.equal(effectiveCount, userInfoBatch.size(), "@的用户不存在");
-        if (isAtAllUser(atUserIds)) {
-            // 判断是否有权限
-            AssertUtil.isTrue(roleService.hasPower(uid, UserRoleEnum.CHAT_MANAGER), "没有权限艾特所有人");
-        }
+        // 这里需要把第二个参数强转成 long 类型，这样比较 Objects.equals 才不会报错
+        AssertUtil.equal(effectiveCount, (long) userInfoBatch.size(), "@的用户不存在");
     }
 
     private void saveAtMsg(TextMsgDTO body, Message message) {
@@ -140,19 +150,12 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
         }
         Message replyMsg = msgCache.getMsg(replyMsgId);
         resp.setContent(message.getContent());
-        resp.setReply(buildReply(message, replyMsgId, replyMsg));
+        resp.setReply(getReply(message, replyMsg));
     }
 
-    private TextMsgResp.ReplyMsg buildReply(Message message, Long replyMsgId, Message replyMsg) {
-        return TextMsgResp.ReplyMsg.builder()
-                .type(MessageTypeEnum.TEXT.getType())
-                .canCallback(YesOrNoEnum.YES.getStatus())
-                .uid(replyMsg.getFromUid())
-                .id(replyMsgId)
-                .username(Optional.ofNullable(userDao.getById(replyMsgId)).map(User::getName).orElse(""))
-                .gapCount(message.getExtra().getGapCount())
-                .body(MsgHandlerFactory.getStrategyNoNull(replyMsg.getType()).showRelayMsg(replyMsg))
-                .build();
+    private TextMsgResp.ReplyMsg getReply(Message message, Message replyMsg) {
+        String userName = userDao.getById(replyMsg.getFromUid()).getName();
+        return MessageAdapter.buildTextReplyMsg(message, replyMsg, userName);
     }
 
     @Override
