@@ -46,13 +46,15 @@ public abstract class AbstractMsgHandler<Req> {
 
     }
 
+    /**
+     * 这个可以获取事务的详细信息
+     * if (TransactionSynchronizationManager.isActualTransactionActive()) {
+     *      String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
+     *      TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+     * }
+     */
     @Transactional(rollbackFor = Exception.class)
     public Long checkAndSave(ChatMessageReq req, Long uid) {
-//        这个可以获取事务的详细信息
-//        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-//            String currentTransactionName = TransactionSynchronizationManager.getCurrentTransactionName();
-//            TransactionStatus transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-//        }
         Req parseBody = this.parseBody(req.getBody());
         AssertUtil.allCheckValidate(parseBody);
         check(parseBody, req.getRoomId(), uid);

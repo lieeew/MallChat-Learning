@@ -2,7 +2,7 @@ package com.leikooo.mallchat.common.chat.domain.entity.msg;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;
+import com.leikooo.mallchat.common.common.utils.discover.domain.UrlInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -12,6 +12,9 @@ import com.leikooo.mallchat.common.chat.service.cache.MsgCache;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
+import com.leikooo.mallchat.common.common.utils.discover.AbstractUrlDiscover;
+import com.leikooo.mallchat.common.common.utils.discover.PrioritizedUrlDiscover;
+import com.leikooo.mallchat.common.common.utils.discover.domain.UrlInfo;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
@@ -49,6 +52,8 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
     @Resource
     private RoleService roleService;
 
+    private final AbstractUrlDiscover URL_TITLE_DISCOVER = new PrioritizedUrlDiscover();
+
     @Override
     protected MessageTypeEnum getMessageType() {
         return MessageTypeEnum.TEXT;
@@ -75,18 +80,30 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
     }
 
     @Override
-    public void saveMsg(Message msg, TextMsgDTO body) {
+    public void saveMsg(final Message msg, TextMsgDTO body) {
         Message message = new Message();
         BeanUtils.copyProperties(msg, message);
-        Optional.ofNullable(body).map(TextMsgDTO::getContent).ifPresent(message::setContent);
+        message.setExtra(Optional.of(message).map(Message::getExtra).orElseGet(MessageExtra::new));
+        saveContentAndResolveUrlIfExist(message, body);
         saveReplayMsg(body, message);
         saveAtMsg(body, message);
         messageDao.updateById(message);
     }
 
+    private void saveContentAndResolveUrlIfExist(Message msg, TextMsgDTO body) {
+        Optional.ofNullable(body).map(TextMsgDTO::getContent).ifPresent((content) -> {
+            msg.setContent(content);
+            saveUrl(content, msg);
+        });
+    }
+
+    private void saveUrl(String content, Message message) {
+        Map<String, UrlInfo> urlContent = URL_TITLE_DISCOVER.getUrlContent(content);
+        message.getExtra().setUrlContentMap(urlContent);
+    }
+
     public void checkAtUser(TextMsgDTO textMsgReq, Long uid) {
-        List<Long> atUserIds = Optional.ofNullable(textMsgReq).map(TextMsgDTO::getAtUidList)
-                .filter(CollectionUtil::isNotEmpty).orElse(new ArrayList<>())
+        List<Long> atUserIds = Optional.ofNullable(textMsgReq).map(TextMsgDTO::getAtUidList).filter(CollectionUtil::isNotEmpty).orElse(new ArrayList<>())
                 .stream().distinct().collect(Collectors.toList());
         if (CollectionUtil.isEmpty(atUserIds)) {
             return;
@@ -111,10 +128,8 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
     }
 
     private void saveAtMsg(TextMsgDTO body, Message message) {
-        Optional.ofNullable(body).map(TextMsgDTO::getAtUidList).ifPresent(atUidList -> {
-            MessageExtra messageExtra = MessageExtra.builder().atUidList(atUidList).build();
-            message.setExtra(messageExtra);
-        });
+        Optional.ofNullable(body).map(TextMsgDTO::getAtUidList)
+                .ifPresent(atUidList -> message.getExtra().setAtUidList(atUidList));
     }
 
     private boolean isAtAllUser(List<Long> atUserIds) {
@@ -126,11 +141,10 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
 
     private void saveReplayMsg(TextMsgDTO body, Message message) {
         Optional.ofNullable(body).map(TextMsgDTO::getReplyMsgId).ifPresent(replyMsgId -> {
-            MessageExtra messageExtra = Optional.ofNullable(message.getExtra()).orElseGet(MessageExtra::new);
+            MessageExtra messageExtra = message.getExtra();
             messageExtra.setReplyMsgId(replyMsgId);
             Integer gapCount = messageDao.getGapCount(message.getRoomId(), body.getReplyMsgId(), message.getId());
             messageExtra.setGapCount(gapCount);
-            message.setExtra(messageExtra);
         });
     }
 

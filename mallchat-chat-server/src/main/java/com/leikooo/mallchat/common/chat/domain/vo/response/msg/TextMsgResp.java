@@ -1,6 +1,6 @@
 package com.leikooo.mallchat.common.chat.domain.vo.response.msg;
 
-import com.leikooo.mallchat.common.common.utils.discover.UrlInfo;
+import com.leikooo.mallchat.common.common.utils.discover.domain.UrlInfo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
