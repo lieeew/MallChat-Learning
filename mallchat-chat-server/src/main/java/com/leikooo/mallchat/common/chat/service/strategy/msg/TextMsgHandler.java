@@ -15,6 +15,7 @@ import com.leikooo.mallchat.common.common.utils.AssertUtil;
 import com.leikooo.mallchat.common.common.utils.discover.AbstractUrlDiscover;
 import com.leikooo.mallchat.common.common.utils.discover.PrioritizedUrlDiscover;
 import com.leikooo.mallchat.common.common.utils.discover.domain.UrlInfo;
+import com.leikooo.mallchat.common.common.utils.sensitive.SensitiveWordBs;
 import com.leikooo.mallchat.common.user.dao.UserDao;
 import com.leikooo.mallchat.common.user.domain.entity.User;
 import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
@@ -51,6 +52,9 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private SensitiveWordBs sensitiveWordBs;
 
     private final AbstractUrlDiscover URL_TITLE_DISCOVER = new PrioritizedUrlDiscover();
 
@@ -92,7 +96,7 @@ public class TextMsgHandler extends AbstractMsgHandler<TextMsgDTO> {
 
     private void saveContentAndResolveUrlIfExist(Message msg, TextMsgDTO body) {
         Optional.ofNullable(body).map(TextMsgDTO::getContent).ifPresent((content) -> {
-            msg.setContent(content);
+            msg.setContent(sensitiveWordBs.filter(content));
             saveUrl(content, msg);
         });
     }

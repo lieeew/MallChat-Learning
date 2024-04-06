@@ -3,6 +3,7 @@ package com.leikooo.mallchat.common.user.service.impl;
 import com.leikooo.mallchat.common.common.event.UserBlackEvent;
 import com.leikooo.mallchat.common.common.event.UserRegisterEvent;
 import com.leikooo.mallchat.common.common.utils.AssertUtil;
+import com.leikooo.mallchat.common.common.utils.sensitive.SensitiveWordBs;
 import com.leikooo.mallchat.common.user.adapter.UserAdaptor;
 import com.leikooo.mallchat.common.user.dao.BlackDao;
 import com.leikooo.mallchat.common.user.dao.ItemConfigDao;
@@ -67,6 +68,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserSummaryCache userSummaryCache;
 
+    @Resource
+    private SensitiveWordBs sensitiveWordBs;
+
     @Transactional
     @Override
     public Long saveUser(User user) {
@@ -86,6 +90,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void modifyName(Long uid, String name) {
+        AssertUtil.isFalse(sensitiveWordBs.hasSensitiveWord(name), "名字中包含敏感词，请重新输入");
         User user = userDao.getUserByName(name);
         AssertUtil.isEmpty(user, "用户名已经存在");
         UserBackpack firstValidItem = userBackpackDao.getFirstValidItem(uid, ItemEnum.MODIFY_NAME_CARD.getId());
