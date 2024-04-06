@@ -4,13 +4,16 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.core.thread.NamedThreadFactory;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import com.leikooo.mallchat.common.common.exception.BusinessException;
+import com.leikooo.mallchat.common.common.exception.CommonErrorEnum;
 import com.leikooo.mallchat.common.common.utils.FutureUtils;
 import com.leikooo.mallchat.common.common.utils.discover.domain.UrlInfo;
 import io.micrometer.core.lang.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.nodes.Document;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -47,7 +50,11 @@ public abstract class AbstractUrlDiscover implements UrlDiscover {
         for (String match : matchList) {
             CompletableFuture<Pair<String, UrlInfo>> future = CompletableFuture
                     .supplyAsync(() -> getContent(match), executor) // 在自定义的Executor中执行任务
-                    .thenApply(urlInfo -> Objects.isNull(urlInfo) ? null : Pair.of(match, urlInfo));
+                    .thenApply(urlInfo -> Objects.isNull(urlInfo) ? null : Pair.of(match, urlInfo))
+                    .exceptionally((e) -> {
+                        log.error("AbstractUrlDiscover#parallelExecuteWithUrls error" + ExceptionUtils.getStackTrace(e));
+                        throw new BusinessException(CommonErrorEnum.SYSTEM_ERROR);
+                    });
             futures.add(future);
         }
         // 并行执行

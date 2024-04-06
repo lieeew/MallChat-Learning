@@ -42,10 +42,10 @@ wx:
     #    callback: http://f4cd-113-92-129-127.ngrok.io
     callback: ${mallchat.wx.callback}
     configs:
-      - appId: ${mallchat.wx.appId} # 第一个公众号的appid
-        secret: ${mallchat.wx.secret} # 公众号的appsecret
-        token: ${mallchat.wx.token} # 接口配置里的Token值
-        aesKey: ${mallchat.wx.aesKey} # 接口配置里的EncodingAESKey值
+      - appId: ${mallchat.wx.appId} # 第一个公众号的 appid
+        secret: ${mallchat.wx.secret} # 公众号的 appsecret
+        token: ${mallchat.wx.token} # 接口配置里的 Token 值
+        aesKey: ${mallchat.wx.aesKey} # 接口配置里的 EncodingAESKey 值
 
 mybatis-plus:
   # xml地址
@@ -81,4 +81,12 @@ rocketmq:
     listeners: # 配置某个消费分组，是否监听指定 Topic 。结构为 Map<消费者分组, <Topic, Boolean>> 。默认情况下，不配置表示监听。
       erbadagang-consumer-group:
         topic1: false # 关闭 test-consumer-group 对 topic1 的监听消费
+## oss 配置
+oss:
+  enabled: ${oss.enabled}
+  type: ${oss.type}
+  endpoint: ${oss.endpoint}
+  access-key: ${oss.access-key}
+  secret-key: ${oss.secret-key}
+  bucketName: ${oss.bucketName}
 

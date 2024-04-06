@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author zhongzb create on 2021/05/31
+ * @description 表情包返回
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class IdRespVO {
+
     @ApiModelProperty("id")
     private long id;
 
