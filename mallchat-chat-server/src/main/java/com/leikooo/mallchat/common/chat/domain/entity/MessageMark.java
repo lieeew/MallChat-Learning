@@ -55,6 +55,7 @@ public class MessageMark implements Serializable {
 
     /**
      * 消息状态 0正常 1取消
+     * @see com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum
      */
     @TableField("status")
     private Integer status;

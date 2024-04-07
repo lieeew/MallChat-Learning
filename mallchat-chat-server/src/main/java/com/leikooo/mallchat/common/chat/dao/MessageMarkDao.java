@@ -25,4 +25,11 @@ public class MessageMarkDao extends ServiceImpl<MessageMarkMapper, MessageMark> 
                 .eq(MessageMark::getUid, receiveUid)
                 .list();
     }
+
+    public MessageMark getOneMark(Long messageId, Long uid, Integer type) {
+        return lambdaQuery().eq(MessageMark::getUid, uid)
+                .eq(MessageMark::getMsgId, messageId)
+                .eq(MessageMark::getType, type)
+                .one();
+    }
 }

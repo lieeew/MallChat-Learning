@@ -5,18 +5,24 @@ import com.leikooo.mallchat.common.chat.dao.*;
 import com.leikooo.mallchat.common.chat.domain.dto.ChatMsgRecallDTO;
 import com.leikooo.mallchat.common.chat.domain.entity.*;
 import com.leikooo.mallchat.common.chat.domain.entity.msg.MsgRecall;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageMarkActTypeEnum;
+import com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageStatusEnum;
 import com.leikooo.mallchat.common.chat.domain.enums.MessageTypeEnum;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageMarkReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
 import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.chat.adaptor.MessageAdapter;
 import com.leikooo.mallchat.common.chat.service.cache.MsgCache;
+import com.leikooo.mallchat.common.chat.service.factory.MarkMsgFactory;
 import com.leikooo.mallchat.common.chat.service.factory.MsgHandlerFactory;
+import com.leikooo.mallchat.common.chat.service.strategy.mark.AbstractMsgMarkStrategy;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.AbstractMsgHandler;
 import com.leikooo.mallchat.common.chat.service.strategy.msg.RecallMsgHandler;
+import com.leikooo.mallchat.common.common.annotation.RedissonLock;
 import com.leikooo.mallchat.common.common.domain.enums.YesOrNoEnum;
 import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.event.MessageRecallEvent;
@@ -30,6 +36,7 @@ import com.leikooo.mallchat.common.user.domain.entity.UserRole;
 import com.leikooo.mallchat.common.user.domain.enums.BlackTypeEnum;
 import com.leikooo.mallchat.common.user.domain.enums.UserRoleEnum;
 import com.leikooo.mallchat.common.user.service.cache.UserCache;
+import javafx.scene.control.TableView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -106,7 +113,7 @@ public class ChatServiceImpl implements ChatService {
     public CursorPageBaseResp<ChatMessageResp> getMsgPage(ChatMessagePageReq req, Long uid) {
         filterBlockUser(uid);
         Long lastMessageId = getLastMessageId(req.getRoomId(), uid);
-        CursorPageBaseResp<Message> cursorPage = messageDao.getCursorPage(req.getRoomId(), req, lastMessageId);
+        CursorPageBaseResp<Message> cursorPage = messageDao.getCursorPage(req, lastMessageId);
         return CursorPageBaseResp.init(cursorPage, getMsgRespBatch(cursorPage.getList(), uid));
     }
 
@@ -117,6 +124,13 @@ public class ChatServiceImpl implements ChatService {
         checkAuthorize(uid, req.getMsgId());
         //执行消息撤回
         recallMessage(req.getMsgId(), uid, req.getRoomId());
+    }
+
+    @RedissonLock(prefix = "ChatServiceSetMsgMark", key = "#uid")
+    @Override
+    public void setMsgMark(Long uid, ChatMessageMarkReq request) {
+        AbstractMsgMarkStrategy msgMarkStrategy = MarkMsgFactory.getStrategyNoNull(MessageMarkTypeEnum.of(request.getMarkType()));
+        msgMarkStrategy.execute(request.getMsgId(), uid, request.getActType());
     }
 
     private void recallMessage(Long msgId, Long recallUid, Long roomId) {

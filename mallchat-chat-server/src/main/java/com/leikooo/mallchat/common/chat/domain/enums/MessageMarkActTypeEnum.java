@@ -21,6 +21,7 @@ public enum MessageMarkActTypeEnum {
     ;
 
     private final Integer type;
+
     private final String desc;
 
     private static Map<Integer, MessageMarkActTypeEnum> cache;

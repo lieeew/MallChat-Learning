@@ -22,7 +22,7 @@ import java.util.Objects;
 @Service
 public class MessageDao extends ServiceImpl<MessageMapper, Message> {
 
-    public CursorPageBaseResp<Message> getCursorPage(Long roomId, ChatMessagePageReq req, Long lastMessageId) {
+    public CursorPageBaseResp<Message> getCursorPage(ChatMessagePageReq req, Long lastMessageId) {
         return CursorUtils.getCursorPageByMysql(this, req, wrapper -> {
             wrapper.eq(Message::getStatus, MessageStatusEnum.NORMAL.getStatus());
             wrapper.eq(Message::getRoomId, req.getRoomId());

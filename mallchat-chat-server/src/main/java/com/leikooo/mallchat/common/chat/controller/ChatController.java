@@ -1,6 +1,7 @@
 package com.leikooo.mallchat.common.chat.controller;
 
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageMarkReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
@@ -44,6 +45,13 @@ public class ChatController {
     @ApiOperation("撤回消息")
     public ApiResult<ChatMessageResp> recallMsg(@Valid @RequestBody ChatMessageBaseReq req) {
         chatService.recallMsg(req, RequestHolder.get().getUid());
+        return ApiResult.success();
+    }
+
+    @PutMapping("/msg/mark")
+    @ApiOperation("消息标记")
+    public ApiResult<Void> setMsgMark(@Valid @RequestBody ChatMessageMarkReq request) {
+        chatService.setMsgMark(RequestHolder.get().getUid(), request);
         return ApiResult.success();
     }
 }

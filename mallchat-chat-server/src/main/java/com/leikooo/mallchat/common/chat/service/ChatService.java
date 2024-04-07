@@ -2,6 +2,7 @@ package com.leikooo.mallchat.common.chat.service;
 
 import com.leikooo.mallchat.common.chat.domain.entity.Message;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
+import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageMarkReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageReq;
 import com.leikooo.mallchat.common.chat.domain.vo.response.ChatMessageResp;
@@ -31,4 +32,6 @@ public interface ChatService {
      * 撤回消息接口
      */
     void recallMsg(ChatMessageBaseReq req, Long uid);
+
+    void setMsgMark(Long uid, ChatMessageMarkReq request);
 }

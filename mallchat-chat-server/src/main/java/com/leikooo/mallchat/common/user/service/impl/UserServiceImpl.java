@@ -143,12 +143,12 @@ public class UserServiceImpl implements UserService {
                 .build();
         blackDao.save(insertBlack);
         User blockUser = userDao.getById(blockUid);
-        String creatIp = Optional.ofNullable(blockUser).map(User::getIpInfo).map(IpInfo::getCreateIp).orElse("");
+        String createdIpAdr = Optional.ofNullable(blockUser).map(User::getIpInfo).map(IpInfo::getCreateIp).orElse("");
         String updateIp = Optional.ofNullable(blockUser).map(User::getIpInfo).map(IpInfo::getUpdateIp).orElse("");
-        if (StringUtils.equals(creatIp, updateIp)) {
-            blockIpIfNotEmpty(creatIp);
+        if (StringUtils.equals( createdIpAdr, updateIp)) {
+            blockIpIfNotEmpty( createdIpAdr);
         } else {
-            blockIpIfNotEmpty(creatIp);
+            blockIpIfNotEmpty( createdIpAdr);
             blockIpIfNotEmpty(updateIp);
         }
         applicationEventPublisher.publishEvent(new UserBlackEvent(this, blockUser));

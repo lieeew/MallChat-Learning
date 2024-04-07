@@ -24,13 +24,13 @@ public class ChatMessageMarkDTO {
     private Long msgId;
 
     /**
-     * @see com.abin.mallchat.common.chat.domain.enums.MessageMarkTypeEnum
+     * @see com.leikooo.mallchat.common.chat.domain.enums.MessageMarkTypeEnum
      */
     @ApiModelProperty("标记类型 1点赞 2举报")
     private Integer markType;
 
     /**
-     * @see com.abin.mallchat.common.chat.domain.enums.MessageMarkActTypeEnum
+     * @see com.leikooo.mallchat.common.chat.domain.enums.MessageMarkActTypeEnum
      */
     @ApiModelProperty("动作类型 1确认 2取消")
     private Integer actType;
