@@ -14,6 +14,7 @@ public enum BusinessErrorEnum implements ErrorEnum {
     //==================================user==================================
     //==================================chat==================================
     SYSTEM_ERROR(1001, "系统出小差了，请稍后再试哦~~"),
+    CAPACITY_REFILL_ERROR(1001, "Capacity and refill rate must be positive"),
     ;
 
     private final Integer code;

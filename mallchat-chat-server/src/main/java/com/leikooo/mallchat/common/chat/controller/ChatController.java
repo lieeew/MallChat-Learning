@@ -9,6 +9,7 @@ import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
+import com.leikooo.mallchat.common.frequency.annotation.FrequencyControl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,10 @@ public class ChatController {
         return ApiResult.success();
     }
 
+    @FrequencyControl(time = 120, count = 20, target = FrequencyControl.Target.UID)
     @GetMapping("public/msg/page")
     @ApiOperation("消息列表")
-    // todo 限流控制
-    public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid @RequestParam ChatMessagePageReq req) {
+    public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid ChatMessagePageReq req) {
         return ApiResult.success(chatService.getMsgPage(req, RequestHolder.get().getUid()));
     }
 

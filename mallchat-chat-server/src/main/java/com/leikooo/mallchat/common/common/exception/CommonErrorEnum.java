@@ -17,6 +17,7 @@ public enum CommonErrorEnum implements ErrorEnum{
     PARAM_INVALID(-2, "参数校验失败"),
     SYSTEM_ERROR(-1, "系统异常"),
     BUSINESS_ERROR(0, "业务异常"),
+    FREQUENCY_LIMIT(-3, "请求太频繁了，请稍后再试哦~~"),
     ;
 
     private final Integer code;
