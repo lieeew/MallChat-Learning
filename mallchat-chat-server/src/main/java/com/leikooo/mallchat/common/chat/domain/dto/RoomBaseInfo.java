@@ -27,7 +27,7 @@ public class RoomBaseInfo {
     /**
      * 是否全员展示 0否 1是
      *
-     * @see com.abin.mallchat.common.chat.domain.enums.HotFlagEnum
+     * @see com.leikooo.mallchat.common.chat.domain.enums.HotFlagEnum
      */
     private Integer hotFlag;
 
