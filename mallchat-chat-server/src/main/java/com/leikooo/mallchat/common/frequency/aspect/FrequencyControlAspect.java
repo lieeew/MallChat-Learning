@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.leikooo.mallchat.common.FrequencyControlConstant;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
 import com.leikooo.mallchat.common.frequency.annotation.FrequencyControl;
-import com.leikooo.mallchat.common.frequency.domain.dto.FixedWindowDTO;
 import com.leikooo.mallchat.common.frequency.domain.dto.FrequencyControlDTO;
 import com.leikooo.mallchat.common.frequency.domain.dto.SlidingWindowDTO;
 import com.leikooo.mallchat.common.frequency.domain.dto.TokenBucketDTO;
@@ -24,8 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.leikooo.mallchat.common.frequency.adaptor.FrequencyAdaptor.*;
+
 /**
  * 频控实现
+ *
  * @author liang
  */
 @Slf4j
@@ -42,80 +44,43 @@ public class FrequencyControlAspect {
             // 获取频控注解
             FrequencyControl frequencyControl = annotationsByType[i];
             String prefix = StrUtil.isBlank(frequencyControl.prefixKey()) ? /* 默认方法限定名 + 注解排名（可能多个）*/method.toGenericString() + ":index:" + i : frequencyControl.prefixKey();
-            String key = "";
-            switch (frequencyControl.target()) {
-                case EL:
-                    key = SpElUtils.parseSpEl(method, joinPoint.getArgs(), frequencyControl.spEl());
-                    break;
-                case IP:
-                    key = RequestHolder.get().getIp();
-                    break;
-                case UID:
-                    key = RequestHolder.get().getUid().toString();
-            }
+            String key = getKey(joinPoint, method, frequencyControl);
             keyMap.put(prefix + ":" + key, frequencyControl);
             strategy = frequencyControl.strategy();
         }
+        return frequencyControlAndExecute(strategy, keyMap, joinPoint);
+    }
+
+    private String getKey(ProceedingJoinPoint joinPoint, Method method, FrequencyControl frequencyControl) {
+        String key = "";
+        switch (frequencyControl.target()) {
+            case EL:
+                key = SpElUtils.parseSpEl(method, joinPoint.getArgs(), frequencyControl.spEl());
+                break;
+            case IP:
+                key = RequestHolder.get().getIp();
+                break;
+            case UID:
+                key = RequestHolder.get().getUid().toString();
+        }
+        return key;
+    }
+
+    private Object frequencyControlAndExecute(String strategy, Map<String, ? extends FrequencyControl> keyMap, ProceedingJoinPoint joinPoint) throws Throwable {
         // 将注解的参数转换为编程式调用需要的参数
         if (FrequencyControlConstant.TOTAL_COUNT_WITH_IN_FIX_TIME.equals(strategy)) {
             // 调用编程式注解 固定窗口
-            List<FrequencyControlDTO> frequencyControlDTOS = keyMap.entrySet().stream().map(entrySet -> buildFixedWindowDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
-            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDTOS, joinPoint::proceed);
-
+            List<FrequencyControlDTO> frequencyControlDto = keyMap.entrySet().stream().map(entrySet -> buildFixedWindowDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
+            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDto, joinPoint::proceed);
         } else if (FrequencyControlConstant.TOKEN_BUCKET.equals(strategy)) {
             // 调用编程式注解 令牌桶
-            List<TokenBucketDTO> frequencyControlDTOS = keyMap.entrySet().stream().map(entrySet -> buildTokenBucketDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
-            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDTOS, joinPoint::proceed);
-        } else {
+            List<TokenBucketDTO> frequencyControlDto = keyMap.entrySet().stream().map(entrySet -> buildTokenBucketDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
+            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDto, joinPoint::proceed);
+        } else if (FrequencyControlConstant.SLIDING_WINDOW.equals(strategy)) {
             // 调用编程式注解 滑动窗口
-            List<SlidingWindowDTO> frequencyControlDTOS = keyMap.entrySet().stream().map(entrySet -> buildSlidingWindowFrequencyControlDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
-            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDTOS, joinPoint::proceed);
+            List<SlidingWindowDTO> frequencyControlDto = keyMap.entrySet().stream().map(entrySet -> buildSlidingWindowFrequencyControlDTO(entrySet.getKey(), entrySet.getValue())).collect(Collectors.toList());
+            return FrequencyControlUtil.executeWithFrequencyControlList(strategy, frequencyControlDto, joinPoint::proceed);
         }
-    }
-
-    /**
-     * 将注解参数转换为编程式调用所需要的参数
-     *
-     * @param key              频率控制Key
-     * @param frequencyControl 注解
-     * @return 编程式调用所需要的参数-FrequencyControlDTO
-     */
-    private SlidingWindowDTO buildSlidingWindowFrequencyControlDTO(String key, FrequencyControl frequencyControl) {
-        SlidingWindowDTO frequencyControlDTO = new SlidingWindowDTO();
-        frequencyControlDTO.setWindowSize(frequencyControl.windowSize());
-        frequencyControlDTO.setPeriod(frequencyControl.period());
-        frequencyControlDTO.setCount(frequencyControl.count());
-        frequencyControlDTO.setUnit(frequencyControl.unit());
-        frequencyControlDTO.setKey(key);
-        return frequencyControlDTO;
-    }
-
-    /**
-     * 将注解参数转换为编程式调用所需要的参数
-     *
-     * @param key              频率控制Key
-     * @param frequencyControl 注解
-     * @return 编程式调用所需要的参数-FrequencyControlDTO
-     */
-    private TokenBucketDTO buildTokenBucketDTO(String key, FrequencyControl frequencyControl) {
-        TokenBucketDTO tokenBucketDTO = new TokenBucketDTO(frequencyControl.capacity(), frequencyControl.refillRate());
-        tokenBucketDTO.setKey(key);
-        return tokenBucketDTO;
-    }
-
-    /**
-     * 将注解参数转换为编程式调用所需要的参数
-     *
-     * @param key              频率控制Key
-     * @param frequencyControl 注解
-     * @return 编程式调用所需要的参数-FrequencyControlDTO
-     */
-    private FixedWindowDTO buildFixedWindowDTO(String key, FrequencyControl frequencyControl) {
-        FixedWindowDTO fixedWindowDTO = new FixedWindowDTO();
-        fixedWindowDTO.setCount(frequencyControl.count());
-        fixedWindowDTO.setTime(frequencyControl.time());
-        fixedWindowDTO.setUnit(frequencyControl.unit());
-        fixedWindowDTO.setKey(key);
-        return fixedWindowDTO;
+        return null;
     }
 }

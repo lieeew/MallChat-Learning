@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * @author leikoooo
+ */
 @Component
 public class TokenBucketManager {
     private final Map<String, TokenBucketDTO> tokenBucketMap = new ConcurrentHashMap<>();

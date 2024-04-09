@@ -58,8 +58,7 @@ public abstract class AbstractFrequencyControlService<K extends FrequencyControl
         boolean existsFrequencyControlHasNullKey = frequencyControlList.stream().anyMatch(frequencyControl -> ObjectUtils.isEmpty(frequencyControl.getKey()));
         AssertUtil.isFalse(existsFrequencyControlHasNullKey, "限流策略的Key字段不允许出现空值");
         Map<String, K> frequencyControlDTOMap = frequencyControlList.stream()
-                .collect(Collectors.groupingBy(K::getKey,
-                        Collectors.collectingAndThen(Collectors.toList(), list -> list.get(0))));
+                .collect(Collectors.groupingBy(K::getKey, Collectors.collectingAndThen(Collectors.toList(), list -> list.get(0))));
         return executeWithFrequencyControlMap(frequencyControlDTOMap, supplier);
     }
 

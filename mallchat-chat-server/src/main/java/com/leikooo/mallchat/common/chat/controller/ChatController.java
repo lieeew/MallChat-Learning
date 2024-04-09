@@ -35,7 +35,7 @@ public class ChatController {
         return ApiResult.success();
     }
 
-    @FrequencyControl(time = 120, count = 20, target = FrequencyControl.Target.UID)
+    @FrequencyControl(time = 120, count = 20, target = FrequencyControl.Target.UID, prefixKey = "ChatController#getMsgPage")
     @GetMapping("public/msg/page")
     @ApiOperation("消息列表")
     public ApiResult<CursorPageBaseResp<ChatMessageResp>> getMsgPage(@Valid ChatMessagePageReq req) {

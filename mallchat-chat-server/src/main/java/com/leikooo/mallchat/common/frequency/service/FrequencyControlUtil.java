@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * 限流工具类 提供编程式的限流调用方法
- * @author liang
+ *
+ * @author leikooo
  */
 public class FrequencyControlUtil {
 
@@ -43,7 +44,10 @@ public class FrequencyControlUtil {
      * @return 业务方法执行的返回值
      * @throws Throwable 被限流或者限流策略定义错误
      */
-    public static <T, K extends FrequencyControlDTO> T executeWithFrequencyControlList(String strategyName, List<K> frequencyControlList, AbstractFrequencyControlService.SupplierThrowWithoutParam<T> supplier) throws Throwable {
+    public static <T, K extends FrequencyControlDTO> T executeWithFrequencyControlList(
+            String strategyName,
+            List<K> frequencyControlList,
+            AbstractFrequencyControlService.SupplierThrowWithoutParam<T> supplier) throws Throwable {
         boolean existsFrequencyControlHasNullKey = frequencyControlList.stream().anyMatch(frequencyControl -> ObjectUtils.isEmpty(frequencyControl.getKey()));
         AssertUtil.isFalse(existsFrequencyControlHasNullKey, "限流策略的Key字段不允许出现空值");
         AbstractFrequencyControlService<K> frequencyController = FrequencyControlStrategyFactory.getFrequencyControllerByName(strategyName);
