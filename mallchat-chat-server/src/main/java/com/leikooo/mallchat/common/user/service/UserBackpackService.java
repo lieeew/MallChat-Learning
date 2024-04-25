@@ -14,8 +14,9 @@ public interface UserBackpackService {
      * 获取物品
      * @param uid 用户 id
      * @param itemId 物品 id
-     * @param messageType @see com.leikooo.mallchat.common.common.domain.enums.IdempotentEnum
-     * @param businessId
+     * @param idempotentType look see
+     * @see com.leikooo.mallchat.common.common.domain.enums.IdempotentEnum
+     * @param businessId if use UID this is userId that String type
      */
-    void acquireItem(Long uid, Long itemId, Integer messageType, String businessId);
+    void acquireItem(Long uid, Long itemId, Integer idempotentType, String businessId);
 }

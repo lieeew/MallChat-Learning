@@ -33,8 +33,8 @@ public class UserBackpackServiceImpl implements UserBackpackService {
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void acquireItem(Long uid, Long itemId, Integer messageType, String businessId) {
-        String idempotentId = getIdempotent(itemId, messageType, businessId);
+    public void acquireItem(Long uid, Long itemId, Integer idempotentType, String businessId) {
+        String idempotentId = getIdempotent(itemId, idempotentType, businessId);
         // 1、可以自己注入自己然后调用 @Lazy @Resource private UserBackpackServiceImpl userBackpackServiceImpl;
         // 2、可以使用 ((UserBackpackServiceImpl) AopContext.currentProxy()).doAcquireItem(uid, itemId, idempotentId);
         // 3、使用 SpringUtil 获取 bean 调用
