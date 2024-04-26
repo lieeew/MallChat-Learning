@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.common.config;
 
+import com.leikooo.frequency.interceptor.GlobalRequestInterceptor;
 import com.leikooo.mallchat.common.common.interceptor.BlackInterceptor;
 import com.leikooo.mallchat.common.common.interceptor.CollectorInterceptor;
 import com.leikooo.mallchat.common.common.interceptor.TokenInterceptor;
@@ -25,6 +26,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Resource
     private BlackInterceptor blackInterceptor;
 
+    @Resource
+    private GlobalRequestInterceptor globalRequestInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
@@ -32,6 +36,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(collectorInterceptor)
                 .addPathPatterns("/capi/**");
         registry.addInterceptor(blackInterceptor)
+                .addPathPatterns("/capi/**");
+        registry.addInterceptor(globalRequestInterceptor)
                 .addPathPatterns("/capi/**");
     }
 }

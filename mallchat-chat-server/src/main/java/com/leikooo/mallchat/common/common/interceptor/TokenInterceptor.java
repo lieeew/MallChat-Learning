@@ -23,6 +23,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     public static final String HEADER_AUTHORIZATION = "Authorization";
 
     public static final String AUTHORIZATION_SCHEMA = "Bearer ";
+
     public static final String UID = "uid";
 
     @Resource

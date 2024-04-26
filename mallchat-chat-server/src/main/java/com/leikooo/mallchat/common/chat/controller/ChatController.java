@@ -1,5 +1,6 @@
 package com.leikooo.mallchat.common.chat.controller;
 
+import com.leikooo.frequency.annotation.FrequencyControl;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageBaseReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessageMarkReq;
 import com.leikooo.mallchat.common.chat.domain.vo.request.ChatMessagePageReq;
@@ -9,7 +10,6 @@ import com.leikooo.mallchat.common.chat.service.ChatService;
 import com.leikooo.mallchat.common.common.domain.vo.response.ApiResult;
 import com.leikooo.mallchat.common.common.domain.vo.response.CursorPageBaseResp;
 import com.leikooo.mallchat.common.common.utils.RequestHolder;
-import com.leikooo.mallchat.common.frequency.annotation.FrequencyControl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
